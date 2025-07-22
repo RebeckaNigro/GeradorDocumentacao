@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manual do Projeto</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>📘 Manual do Projeto</h1>
+  {{CONTEUDO}}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.toggle-text').forEach(el => {
+        el.addEventListener('click', () => {
+          const detalhes = el.nextElementSibling;
+          if (!detalhes) return;
+          detalhes.style.display = detalhes.style.display === 'block' ? 'none' : 'block';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

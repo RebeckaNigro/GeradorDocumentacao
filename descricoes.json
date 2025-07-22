@@ -1,0 +1,6 @@
+{
+  "Dockerfile": "Define a imagem base do container e os passos para build.",
+  "docker-compose.yml": "Gerencia múltiplos containers para ambientes locais.",
+  "azure-pipelines.yml": "Define o CI/CD no Azure DevOps.",
+  "README.md": "Documentação principal do projeto."
+}
