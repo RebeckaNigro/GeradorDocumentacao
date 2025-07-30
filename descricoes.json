@@ -1106,5 +1106,33 @@
     "azure-pipelines.yml": {
         "descricao": "Este arquivo `azure-pipelines.yml` define um pipeline de integração contínua (CI) no Azure DevOps. Ele é acionado sempre que há um commit na branch `master`. O pipeline utiliza o pool de agentes `rebecka_azure` para executar as tarefas. A principal tarefa é construir uma imagem Docker a partir do `Dockerfile` presente no repositório e enviá-la para o registro de contêiner `eldorado percepcao registry` no repositório `ecossistema`. A imagem é taggeada com o ID da build atual (`$(Build.BuildId)`). Essencialmente, automatiza a construção e publicação de imagens Docker.",
         "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "docker-compose.yml": {
+        "descricao": "Este arquivo `docker-compose.yml` define um serviço chamado `docmanual` que utiliza a imagem `nginx:alpine`. Ele cria um container Docker nomeado `automacao` que expõe a porta 80 do container na porta 8080 da máquina host. O container compartilha dois volumes: um mapeia a pasta `./output` local para o diretório de documentos do Nginx, tornando os arquivos HTML gerados acessíveis via web. O outro volume substitui a configuração padrão do Nginx por um arquivo personalizado em `./nginx/default.conf`. O container reinicia automaticamente, a menos que seja explicitamente parado. Essencialmente, este arquivo configura um servidor web Nginx para servir conteúdo estático gerado em `./output`.",
+        "referencia": ""
+    },
+    "main.py": {
+        "descricao": "Este script (main.py) utiliza a API Gemini para gerar descrições de arquivos de código. Ele lê o conteúdo de um arquivo, formula um prompt para o modelo Gemini (gemma-3-27b-it) solicitando uma descrição técnica e funcional, e imprime a resposta. Requer a chave da API Gemini configurada como variável de ambiente (GEMINI_API_KEY). O script é projetado para auxiliar na documentação e compreensão de projetos de código, fornecendo descrições concisas e acessíveis para novos desenvolvedores.",
+        "referencia": ""
+    },
+    "default.conf": {
+        "descricao": "Este arquivo configura um servidor web Nginx básico. Ele escuta na porta 80 (HTTP) e responde ao nome de domínio \"localhost\". Quando acessado, serve arquivos da pasta \"/usr/share/nginx/html\", priorizando o arquivo \"manual.html\" como página inicial. A opção \"autoindex on\" permite listar o conteúdo da pasta se nenhum arquivo específico for solicitado. Essencialmente, define a configuração padrão para servir conteúdo web simples.",
+        "referencia": ""
+    },
+    "documentacao.html": {
+        "descricao": "O arquivo `documentacao.html` é a página principal do manual do projeto. Ele usa HTML básico e CSS (via `style.css`) para exibir uma lista de arquivos de configuração importantes, como o `docker-compose.yml`. Ao clicar em cada item da lista, detalhes sobre o arquivo (caminho e descrição) são revelados. O foco é fornecer documentação acessível sobre a estrutura e funcionamento do projeto, especialmente a configuração do Docker para servir a documentação via Nginx.",
+        "referencia": ""
+    },
+    "style.css": {
+        "descricao": "Este arquivo CSS (style.css) define a aparência visual de elementos relacionados à funcionalidade de \"toggle\" (mostrar/esconder) de detalhes em uma página web. Remove marcadores de lista (`ul`), estiliza o texto que ativa o toggle (`.toggle-text` com cor azul e negrito, sublinhado no hover), e formata a área de detalhes escondida (`.detalhes` com margem e cor cinza). A classe `.detalhes` inicialmente é escondida (`display: none;`) e só é exibida via JavaScript. O `user-select: none;` impede que o texto do toggle seja selecionado pelo usuário.",
+        "referencia": ""
+    },
+    "template.html": {
+        "descricao": "O arquivo `template.html` define a estrutura básica da página do manual do projeto. Ele inclui metadados (charset, título, link para o CSS `style.css`) e um cabeçalho principal. A área `{{CONTEUDO}}` é um placeholder onde o conteúdo dinâmico do manual será inserido. O script JavaScript adiciona funcionalidade para expandir/colapsar seções de texto (classes `.toggle-text`), melhorando a legibilidade do manual. Essencialmente, é o layout HTML que recebe e exibe as informações do projeto.",
+        "referencia": ""
+    },
+    "teste_gemini.py": {
+        "descricao": "Este script (teste_gemini.py) verifica a conexão com a API Gemini da Google. Ele busca a chave da API em uma variável de ambiente (\"GEMINI_API_KEY\") para evitar expor a chave no código. Se a chave for encontrada, ele inicializa o modelo 'gemma-3-27b-it' e envia uma mensagem simples (\"Responda 'OK'\") para testar a comunicação. Imprime mensagens de sucesso ou erro no console, indicando se a conexão foi estabelecida e qual foi a resposta do modelo. O script retorna `True` em caso de sucesso e `False` em caso de falha.",
+        "referencia": ""
     }
 }

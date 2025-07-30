@@ -76,10 +76,21 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
             nome_arquivo = valor.name
             caminho_relativo = str(valor.relative_to(projeto_path))
             
-            # Obter descrição (mantendo sua lógica existente)
-            descricao = descricoes.get(nome_arquivo, {}).get('descricao', "Sem descrição definida.")
+            # Verifica se precisa gerar nova descrição
+            if nome_arquivo not in descricoes:
+                descricao_gerada = gerar_descricao_com_gemini(valor, info_projeto)
+                descricoes[nome_arquivo] = {
+                    'descricao': descricao_gerada,
+                    'referencia': ""  # Inicializa referência vazia
+                }
+                # Salva imediatamente no arquivo
+                with open("descricoes.json", "w", encoding="utf-8") as f:
+                    json.dump(descricoes, f, indent=4, ensure_ascii=False)
             
-            # Busca por referências (como no código original)
+            # Obtém a descrição (agora garantido que existe)
+            descricao = descricoes[nome_arquivo].get('descricao', "Sem descrição definida.")
+            
+            # Busca por referências
             referencias = []
             for arq_ref in arquivos:
                 if arq_ref == valor:
@@ -91,7 +102,7 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
                 except:
                     continue
             
-            # Construindo a seção de detalhes com referências
+            # Construindo a seção de detalhes
             detalhes = f"""
             <p><strong>Caminho:</strong> {caminho_relativo}</p>
             <p><strong>Descrição:</strong> {descricao}</p>
