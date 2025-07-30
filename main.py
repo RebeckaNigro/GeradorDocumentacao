@@ -4,6 +4,9 @@ from pathlib import Path
 from tqdm import tqdm
 import os
 import google.generativeai as genai
+import html
+
+
 
 def gerar_descricao_com_gemini(caminho_arquivo, info_projeto):
     print(f"\n📄 Gerando descrição para: {caminho_arquivo.name}")
@@ -56,10 +59,10 @@ def construir_arvore(arquivos, base_path):
     return raiz
 
 def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto, barra_progresso=None):
-    html = "<ul>"
+    html_content = "<ul>"
     for chave, valor in sorted(estrutura.items()):
         if isinstance(valor, dict):
-            html += f"""
+            html_content += f"""
             <li>
               <div class='toggle-text'>📁 {chave}</div>
               <div class='detalhes' style='display:none;'>
@@ -89,6 +92,7 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
             
             # Obtém a descrição (agora garantido que existe)
             descricao = descricoes[nome_arquivo].get('descricao', "Sem descrição definida.")
+            descricao_html = html.escape(descricao)  # ESCAPA AQUI
             
             # Busca por referências
             referencias = []
@@ -105,7 +109,7 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
             # Construindo a seção de detalhes
             detalhes = f"""
             <p><strong>Caminho:</strong> {caminho_relativo}</p>
-            <p><strong>Descrição:</strong> {descricao}</p>
+            <p><strong>Descrição:</strong> {descricao_html}</p>
             """
             
             if referencias:
@@ -116,7 +120,7 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
             else:
                 detalhes += "<p><em>Sem referências encontradas.</em></p>"
             
-            html += f"""
+            html_content += f"""
             <li>
               <div class='toggle-text'>📄 {nome_arquivo}</div>
               <div class='detalhes' style='display:none; margin-left: 1em;'>
@@ -124,7 +128,7 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
               </div>
             </li>
             """
-    return html + "</ul>"
+    return html_content + "</ul>"
 
 def main():
     if len(sys.argv) < 2:
@@ -155,9 +159,8 @@ def main():
         """)
 
     # Processamento dos arquivos
-    ignorar_ext = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.json', '.md', '.lock',
-                  '.dll', '.exe', '.pdb', '.cache', '.targets']
-    ignorar_pastas = ['node_modules', '.git', '__pycache__', 'venv', 'dist', '.vscode', '.vs']
+    ignorar_ext = ['.png', '.jpg', '.pdf', '.jpeg', '.gif', '.svg', '.ico', '.webp', '.mp4', '.mp3','.dll', '.exe', '.pdb', '.so', '.a', '.o', '.class', '.jar', '.pyc', '.wasm','.lock', '.log', '.cache', '.tmp', '.swp','.json', '.md', '.txt', '.csv', '.db', '.sqlite', '.env', '.ini', '.yml', '.yaml','.html', '.xml','.targets', '.props', '.csproj', '.sln']
+    ignorar_pastas = ['node_modules', 'bower_components', 'vendor','.git', '.github', '.vscode', '.idea', '.vs', 'dist', 'build', 'out', '.next', '.turbo', '.parcel-cache','__pycache__', 'venv', '.mypy_cache', 'bin', 'obj', '__tests__', 'tests', 'test', 'examples','coverage', '.coverage', 'reports']
 
     arquivos = [
         f for f in projeto_path.rglob("*")

@@ -1134,5 +1134,385 @@
     "teste_gemini.py": {
         "descricao": "Este script (teste_gemini.py) verifica a conexão com a API Gemini da Google. Ele busca a chave da API em uma variável de ambiente (\"GEMINI_API_KEY\") para evitar expor a chave no código. Se a chave for encontrada, ele inicializa o modelo 'gemma-3-27b-it' e envia uma mensagem simples (\"Responda 'OK'\") para testar a comunicação. Imprime mensagens de sucesso ou erro no console, indicando se a conexão foi estabelecida e qual foi a resposta do modelo. O script retorna `True` em caso de sucesso e `False` em caso de falha.",
         "referencia": ""
+    },
+    ".prettierrc": {
+        "descricao": "Este arquivo configura o Prettier, um formatador de código. Define regras para formatação automática, como uso de vírgulas finais (\"trailingComma\"), tamanho do tab (\"tabWidth\"), largura máxima da linha (\"printWidth\"), ponto e vírgula (\"semi\") e aspas simples (\"singleQuote\").  Inclui um plugin para organizar importações e formatação específica para arquivos Vue, usando o parser Vue. Garante consistência no estilo do código em todo o projeto. \"endOfLine\" define o tipo de quebra de linha.",
+        "referencia": ""
+    },
+    "App.vue": {
+        "descricao": "O `App.vue` é o componente raiz da aplicação Vue. Ele gerencia a autenticação do usuário, redirecionando para a página de login se o usuário estiver desconectado. Utiliza `stores` (Alert, User, Modal) para controlar o estado global da aplicação, como alertas, informações do usuário e visibilidade de modais.  Importa componentes reutilizáveis (Alert, Cookies, NavBar, Footer, Modal) e utiliza o `vue-router` para navegação e monitoramento da rota atual, executando ações específicas ao acessar a rota '/login'.",
+        "referencia": ""
+    },
+    "global.scss": {
+        "descricao": "O arquivo `global.scss` define estilos globais para o projeto. Ele importa duas fontes do Google Fonts (Montserrat e Inter) e define variáveis CSS para cores (verde, laranja) e gradientes lineares. Também inclui estilos básicos para elementos como `.box` (estilo de card com sombra e borda) e `.card-position` (centraliza cards).  Adicionalmente, inicia a estilização de um container de breadcrumb (`.breadcrumb-container`). Esses estilos são aplicados em diversos componentes da aplicação para manter consistência visual.",
+        "referencia": ""
+    },
+    "GeneralBtn.vue": {
+        "descricao": "O `GeneralBtn.vue` é um componente reutilizável de botão. Ele recebe texto (`btnText`), link (`link`), e flags para indicar se o link é externo (`isExternalLink`) e customizar a aparência (cor de fundo, largura, altura, cor do texto, ID).  Usa `router-link` para links internos e `<a>` para externos.  Adiciona efeito de brilho ao passar o mouse (implementação incompleta, `glowBg` e `unglowBg` precisam ser definidos). Aplica estilos CSS dinamicamente com base nas propriedades recebidas.",
+        "referencia": ""
+    },
+    "CardDocumento.vue": {
+        "descricao": "O componente `CardDocumento.vue` exibe um resumo de um documento. Recebe um objeto `documento` como prop e mostra seu nome, autor, descrição e tags. Possui botões para visualizar o documento completo (redireciona para a página 'DocumentoExpandido') e, se disponível, para download. A exibição das tags e do link de download são condicionais, baseadas nos dados do `documento`. Utiliza ícones para visualização e download, e estilização para layout responsivo.",
+        "referencia": ""
+    },
+    "CardSessao.vue": {
+        "descricao": "Componente Vue para exibir um card de sessão de documentos. Recebe título, caminho do ícone (opcional), texto descritivo e flag para exibir o ícone. Possui um botão \"Ver mais\" (sem funcionalidade implementada) e prepara a estrutura para um botão de download (também não implementado). Utiliza estilos SCSS para definir bordas, padding, altura, sombra e fundo branco do card, além de estilizar o título com ellipsis para textos longos. É usado para apresentar informações resumidas de cada sessão na interface.",
+        "referencia": ""
+    },
+    "ContainerDestaques.vue": {
+        "descricao": "Este componente Vue (`ContainerDestaques.vue`) exibe uma lista de documentos destacados na interface. Ele utiliza o `useDocumentStore` para buscar os últimos documentos adicionados. Inicialmente, mostra um `Spinner` enquanto os dados são carregados. Após o carregamento, renderiza cada documento usando o componente `CardDocumento`, organizando-os em um layout responsivo. A propriedade `lastDocs` armazena a lista de documentos simplificados recebidos da store. O componente não permite download direto dos documentos (prop `has-download-option` é `false`).",
+        "referencia": ""
+    },
+    "CardEdital.vue": {
+        "descricao": "O `CardEdital.vue` exibe um resumo de um edital (documento). Recebe um objeto `documento` com nome, descrição e data de atualização. Apresenta essas informações formatadas e um link \"Visualizar\" que direciona para a página de detalhes do edital (`DocumentoExpandido`) usando o `router`. A função `friendlyDateTime` formata a data para um formato mais legível. É um componente reutilizável para listar editais na interface.",
+        "referencia": ""
+    },
+    "Codigo.vue": {
+        "descricao": "Este componente Vue (`Codigo.vue`) é responsável pela tela de inserção do código de recuperação de senha. Ele exibe um campo para o usuário digitar o código recebido por e-mail. A validação do campo é feita via `v-model` e `vee-validate`, exibindo mensagens de erro se o código for inválido. O botão \"Voltar para Login\" redireciona o usuário para a página de login. O componente faz parte do fluxo de recuperação de senha, recebendo o código do usuário e, presumivelmente, enviando-o para o backend para verificação (lógica não presente neste arquivo).",
+        "referencia": ""
+    },
+    "EsqueciSenha.vue": {
+        "descricao": "Este componente Vue (`EsqueciSenha.vue`) implementa a tela de recuperação de senha. Permite ao usuário inserir seu e-mail para solicitar um reset. Utiliza `v-model` para vincular o input de e-mail a uma propriedade `usuario.email` e validação com `vee-validate` (indicado por `v$`). Ao clicar no botão \"Enviar\", o componente redireciona o usuário para a página de login (`Login`). A interface usa classes CSS para estilização (ex: `green-btn-outlined`).",
+        "referencia": ""
+    },
+    "RedefinirSenha.vue": {
+        "descricao": "Este componente Vue (`RedefinirSenha.vue`) é responsável pela tela de redefinição de senha. Permite ao usuário inserir uma nova senha, com opção de visualização (mostrar/esconder). Utiliza validação (via `v$`) para garantir que a senha seja preenchida. O formulário envia os dados para processamento (não implementado neste trecho), atualizando o campo `usuario.password` com a nova senha digitada. O ícone de visibilidade alterna entre mostrar e esconder a senha ao ser clicado.",
+        "referencia": ""
+    },
+    "CardEvento.vue": {
+        "descricao": "O `CardEvento.vue` é um componente que exibe um resumo visual de um evento. Recebe um objeto `evento` como prop, contendo informações como título, datas, local e um arquivo de imagem (em base64). Se a imagem não estiver presente, usa uma imagem padrão.  O componente também recebe um booleano `encerrado` para indicar se o evento já terminou, alterando a aparência (cor do texto e imagem) para indicar o status. Ao clicar em \"Ver detalhes\", redireciona o usuário para a página de detalhes do evento (`EventoExpandido`) usando o `id` do evento. A função `brDateString` formata as datas para o padrão brasileiro.",
+        "referencia": ""
+    },
+    "ContainerEventos.vue": {
+        "descricao": "Este componente Vue (`ContainerEventos.vue`) exibe uma lista de eventos. Ele busca os eventos usando `useEventoStore` e os renderiza através do componente `CardEvento`. Inicialmente, carrega um conjunto limitado de eventos (`loadingContent`). Ao clicar em \"VER MAIS\", busca e adiciona mais eventos à lista (`addEventsToView`, `loadingMoreContent`). Utiliza `Spinner` para indicar carregamento de dados. O componente recebe dados do tipo `IEventoSimplificado` definidos no store de eventos.",
+        "referencia": ""
+    },
+    "Destaques.vue": {
+        "descricao": "O componente `Destaques.vue` exibe os últimos eventos em um carrossel na página de eventos. Ele utiliza o `eventoStore` para buscar os dados e um `Spinner` enquanto carrega. Após a montagem do componente, ele chama `eventoStore.getLastEvents()` para popular os dados do carrossel (`DestaquesCarousel`). O componente estiliza a seção de destaques com um título e espaçamento.",
+        "referencia": ""
+    },
+    "DestaquesCarousel.vue": {
+        "descricao": "Este componente Vue (DestaquesCarousel.vue) exibe um carrossel de destaques de eventos. Ele recebe dados (carouselData) contendo informações como ID e a imagem (em base64) de cada destaque. Utiliza a biblioteca Bootstrap para a funcionalidade de carrossel, mostrando as imagens em slides e permitindo a navegação entre eles através de indicadores e botões. O componente itera sobre os dados recebidos para gerar dinamicamente os slides do carrossel.",
+        "referencia": ""
+    },
+    "ContainerOrganizador.vue": {
+        "descricao": "Componente Vue que exibe informações sobre o organizador de um evento. Apresenta um título (\"SOBRE O ORGANIZADOR\") e um botão que direciona para a página do organizador (link atualmente definido como \"#\"). Inclui um espaço reservado para uma logo e um texto de exemplo (\"LOREM IPSUM\") para prototipação. Faz uso do componente `GeneralBtn` para estilização do botão. O componente é usado na visualização expandida de detalhes do evento.",
+        "referencia": ""
+    },
+    "Formulario.vue": {
+        "descricao": "O `Formulario.vue` é um componente Vue.js responsável por exibir o formulário de \"Fale Conosco\". Ele coleta dados do usuário (nome, email corporativo, telefone, mensagem) através de inputs. Utiliza `v-model` para vincular os valores dos inputs a propriedades do objeto `contactForm`.  A validação dos campos é feita com `vee-validate`, exibindo mensagens de erro (`invalid-feedback`) caso algum campo seja inválido. O formulário, estilizado com classes Bootstrap, envia os dados ao ser submetido (ação \"submit\").",
+        "referencia": ""
+    },
+    "Alert.vue": {
+        "descricao": "O componente `Alert.vue` exibe notificações (alertas) na tela. Ele utiliza o Pinia Store `alertStore` para obter a mensagem, tipo (sucesso, erro, etc.) e se pode ser fechado. A classe CSS aplicada varia conforme o tipo de alerta (cores diferentes). Se configurado, o alerta se fecha automaticamente após 10 segundos ou ao clicar no botão \"Close\". Ele é posicionado fixo no topo da tela e centralizado.",
+        "referencia": ""
+    },
+    "AutocompleteComponent.vue": {
+        "descricao": "AutocompleteComponent.vue é um componente Vue que implementa uma funcionalidade de autocompletar. Ele recebe uma lista de `items` (dados para autocompletar) e exibe sugestões em uma lista dropdown conforme o usuário digita na caixa de texto. O componente permite navegação pelas sugestões com as setas do teclado e seleção via Enter ou clique. Ao selecionar um item, o evento `selected-value` é emitido com o valor escolhido. O componente suporta diferentes tipos de dados (CustomTag, Instituicao) exibindo campos específicos de cada tipo.",
+        "referencia": ""
+    },
+    "Banner.vue": {
+        "descricao": "Componente Banner.vue exibe uma imagem com texto sobreposto (via slots). Recebe `path` (URL da imagem), `imgAlt` (texto alternativo), `figcaption` (legenda oculta), `imgOverlay` (ativa/desativa overlay branco) e `maxHeight` (altura máxima da imagem).  No `mounted`, define a altura máxima da imagem dinamicamente.  O CSS controla responsividade, aplicando um overlay e ajustando a altura em telas menores. É usado para criar banners visuais em diversas páginas.",
+        "referencia": ""
+    },
+    "ConfirmModal.vue": {
+        "descricao": "ConfirmModal.vue é um componente Vue.js que exibe uma janela modal de confirmação. Ele recebe a mensagem a ser exibida do `confirmStore` (presumivelmente um store Vuex). Possui botões \"Cancelar\" e \"Confirmar\". \"Cancelar\" fecha a modal. \"Confirmar\" dispara um evento ( `sendConfirmEvent`) para notificar outro componente sobre a confirmação do usuário. A modal é estática (não fecha ao clicar fora) e impede a interação com o restante da página. Utiliza classes Bootstrap para estilização e layout responsivo.",
+        "referencia": ""
+    },
+    "Cookies.vue": {
+        "descricao": "O componente `Cookies.vue` exibe uma notificação de cookies na parte inferior da tela. Ele informa ao usuário sobre o uso de cookies e oferece opções para \"Rejeitar Todos\" ou \"Aceitar todos os cookies\". Ao clicar em qualquer botão, a função `hideNotification` é chamada, atualizando o estado `choseCookies` na store `cookies/store` para indicar que o usuário fez uma escolha, removendo a notificação. O componente usa Vue 3 Composition API e TypeScript.",
+        "referencia": ""
+    },
+    "ExternalHeader.vue": {
+        "descricao": "Este componente Vue (ExternalHeader.vue) exibe um cabeçalho com título, subtítulo e parágrafo. Recebe o título e parágrafo como *props* obrigatórios, e o subtítulo como opcional (com valor padrão vazio). Utiliza classes CSS para estilização e posicionamento, centralizando o conteúdo verticalmente e alinhando o texto à esquerda. O parágrafo possui um limite de 4 linhas, com reticências caso o texto seja maior. É usado para apresentar informações textuais em páginas, provavelmente em conjunto com outros componentes.",
+        "referencia": ""
+    },
+    "FilterComponent.vue": {
+        "descricao": "Componente Vue para filtrar dados. Exibe um dropdown (select) com opções baseadas em `menuOptions`, populado dinamicamente. O texto do label e a opção \"Todos\" variam conforme o `type` (evento, documento, etc.).  A seleção no dropdown aciona a função `doFilter` (herdada via props) enviando o evento de mudança.  `carregando` indica estado de carregamento. Recebe `field` (label) e `type` via props. Utiliza `v-model` para sincronizar a seleção com a variável `selectedOption`.",
+        "referencia": ""
+    },
+    "FooterComponent.vue": {
+        "descricao": "O `FooterComponent.vue` é um componente Vue.js responsável por exibir o rodapé da aplicação. Ele contém o logo, links para \"Termo de Privacidade\", \"Quem Somos\" e \"Parceiros\". Utiliza classes Bootstrap para layout responsivo, fixando o rodapé na parte inferior da tela (`sticky-bottom`) e centralizando o conteúdo. Os links \"Quem Somos\" e \"Parceiros\" usam o `router-link` do Vue Router para navegação interna. O componente é reutilizável e serve como base para a navegação e informações importantes da aplicação.",
+        "referencia": ""
+    },
+    "GeneralContainer.vue": {
+        "descricao": "O `GeneralContainer.vue` é um componente reutilizável para exibir conteúdo em colunas. Recebe um título, um array de conteúdo (textos ou URLs de imagens) e opções de estilo (cores, borda superior circular).  Itera sobre o array de conteúdo, renderizando imagens se o item for uma URL, ou texto formatado caso contrário. Pode incluir um botão \"SAIBA MAIS\" com link fixo para \"/quem-somos\". Serve como um bloco de construção flexível para seções informativas na aplicação.",
+        "referencia": ""
+    },
+    "MenuLateral.vue": {
+        "descricao": "O `MenuLateral.vue` é um componente Vue.js responsável por exibir um menu lateral (offcanvas) para usuários autenticados. Ele utiliza o Pinia (`userStore`) para verificar se o usuário está logado e, se sim, renderiza um botão que abre o menu. O menu contém links para diferentes seções da aplicação, como a página inicial ('Home') e um dropdown para 'Documentos' (implementação incompleta no trecho).  O componente usa Bootstrap para estilização e comportamento do menu offcanvas. A navegação é gerenciada pelo Vue Router, utilizando `router.resolve` para gerar os links corretos.",
+        "referencia": ""
+    },
+    "ModalComponent.vue": {
+        "descricao": "O `ModalComponent.vue` é um componente reutilizável para exibir modais (janelas de diálogo). Ele utiliza o store `modalStore` para controlar o conteúdo (mensagem, ícone, status) e visibilidade do modal. A interface exibe um ícone baseado no status, a mensagem principal e um botão \"Fechar\" que chama a ação `closeModal` do store, fechando a janela.  Um spinner é exibido enquanto `modalStore.loading` for verdadeiro, indicando uma operação em andamento. O componente usa classes Bootstrap para estilização e adaptação.",
+        "referencia": ""
+    },
+    "NavBar.vue": {
+        "descricao": "Este componente NavBar.vue cria a barra de navegação principal da aplicação. Ele exibe um menu lateral (MenuLateral), o logo da aplicação (link para a página inicial) e links adicionais (definidos em `maisInfos`).  Condicionalmente, mostra um botão de \"LOGIN\" se o usuário não estiver autenticado ou um menu dropdown com opções de usuário se estiver logado (usando `userStore` para verificar o estado de autenticação). Utiliza Vue Router para navegação entre páginas.",
+        "referencia": ""
+    },
+    "SearchComponent.vue": {
+        "descricao": "Este componente Vue (SearchComponent.vue) implementa uma barra de pesquisa genérica. Ele recebe uma lista de `items` (qualquer tipo de dado) e um `type` (string que indica o tipo de item) como propriedades. O usuário digita na caixa de texto (`searchWord`) e pressiona Enter ou clica no ícone de pesquisa para disparar o evento `search-result`, emitindo o termo de pesquisa para o componente pai. O componente é reutilizável para pesquisar diferentes tipos de dados (eventos, notícias, documentos, parceiros) dentro da aplicação.",
+        "referencia": ""
+    },
+    "Spinner.vue": {
+        "descricao": "O componente `Spinner.vue` exibe um indicador visual de carregamento. Utiliza um spinner do Bootstrap (classe `spinner-border text-success`) e um texto \"Carregando...\" formatado com a classe `verde-padrao`.  É um componente reutilizável para sinalizar que uma operação está em andamento, melhorando a experiência do usuário ao fornecer feedback visual. Não possui lógica de script, apenas a estrutura HTML e estilos (atualmente vazios em SCSS).",
+        "referencia": ""
+    },
+    "TagInput.vue": {
+        "descricao": "Este componente Vue (TagInput.vue) permite ao usuário inserir e gerenciar tags. O usuário digita as tags em um campo de texto e as adiciona pressionando Comma (,) ou Enter. As tags são exibidas como elementos individuais com um botão de remoção. A função `addTag` processa a entrada do usuário e adiciona a tag ao array `tags`. A função `removeTag` remove uma tag específica do array, atualizando a interface. O componente utiliza `v-model` para sincronizar o input com a variável `tag` e `v-for` para renderizar as tags existentes.",
+        "referencia": ""
+    },
+    "ToastComponent.vue": {
+        "descricao": "Este componente Vue (ToastComponent.vue) exibe notificações temporárias (toasts) na tela. Recebe título, mensagem e um status (ícone) como propriedades. Utiliza Bootstrap para estilização e funcionalidade de exibição/ocultação. A função `openToast` manipula a exibição do toast, removendo a classe 'hide' e adicionando 'show', com um timeout para fechamento automático. O componente é posicionado fixo no canto superior direito da tela.",
+        "referencia": ""
+    },
+    "LoginContainer.vue": {
+        "descricao": "O `LoginContainer.vue` é o componente responsável pela interface de login do usuário. Ele exibe um formulário com campos para e-mail e senha, utilizando validação via `vuelidate` para garantir que os dados inseridos sejam válidos. Ao submeter o formulário, chama a ação `callStoreLogin` do Vuex, passando o e-mail e senha do usuário para autenticação.  Um ícone de visibilidade permite mostrar/esconder a senha digitada. O componente se integra com o store para gerenciar o processo de login.",
+        "referencia": ""
+    },
+    "CardNoticia.vue": {
+        "descricao": "Este componente Vue (CardNoticia.vue) exibe um card de notícia. Recebe como entrada (`props`) os dados da notícia (`noticia`) e um booleano (`isRelacionada`) que define o tamanho do card. A imagem da notícia é exibida, usando um placeholder caso não haja imagem disponível. O título é mostrado apenas se a notícia não for relacionada. Tags fixas são exibidas abaixo da imagem. O estilo define tamanhos diferentes para cards relacionados e não relacionados, além de estilos gerais como padding e direção do fluxo.",
+        "referencia": ""
+    },
+    "ContainerCardsNoticia.vue": {
+        "descricao": "Este componente Vue (`ContainerCardsNoticia.vue`) exibe uma lista de notícias em formato de cards. Ele busca os dados das notícias através do `useNoticiaStore` e os renderiza usando o componente `CardNoticia`. Ao clicar em um card, o usuário é redirecionado para a página de detalhes da notícia (`NoticiaExpandida`).\n\nPossui um spinner (`Spinner`) para indicar carregamento inicial e ao buscar mais notícias. O botão \"VER MAIS\" aciona a função `addNewsToView` para carregar um novo conjunto de notícias, também exibindo um spinner durante o processo. A variável `loadingNews` controla a exibição inicial do conteúdo ou do spinner.",
+        "referencia": ""
+    },
+    "ContainerUltimasNoticias.vue": {
+        "descricao": "Este componente Vue (`ContainerUltimasNoticias.vue`) exibe as últimas notícias do sistema. Ele utiliza o `noticiaStore` para obter a lista de notícias e as renderiza usando o componente `CardNoticia`. Cada card é clicável, redirecionando o usuário para a página de detalhes da notícia (`NoticiaExpandida`) usando o `router`. Um `Spinner` é mostrado enquanto os dados são carregados. O `onMounted` garante que as notícias sejam buscadas ao montar o componente e define `loadingNews` como falso após a busca.",
+        "referencia": ""
+    },
+    "NoticiasRelacionadas.vue": {
+        "descricao": "O componente `NoticiasRelacionadas.vue` exibe uma seção de notícias relacionadas na interface. Utiliza o componente `CardNoticia` duas vezes, passando a prop `is-relacionada` como `true` para indicar que são cards de notícias relacionadas. Atualmente, não recebe dados de notícia (`noticia` é nulo), mas está preparado para exibi-los. O estilo define margens, alinhamento e responsividade, centralizando os cards em telas menores e ajustando o tamanho do título em dispositivos ainda menores. Ele é parte da interface de exibição de notícias do projeto.",
+        "referencia": ""
+    },
+    "CardParceiro.vue": {
+        "descricao": "O `CardParceiro.vue` é um componente que exibe o logo de um parceiro. Recebe um objeto `cardParceiro` (tipo `IPartnerSimplificado`) como propriedade, usando seu logo para preencher o card. Ao clicar no card, redireciona o usuário para a página de detalhes do parceiro (`ParceiroExpandido`), passando o ID do parceiro como parâmetro na URL. O estilo define um card quadrado com sombra ao passar o mouse, indicando que é clicável.",
+        "referencia": ""
+    },
+    "ContainerCardsParceiro.vue": {
+        "descricao": "Este componente Vue (`ContainerCardsParceiro.vue`) exibe uma lista de parceiros, organizada por tipo de instituição. Ele inclui filtros por área e busca, ambos atualizando a lista exibida via a função `filtrarParceiros`. Cada tipo de instituição pode ser expandido/colapsado para mostrar/esconder os parceiros correspondentes. Utiliza os componentes `FilterComponent` e `SearchComponent` para as funcionalidades de filtro e busca, respectivamente. A variável `partners` contém os dados dos parceiros a serem exibidos.",
+        "referencia": ""
+    },
+    "Partners.vue": {
+        "descricao": "O componente `Partners.vue` exibe um carrossel de logos de empresas parceiras na página inicial. Ele recebe um array de URLs de logos (`logosUrlArray`) e usa a biblioteca Bootstrap para criar um carrossel responsivo. Cada logo é exibida como um item do carrossel, permitindo a navegação entre os parceiros através de botões de \"próximo\" e \"anterior\". O componente estiliza o título \"EMPRESAS PARCEIRAS\" e garante a exibição correta das imagens.",
+        "referencia": ""
+    },
+    "ContatoParceiro.vue": {
+        "descricao": "O componente `ContatoParceiro.vue` exibe as informações de contato de um parceiro. Ele mostra email, telefone, endereço e website como links clicáveis. Inclui também links para Instagram e LinkedIn (se fornecidos) usando ícones. Recebe os dados de contato via props (emailContato, telefone, endereco, website, instaLink, linkedinLink) e formata para exibição clara e acessível. Faz parte da interface de detalhes expandidos de um parceiro.",
+        "referencia": ""
+    },
+    "ExpandedBody.vue": {
+        "descricao": "O componente `ExpandedBody.vue` exibe informações detalhadas de um parceiro. Recebe via `props` o nome (`partnerName`), primeiro parágrafo (`firstParagraph`), subtítulo (`subTitle`), segundo parágrafo (`secondParagraph`) e CNPJ (`cnpj`).  Renderiza esses dados em uma estrutura de texto com títulos e formatação básica, centralizando o conteúdo na tela. É usado para apresentar a descrição completa de um parceiro dentro da seção de parceiros do ecossistema.",
+        "referencia": ""
+    },
+    "FormDocumento.vue": {
+        "descricao": "FormDocumento.vue é um componente Vue.js para criar/editar documentos. Exibe um formulário com campos para nome e descrição do documento. O título muda dinamicamente para \"ENVIE SEU DOCUMENTO!\" (novo) ou \"EDITE SEU DOCUMENTO!\" (edição). Utiliza `v-model` para vincular os campos aos atributos do objeto `documento`, facilitando a manipulação dos dados. Validação básica do campo 'nome' é implementada com VeeValidate, exibindo mensagens de erro se o campo for inválido. O componente faz parte da interface de usuário para gerenciamento de documentos do usuário.",
+        "referencia": ""
+    },
+    "CardDocumentoCriado.vue": {
+        "descricao": "Este componente Vue (`CardDocumentoCriado.vue`) exibe um resumo de um documento criado pelo usuário. Ele mostra tags associadas ao documento e, se o usuário for administrador, inclui botões para visualizar e editar o documento. Ao clicar nos ícones, o componente usa `$router` para navegar para as rotas 'DocumentoExpandido' (visualização) e 'GerenciaDocumento' (edição), passando o ID do documento como parâmetro quando necessário. O componente recebe os dados do documento via `props`.",
+        "referencia": ""
+    },
+    "ContainerCardsDocumentosCriados.vue": {
+        "descricao": "Este componente Vue exibe uma lista de documentos criados pelo usuário. Ele usa `documentoStore` para acessar os dados e permite filtrar e pesquisar documentos. Um botão \"+ CRIAR NOVO DOCUMENTO\" redireciona para a página de gerenciamento de documentos.  `FilterComponent` e `SearchComponent` emitem eventos (`@filter-result`, `@search-result`) que atualizam a lista exibida. Um `Spinner` é mostrado durante o carregamento dos documentos. `CardDocumentoCriado` renderiza cada documento individualmente.",
+        "referencia": ""
+    },
+    "FormEvento.vue": {
+        "descricao": "FormEvento.vue é um componente Vue responsável por criar ou editar eventos. Ele exibe um formulário com campos para tipo (presencial/online), título e outros detalhes (não mostrados no trecho). A interface muda dinamicamente: \"CRIE SEU EVENTO!\" para novos, \"EDITE SEU EVENTO!\" para existentes.  `evento.id < 0` controla essa exibição. A variável `isVisualizacao` controla se o formulário é editável ou apenas para visualização.  `v-model` vincula os inputs aos atributos do objeto `evento`, facilitando a manipulação dos dados.",
+        "referencia": ""
+    },
+    "CardEventoCriado.vue": {
+        "descricao": "Este componente Vue (CardEventoCriado.vue) exibe um card para um evento criado pelo usuário. Ele recebe um objeto `evento` como prop e um booleano `isRascunho` indicando se o evento é um rascunho. Se o evento tiver uma imagem (`evento.arquivo`), ela é exibida; caso contrário, uma imagem padrão é usada. Rascunhos recebem uma máscara e texto indicativo. O card também indica visualmente se o evento está encerrado. Faz parte da listagem de eventos criados pelo usuário.",
+        "referencia": ""
+    },
+    "ContainerCardsEventosCriados.vue": {
+        "descricao": "Este componente Vue exibe a lista de eventos criados pelo usuário. Ele usa `eventoStore` para obter os dados dos eventos. Possui um botão para criar novos eventos, redirecionando para a página de gerenciamento de eventos.  Inclui componentes `FilterComponent` (filtro por data) e `SearchComponent` (busca por nome) que atualizam a lista através da função `filtrarEventos`. A interface é responsiva, adaptando-se a diferentes tamanhos de tela.",
+        "referencia": ""
+    },
+    "ContainerUltimosDocumentos.vue": {
+        "descricao": "Este componente Vue (`ContainerUltimosDocumentos.vue`) exibe uma lista dos últimos documentos enviados pelo usuário. Ele utiliza o `documentoStore` para obter a lista de documentos e apresenta cada um com seu nome. Ao clicar em um documento, o usuário é redirecionado para a página de detalhes desse documento (`DocumentoExpandido`) usando o `router`. Um spinner é exibido enquanto os documentos estão sendo carregados (`loadingDocs`). O componente usa estilização Bootstrap para layout e aparência.",
+        "referencia": ""
+    },
+    "ContainerUltimosEventos.vue": {
+        "descricao": "Este componente Vue (`ContainerUltimosEventos.vue`) exibe os últimos eventos criados pelo usuário logado. Ele utiliza o `eventoStore` para obter a lista de eventos e os renderiza usando o componente `CardEventoCriado`. Um spinner é mostrado enquanto os eventos são carregados. Botões permitem navegar para a página completa de eventos criados ou criar um novo evento. O método `loadLastEvents` é chamado pelo `CardEventoCriado` para atualizar a lista após alguma ação (ex: exclusão).",
+        "referencia": ""
+    },
+    "FormNoticia.vue": {
+        "descricao": "FormNoticia.vue é um componente Vue.js para criar/editar notícias. Exibe um formulário com campos para título (obrigatório), subtítulo e imagem. Usa `v-model` para vincular os campos aos atributos do objeto `noticia`. A validação é feita via `vee-validate`, exibindo mensagens de erro se o título estiver vazio. O componente alterna entre os títulos \"ENVIE SUA NOTÍCIA!\" e \"EDITE SUA NOTÍCIA!\" baseado no ID da notícia, indicando se é uma criação ou edição. A variável `isVisualizacao` controla se o formulário é exibido.",
+        "referencia": ""
+    },
+    "CardNoticiaCriada.vue": {
+        "descricao": "Este componente Vue (CardNoticiaCriada.vue) exibe um card para cada notícia criada pelo usuário. Ele recebe um objeto `noticia` como prop e um booleano `isRascunho`. Se `isRascunho` for verdadeiro, sobrepõe uma máscara indicando que a notícia é um rascunho. A imagem da notícia é exibida, usando um placeholder padrão se `noticia.arquivo` estiver vazio. O card também mostra informações básicas da notícia (título, data), que são renderizadas em outro componente (não incluído aqui). Ele faz parte da interface para o usuário gerenciar suas notícias criadas.",
+        "referencia": ""
+    },
+    "ContainerCardsNoticiasCriadas.vue": {
+        "descricao": "Este componente Vue exibe as notícias criadas pelo usuário. Ele usa `noticiaStore` para obter a lista completa de notícias. Oferece botões para criar novas notícias e filtros (data, busca) que atualizam a exibição via a função `filtrarNoticias`.  Um spinner é mostrado durante o carregamento. Exibe cards de notícias (`CardNoticiaCriada`) após o carregamento, com lógica para rascunhos (incompleta no trecho). Integra componentes `FilterComponent` e `SearchComponent` para refinar a lista.",
+        "referencia": ""
+    },
+    "env.d.ts": {
+        "descricao": "Este arquivo define tipos para o projeto Vue.js, permitindo que arquivos `.vue` sejam importados como componentes. Ele declara que um arquivo `.vue` é um componente Vue, utilizando `DefineComponent` para definir sua estrutura. A linha `eslint-disable-next-line` suprime avisos do ESLint relacionados à tipagem flexível dentro do componente. Essencial para o TypeScript entender e validar componentes Vue no projeto.",
+        "referencia": ""
+    },
+    "main.ts": {
+        "descricao": "Este arquivo (main.ts) é o ponto de entrada da aplicação Vue.js. Ele inicializa o Vue, o roteamento (router), o gerenciamento de estado (Pinia com persistência) e registra componentes globais, incluindo o editor Quill.  Também importa estilos CSS (Bootstrap e globais).  Finalmente, instancia a store de usuário e disponibiliza o ID do usuário para toda a aplicação via injeção de dependência. Essencialmente, configura e monta a aplicação Vue.",
+        "referencia": ""
+    },
+    "index.ts": {
+        "descricao": "Este arquivo (src\\router\\index.ts) configura as rotas da aplicação Vue.js. Define os caminhos (URLs) que o usuário pode acessar e quais componentes/páginas serão exibidos para cada caminho. Inclui rotas para: Home, Login, Esqueci Senha (com seus passos: código e redefinição), Documentos (lista, pesquisa, detalhes e editais), Eventos (lista e detalhes), Notícias (lista e detalhes) e Fale Conosco. Utiliza `vue-router` para gerenciar a navegação e o `userStore` para possivelmente controlar o acesso a certas rotas com base no status do usuário.",
+        "referencia": ""
+    },
+    "store.ts": {
+        "descricao": "Este arquivo (store.ts) define um store Pinia para gerenciar alertas na aplicação. Ele controla a visibilidade de um alerta e suas opções (mensagem, tipo - erro, aviso, sucesso - , se pode ser fechado e se tem timeout). As funções `showErrorMessage`, `showWarningMessage` e `showSuccessMessage` exibem alertas correspondentes, configurando as opções e tornando o alerta visível. O store permite que componentes diferentes mostrem alertas de forma centralizada.",
+        "referencia": ""
+    },
+    "types.ts": {
+        "descricao": "Este arquivo define tipos de dados usados para a comunicação \"Fale Conosco\". `faleConoscoInterface` descreve a estrutura dos dados de um contato (nome, email, etc.). A classe `faleConosco` implementa essa interface, facilitando a criação de objetos com esses dados. `SetorInterface` define a estrutura de um setor (id e descrição), usado para categorizar o contato. Esses tipos são usados para garantir a consistência dos dados enviados e recebidos no sistema.",
+        "referencia": ""
+    },
+    "model.ts": {
+        "descricao": "O arquivo `model.ts` define a classe `LoggedUser`, que representa os dados de um usuário autenticado na aplicação. Ela implementa a interface `ILoggedUser` (definida em `type.ts`) e possui propriedades para nome de usuário, token de autenticação, ID e lista de roles (papéis). A classe possui um construtor que inicializa essas propriedades com os valores fornecidos, facilitando a criação de instâncias representando usuários logados. É usado para armazenar e manipular informações do usuário autenticado no sistema.",
+        "referencia": ""
+    },
+    "type.ts": {
+        "descricao": "Este arquivo define a interface `ILoggedUser`, que representa os dados de um usuário autenticado na aplicação. Ela contém propriedades para o nome de usuário (`userName`), token de autenticação (`token`), identificador único (`id`) e lista de permissões/papéis (`roles`). Todos os campos podem ser nulos, indicando que o usuário não está logado ou que a informação não está disponível. Essa interface é usada para tipar o estado do usuário no store de gerenciamento de estado da aplicação, garantindo a consistência dos dados.",
+        "referencia": ""
+    },
+    "GeneralResponseHandler.ts": {
+        "descricao": "Este arquivo define `GeneralResponseHandler`, uma classe para formatar respostas da API de forma consistente. Implementa a interface `ResponseInterface` (código, dados e mensagem). O construtor inicializa a resposta, `putResponse` atualiza com dados, `putError` define respostas de erro e `getResponse` retorna um objeto com o formato padrão da resposta. Facilita a criação de respostas padronizadas em todo o projeto.",
+        "referencia": ""
+    },
+    "constantes.ts": {
+        "descricao": "O arquivo `constantes.ts` define valores constantes utilizados no projeto. Atualmente, contém apenas a constante `ID_SEM_INSTITUICAO`, definida como 14. Essa constante provavelmente representa um identificador padrão ou especial para situações onde uma instituição não está associada a um determinado registro ou operação. Os comentários indicam valores diferentes para ambientes de Desenvolvimento (DEV), Homologação (HOM) e Produção (PROD), sugerindo que o valor pode ser configurável dependendo do ambiente.",
+        "referencia": ""
+    },
+    "validation.ts": {
+        "descricao": "O arquivo `validation.ts` contém funções para validar dados de eventos. `eventNameIsValid` verifica se o nome do evento tem pelo menos 2 caracteres. `beginDatetimeIsValid` e `endDatetimeIsValid` validam datas (atualmente apenas se não estão vazias, com TODOs para validações mais complexas). `eventDescriptionIsValid` verifica se a descrição tem no mínimo 10 caracteres. `ticketLinkIsValid` valida links de ingressos (atualmente apenas se não estão vazios, com TODO para usar regex). `producerNameIsValid` valida o nome do produtor, exigindo pelo menos 2 caracteres e permitindo letras e acentos. Essas funções ajudam a garantir a integridade dos dados antes de serem usados no sistema de eventos.",
+        "referencia": ""
+    },
+    "datetime.ts": {
+        "descricao": "Este arquivo (datetime.ts) oferece funções para formatar e ajustar datas e horários. `friendlyDateTime` converte uma string de data/hora para um formato legível (ex: \"10/05/2024 às 14:30\"). `brDateString` formata uma data ISO para o padrão brasileiro (dd/mm/aaaa). `dateAndTimeToDatetime` combina data e hora em string para um objeto Date ISO. `adjustDateForTimezone` e `adjustStringDateForTimezone` ajustam datas para o timezone correto, evitando erros de exibição. São utilitários para padronizar a apresentação de datas na aplicação.",
+        "referencia": ""
+    },
+    "masks.ts": {
+        "descricao": "O arquivo `masks.ts` define funções para formatar campos de entrada de texto como CPF e CEP. `CPFMask` recebe uma string, remove caracteres não numéricos e aplica a máscara \"XXX.XXX.XXX-XX\". `CEPMask` faz o mesmo para CEP, formatando como \"XXXXX-XXX\". Ambas usam expressões regulares para realizar as substituições, garantindo que a entrada siga o formato esperado, melhorando a experiência do usuário e a validação dos dados.",
+        "referencia": ""
+    },
+    "headers.ts": {
+        "descricao": "O arquivo `headers.ts` define uma função `headers` que retorna um objeto contendo cabeçalhos HTTP para requisições. A função aceita um parâmetro booleano `multpart` indicando se a requisição é do tipo `multipart/form-data` (para envio de arquivos) ou `application/json` (padrão).  Em ambos os casos, adiciona o cabeçalho `Access-Control-Allow-Origin` para permitir requisições de qualquer origem e o cabeçalho `Authorization` com o token JWT armazenado no `localStorage` (se existir). É usado para padronizar os cabeçalhos em chamadas à API.",
+        "referencia": ""
+    },
+    "converter.ts": {
+        "descricao": "O arquivo `converter.ts` contém a função `fileToBase64` que converte um objeto `File` (geralmente selecionado por um input de arquivo) em uma string Base64. Essa string representa a imagem como texto, útil para enviar ou armazenar a imagem de forma textual. A função retorna uma Promise, resolvendo com a string Base64 ou rejeitando em caso de erro na leitura do arquivo. É usada para preparar imagens para envio ao backend ou exibição na interface.",
+        "referencia": ""
+    },
+    "injectStrict.ts": {
+        "descricao": "Este arquivo define a função `injectStrict` para Vue.js. Ela simplifica o uso de `inject` garantindo que um valor seja sempre retornado. Recebe uma `key` de injeção e um `fallback` opcional. Se `inject` não encontrar um valor injetado correspondente à `key`, a função lança um erro com uma mensagem clara, facilitando a identificação de problemas de configuração no projeto. Caso o `fallback` seja fornecido, ele é retornado se a injeção falhar. Caso contrário, o erro é lançado.",
+        "referencia": ""
+    },
+    "loginValidation.ts": {
+        "descricao": "Este arquivo (loginValidation.ts) contém uma função para validar o formato de um endereço de e-mail. A função `emailIsValid` recebe uma string (e) como entrada e retorna `true` se o e-mail for válido, caso contrário, retorna `false`. A validação verifica se o e-mail não está vazio, tem pelo menos 9 caracteres e contém o caractere \"@\". É usado para garantir que o usuário insira um e-mail no formato correto antes de prosseguir com o login.",
+        "referencia": ""
+    },
+    "validations.ts": {
+        "descricao": "O arquivo `validations.ts` contém a função `isPasswordValid` que valida se uma senha atende a critérios de segurança. Ela verifica se a senha possui pelo menos 8 e no máximo 15 caracteres, contendo letras maiúsculas, minúsculas, números e símbolos, sem espaços. Retorna `true` se a senha for válida, `false` caso contrário. É usado para garantir senhas fortes no sistema.",
+        "referencia": ""
+    },
+    "Home.vue": {
+        "descricao": "O arquivo `Home.vue` define a página inicial da aplicação. Ele exibe um banner com imagem de fundo e informações sobre o ecossistema de inovação de Campo Grande-MS. Utiliza os componentes `Banner` e `ExternalHeader` para estruturar o conteúdo. Abaixo do banner, apresenta uma seção (\"Faça parte do ecossistema\") com texto informativo sobre o propósito da comunidade, incentivando empreendedores a se engajarem. Essencialmente, é a tela de apresentação do projeto, focada em atrair e informar potenciais participantes.",
+        "referencia": ""
+    },
+    "Documentos.vue": {
+        "descricao": "O arquivo `Documentos.vue` é a página principal para visualização de documentos e editais do Ecossistema de Inovação. Ele exibe um banner com título e descrição, uma seção de destaques (`ContainerDestaques`) e uma lista de sessões de documentos (ex: \"Pesquisas\"). Cada sessão é apresentada com um card (`CardSessao`) contendo título, descrição e, opcionalmente, um ícone. A página utiliza um layout responsivo para diferentes tamanhos de tela. O componente busca apresentar informações relevantes e facilitar o acesso a documentos importantes.",
+        "referencia": ""
+    },
+    "Editais.vue": {
+        "descricao": "O arquivo `Editais.vue` é a página que exibe a lista de editais disponíveis. Utiliza componentes `Banner`, `ExternalHeader`, `SearchComponent` e `Spinner` para apresentar informações e permitir a busca. A lista de editais é populada em `novosEditais` e pode ser filtrada através do componente de busca (`@search-result=\"filtrarEditais\"`).  O componente gerencia um estado de carregamento (`loading`) para exibir um spinner enquanto os dados são buscados. A interface permite alternar a visualização dos editais (\"Novos Editais\").",
+        "referencia": ""
+    },
+    "DocumentoExpandido.vue": {
+        "descricao": "Este componente Vue (`DocumentoExpandido.vue`) exibe um documento específico em detalhes. Ele mostra um \"breadcrumb\" para navegação (Documentos > Área > Nome do Documento), um indicador de carregamento (`Spinner`) e, após o carregamento, o nome do documento e suas tags formatadas.  O componente recebe os dados do documento via `propriedade` (documento) e utiliza `$router.back()` para retornar à listagem de documentos. A interface é responsiva, utilizando classes Bootstrap para layout.",
+        "referencia": ""
+    },
+    "Leis.vue": {
+        "descricao": "O arquivo `Leis.vue` é a página que exibe a lista de leis do Ecossistema Local de Inovação. Utiliza um componente `Banner` para o cabeçalho e `ExternalHeader` para título e descrição.  Possui um campo de busca (`SearchComponent`) para filtrar as leis exibidas. A lista de leis é carregada e exibida após a busca ou inicialmente. A função `filtrarLeis` atualiza a exibição com os resultados da busca. Um spinner é mostrado durante o carregamento dos dados. Um botão permite alternar a exibição da lista completa de leis.",
+        "referencia": ""
+    },
+    "Pesquisa.vue": {
+        "descricao": "O arquivo `Pesquisa.vue` é a página de pesquisa de documentos/pesquisas do sistema. Ele exibe um banner com título e descrição, um componente de busca (`SearchComponent`) para filtrar os resultados e uma lista de pesquisas (`documentoStore.researches`).  Enquanto carrega, mostra um indicador de loading (`Spinner`). A função `filtrarDocumentos` é chamada quando um resultado de busca é selecionado, provavelmente para refinar a lista exibida. A página utiliza componentes reutilizáveis como `Banner`, `ExternalHeader` e `SearchComponent`.",
+        "referencia": ""
+    },
+    "Eventos.vue": {
+        "descricao": "O arquivo `Eventos.vue` é a página que lista os eventos do ecossistema de inovação. Ele exibe um banner com título e descrição, além de componentes de filtro por organizador e busca. A lista de eventos e organizadores é obtida do `eventoStore` (loja Vuex). Os eventos são filtrados com base nas seleções do filtro e da busca, utilizando a função `filtrarEventos`. O componente `SearchComponent` parece estar incompleto no trecho fornecido.",
+        "referencia": ""
+    },
+    "EventoExpandido.vue": {
+        "descricao": "O componente `EventoExpandido.vue` exibe detalhes de um evento específico. Ele busca dados do evento (`evento`) e, se estiver carregando, mostra um spinner. A tela inclui um \"breadcrumb\" para navegação (Eventos > Destaques > Título do Evento) e a imagem principal do evento (ou uma imagem padrão se não houver). O título do evento é exibido, indicando se está encerrado. Este componente é usado na rota de visualização detalhada de um evento, acessível através da lista de eventos.",
+        "referencia": ""
+    },
+    "Login.vue": {
+        "descricao": "O arquivo `Login.vue` é a página de login da aplicação. Ele renderiza o componente `LoginContainer` responsável pela interface de login (formulário, botões, etc.).\n\nNo script, ao carregar a página (`onMounted`), verifica se o usuário está desconectado (sessão expirada) através do `userStore`. Se estiver, exibe um aviso de tempo limitado usando o `alertStore`.  Após a verificação, define `userStore.disconnected` como `false` para evitar reexibição do aviso em navegações futuras.  Este componente interage com as stores `user` e `alert` para gerenciar o estado do usuário e exibir notificações.",
+        "referencia": ""
+    },
+    "Noticias.vue": {
+        "descricao": "O arquivo `Noticias.vue` é a página principal de notícias do sistema. Ele exibe um banner, filtros por autor e uma barra de pesquisa para listar notícias do \"Ecossistema Local de Inovação - Campo Grande - MS\". Utiliza os componentes `Banner`, `ExternalHeader`, `FilterComponent` e `SearchComponent`. A função `filtrarNoticias` é chamada pelos componentes de filtro e pesquisa para atualizar a lista de notícias exibidas, buscando dados no `noticiaStore`. Se a pesquisa/filtro não retornar resultados, uma mensagem é mostrada.",
+        "referencia": ""
+    },
+    "NoticiaExpandida.vue": {
+        "descricao": "Este componente Vue (`NoticiaExpandida.vue`) exibe uma notícia em detalhes. Ele recebe um objeto `noticia` como prop, contendo título, subtítulo, autor e data de publicação. A tela mostra um \"breadcrumb\" para navegação, o título, subtítulo, autor, data formatada e a imagem da notícia. Um spinner é exibido enquanto o conteúdo carrega (`isLoadingContent`). A função `friendlyDateTime` formata a data para exibição amigável. O componente usa Bootstrap para estilização e roteamento Vue para voltar à página anterior.",
+        "referencia": ""
+    },
+    "Parceiros.vue": {
+        "descricao": "O arquivo `Parceiros.vue` exibe a página de parceiros do ecossistema. Utiliza componentes reutilizáveis como `Banner`, `ExternalHeader` e `ContainerCardsParceiro` para estruturar a interface. Busca os dados dos parceiros através do `useParceirosStore` (pinia store) e os organiza em containers por tipo de instituição (ex: ICTIs). A página apresenta um banner com título e imagem, seguido de uma seção com cards de parceiros, categorizados. O componente é carregado e os dados reativos são inicializados no `onMounted`.",
+        "referencia": ""
+    },
+    "ParceiroExpandido.vue": {
+        "descricao": "Este componente Vue (`ParceiroExpandido.vue`) exibe detalhes expandidos de um parceiro. Recebe dados do parceiro selecionado (nome, logo, imagens, textos, contatos) via props e os apresenta visualmente. A tela é dividida em um cabeçalho com imagem de capa e logo, e um corpo com informações detalhadas (nome, parágrafos, CNPJ) e seção de contato (links para redes sociais e email). Utiliza componentes `ExpandedBody` e `ContatoParceiro` para organizar a exibição das informações.",
+        "referencia": ""
+    },
+    "Perfil.vue": {
+        "descricao": "O arquivo `Perfil.vue` é uma view (página) responsável por exibir o formulário de edição de perfil do usuário. Ele importa e renderiza o componente `Formulario.vue`, que contém os campos e a lógica para modificar as informações do perfil. Essencialmente, esta view atua como um container para o componente de formulário, simplificando a estrutura da aplicação e separando a apresentação da lógica de edição. Não possui estilos próprios, utilizando apenas o escopo definido pelo atributo `scoped`.",
+        "referencia": ""
+    },
+    "QuemSomos.vue": {
+        "descricao": "Este componente Vue (`QuemSomos.vue`) exibe a página \"Quem Somos\" do site. Ele utiliza um componente `Banner` para a imagem principal e título, e um componente `ExternalHeader` para o cabeçalho dentro do banner. Abaixo do banner, apresenta um texto com a história e origem do Ecossistema de Inovação de Campo Grande - MS, dividida em parágrafos. O layout é responsivo, adaptando-se a diferentes tamanhos de tela. Essencialmente, este arquivo define a estrutura e conteúdo da página \"Quem Somos\", fornecendo informações sobre a iniciativa.",
+        "referencia": ""
+    },
+    "UserHome.vue": {
+        "descricao": "O arquivo `UserHome.vue` define a página inicial do usuário autenticado. Ele utiliza componentes reutilizáveis para exibir informações relevantes: os últimos documentos, as últimas notícias e os últimos eventos. A interface é organizada em um layout responsivo com duas colunas na primeira linha e uma coluna na segunda, adaptando-se a diferentes tamanhos de tela. O estilo `scoped` garante que as regras CSS se apliquem apenas a este componente, evitando conflitos. Essencialmente, este componente agrega e apresenta dados dinâmicos para o usuário após o login.",
+        "referencia": ""
+    },
+    "DocumentosCriados.vue": {
+        "descricao": "Este componente Vue (`DocumentosCriados.vue`) exibe a página de documentos criados pelo usuário. Ele apresenta um \"breadcrumb\" para navegação (Documentos > Documentos criados) e utiliza o componente reutilizável `ContainerCardsDocumentosCriados` para mostrar a lista de documentos. A página é acessível via roteamento e permite retornar à listagem geral de documentos. Não há lógica de negócio complexa, apenas a composição da interface.",
+        "referencia": ""
+    },
+    "GerenciaDocumento.vue": {
+        "descricao": "Este componente Vue (`GerenciaDocumento.vue`) gerencia a interface para envio ou edição de documentos pelo usuário. Ele exibe um breadcrumb para navegação (\"Documentos\" > \"Enviar/Editar\").\n\nA lógica principal reside em determinar se um `documentoId` está presente na rota. Se existir, o componente `FormDocumento` é renderizado no modo de edição, passando o `documentoId` como prop. Caso contrário, `FormDocumento` é renderizado no modo de criação de novo documento.\n\nO componente `FormDocumento` (importado) é responsável pela coleta e envio dos dados do documento. A rota atual é acessada via `useRoute`.",
+        "referencia": ""
+    },
+    "EventosCriados.vue": {
+        "descricao": "O arquivo `EventosCriados.vue` exibe a página de eventos criados pelo usuário. Ele utiliza um breadcrumb para navegação (Eventos > Eventos criados) e renderiza o componente `ContainerCardsEventosCriados`, responsável por mostrar a lista de eventos criados pelo usuário em formato de cards. A página faz parte da área do usuário e se conecta ao roteamento do projeto para permitir o retorno à listagem geral de eventos. Não há lógica de negócio complexa, apenas a composição da interface.",
+        "referencia": ""
+    },
+    "GerenciaEvento.vue": {
+        "descricao": "Este componente Vue (`GerenciaEvento.vue`) gerencia a criação ou edição de eventos. Ele exibe um breadcrumb para navegação (\"Eventos\" -> \"Criar/Editar Evento\").\n\nA lógica verifica se um `eventoId` está presente na rota atual. Se sim, renderiza o componente `FormEvento` no modo de edição, passando o `eventoId` como prop. Caso contrário, renderiza `FormEvento` no modo de criação (sem `eventoId`).\n\nO `eventoId` é obtido da rota usando `useRoute()`. O componente `FormEvento` é responsável por coletar e enviar os dados do evento.",
+        "referencia": ""
+    },
+    "GerenciaNoticia.vue": {
+        "descricao": "Este componente Vue (`GerenciaNoticia.vue`) gerencia a criação ou edição de notícias. Ele exibe um breadcrumb para navegação (\"Notícias\" -> \"Criar/Editar Notícia\").\n\nA lógica principal reside em determinar se o componente deve renderizar o formulário para criar uma nova notícia ou editar uma existente. Isso é controlado pela variável `noticiaId`, obtida da rota atual.\n\nSe `noticiaId` estiver presente, o componente `FormNoticia` é renderizado no modo de edição, passando o `noticiaId` como prop. Caso contrário, `FormNoticia` é renderizado no modo de criação, sem props.\n\nO componente `FormNoticia` (importado) é responsável por coletar e processar os dados da notícia.",
+        "referencia": ""
+    },
+    "NoticiasCriadas.vue": {
+        "descricao": "Este componente Vue (`NoticiasCriadas.vue`) exibe a página de notícias criadas pelo usuário. Ele apresenta um \"breadcrumb\" para navegação (Notícias > Notícias criadas) e utiliza o componente reutilizável `ContainerCardsNoticiasCriadas` para mostrar as notícias em formato de cards. A página é acessível via roteamento e permite ao usuário retornar à listagem geral de notícias. Não há lógica de manipulação de dados diretamente neste arquivo, apenas a composição da interface.",
+        "referencia": ""
+    },
+    "vite.config.ts": {
+        "descricao": "Este arquivo (vite.config.ts) configura o Vite, um bundler para aplicações web modernas. Ele define como o projeto Vue.js será construído e servido durante o desenvolvimento.\n\nEspecificamente, ele:\n\n1.  Importa plugins para suportar arquivos `.vue` (vue) e JSX dentro de componentes Vue (vueJsx).\n2.  Configura um alias `@` para o diretório `src`, simplificando importações de módulos no código (ex: `@/components` ao invés de `./src/components`).\n3.  Exporta a configuração principal do Vite usando a função `defineConfig`.\n\nEm resumo, este arquivo é essencial para o setup inicial do projeto Vue.js com Vite, garantindo que os arquivos sejam processados corretamente e que as importações sejam resolvidas de forma eficiente.",
+        "referencia": ""
+    },
+    "FaleConosco.vue": {
+        "descricao": "O arquivo `FaleConosco.vue` é a página \"Fale Conosco\" da aplicação. Ele exibe um banner com imagem e título, seguido por um cabeçalho com descrição e, finalmente, um formulário de contato. Utiliza componentes reutilizáveis: `Banner`, `ExternalHeader` e `Formulario`, importados de outros arquivos para construir a interface. A página é construída usando a composição API do Vue 3 ( `<script setup>` ). Não há estilos específicos definidos neste arquivo, utilizando apenas o escopo `scoped` para evitar conflitos.",
+        "referencia": ""
     }
 }
