@@ -1,6 +1,1110 @@
 {
-  "Dockerfile": "Define a imagem base do container e os passos para build.",
-  "docker-compose.yml": "Gerencia múltiplos containers para ambientes locais.",
-  "azure-pipelines.yml": "Define o CI/CD no Azure DevOps.",
-  "README.md": "Documentação principal do projeto."
+    ".gitignore": {
+        "descricao": "Este arquivo `.gitignore` especifica arquivos e pastas que o Git deve ignorar ao controlar versões do projeto. Ele impede que arquivos temporários ou específicos da máquina (como o arquivo `55.ecs` na pasta `wwwroot` e o pacote `krisp_2.15.3_arm64.pkg`) sejam acidentalmente adicionados ao repositório, mantendo-o limpo e focado no código-fonte principal. Foi gerado automaticamente pelo Visual Studio.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Dockerfile": {
+        "descricao": "Este Dockerfile define como construir uma imagem Docker para a API do projeto Ecossistema. Utiliza imagens base da Microsoft para .NET 6.0, separando as etapas de build, publish e execução. Primeiro, restaura as dependências do projeto, depois compila e publica a API. Por fim, copia os arquivos publicados, o arquivo de configuração `appsettings.json` e os arquivos estáticos da pasta `wwwroot` para a imagem final, definindo o ponto de entrada para executar a API com `dotnet Ecossistema.API.dll`. Expõe as portas 80 e 443 para acesso HTTP/HTTPS.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AprovacaoController.cs": {
+        "descricao": "Este controlador `AprovacaoController` lida com operações de aprovação na API. Ele recebe requisições para incluir, editar e excluir registros de aprovação, utilizando o serviço `IAprovacaoService` para a lógica de negócios. As ações `Incluir` e `Editar` recebem um objeto `AprovacaoDto` via POST/PUT e o ID do usuário (fixo em 1) para processamento. A ação `Excluir` (código incompleto no trecho) provavelmente removerá um registro de aprovação. O controlador retorna um objeto `RespostaPadrao` indicando o resultado da operação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AutenticacaoController.cs": {
+        "descricao": "Este arquivo (AutenticacaoController.cs) é responsável pela autenticação de usuários na API. Ele expõe dois endpoints: \"login\" e \"logout\". O endpoint \"login\" recebe um objeto `LoginDto` (usuário e senha) e retorna um `RespostaPadrao` contendo informações de autenticação (token JWT, por exemplo) se as credenciais forem válidas. O endpoint \"logout\" finaliza a sessão do usuário. Ele utiliza a interface `IAutenticacaoService` para realizar a lógica de autenticação, desacoplando o controller da implementação específica.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoController.cs": {
+        "descricao": "Este controlador `DocumentoController` lida com a inclusão de documentos na API. Ele recebe um objeto `DocumentoDto` e um arquivo (`IFormFile`) via requisição POST no endpoint \"/api/Documento/incluir\". Utiliza os serviços `IDocumentoService` e `IArquivoService` para processar a lógica de negócio (salvar documento e arquivo, respectivamente). A inclusão é protegida por autorização, exigindo o role \"UsuarioComum\". O `UsuarioId` está fixo em 1, provavelmente para testes ou um usuário padrão. Retorna um objeto `RespostaPadrao` indicando o resultado da operação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EnderecoController.cs": {
+        "descricao": "O `EnderecoController` gerencia operações de endereço na API. Recebe requisições HTTP para incluir, editar e excluir endereços, utilizando o serviço `IEnderecoService` para a lógica de negócios. As ações `Incluir` e `Editar` recebem um objeto `EnderecoDto` no corpo da requisição e um ID de usuário fixo (1) para autorização. Retornam um objeto `RespostaPadrao` indicando o resultado da operação. A rota base para este controller é `/api/Endereco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EventoController.cs": {
+        "descricao": "Arquivo `EventoController.cs`: Controla operações relacionadas a eventos na API. Recebe requisições para criar, listar e gerenciar eventos, utilizando os serviços `IEventoService`, `IArquivoService` e `IAutenticacaoService`.  Atualmente, retorna IDs fixos para usuário e instituição (1).  É um ponto de entrada para a funcionalidade de eventos, interagindo com a lógica de negócios para persistência e manipulação de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoController.cs": {
+        "descricao": "Este arquivo (FaleConoscoController.cs) é responsável por receber requisições da API relacionadas ao formulário \"Fale Conosco\". Ele expõe dois endpoints: \"registrar\" (POST) para receber e processar mensagens enviadas pelo usuário, e \"ObterFaleConosco\" e \"ObterContatosSetor\" (GET) para recuperar informações sobre o formulário e contatos por setor.\n\nO controller utiliza a interface `IFaleConoscoService` para realizar a lógica de negócio, desacoplando a camada de controle da camada de serviço. Recebe dados no formato DTO (`FaleConoscoDTO`) e retorna respostas padronizadas (`RespostaPadrao`) ou objetos com os dados solicitados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetorController.cs": {
+        "descricao": "Este controller (FaleConoscoSetorController) expõe um endpoint da API para listar todos os setores de \"Fale Conosco\". Ele recebe requisições HTTP GET no caminho \"/api/FaleConoscoSetor/ObterFaleConoscoSetores\" e utiliza o serviço `IFaleConoscoSetorService` para buscar os dados. A resposta é formatada em `RespostaPadrao`, um DTO definido no projeto, contendo os setores disponíveis. Essencialmente, permite que outras partes do sistema (ou aplicações externas) consultem a lista de setores para direcionar mensagens de contato.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoController.cs": {
+        "descricao": "Este controller `InstituicaoController` gerencia operações relacionadas a instituições. Ele recebe requisições da API para incluir novas instituições, utilizando o serviço `IInstituicaoService` para a lógica de negócio. A rota base é \"api/Instituicao\". A inclusão de uma instituição requer autorização com o role \"AdminGeral\". O código demonstra a injeção de dependência do serviço e a leitura de dados do corpo da requisição (InstituicaoDto). A propriedade `UsuarioId` e `InstituicaoId` estão hardcoded com o valor 1, o que pode ser um ponto de atenção.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "NoticiaController.cs": {
+        "descricao": "O `NoticiaController` gerencia operações de notícias na API. Recebe requisições para incluir novas notícias (com ou sem arquivo), utilizando os serviços `INoticiaService` e `IArquivoService`. A inclusão requer autenticação com o role \"UsuarioComum\".  O controller recebe dados da notícia via `NoticiaDto` e arquivos via `IFormFile`.  A propriedade `UsuarioId` está hardcoded com o valor 1, representando o ID do usuário logado (necessita revisão). A requisição inclui um token de autorização no header.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagController.cs": {
+        "descricao": "O `TagController` gerencia operações relacionadas a tags. Ele expõe dois endpoints: `cadastrarTag` (POST) para criar uma nova tag, recebendo um `TagDto` e o ID do usuário, e `listarTags` (GET) para obter a lista de todas as tags existentes. Utiliza `ITagService` para a lógica de negócios e `RespostaPadrao` para padronizar as respostas da API. O ID do usuário está fixo em 1 neste código.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UsuarioController.cs": {
+        "descricao": "O `UsuarioController` gerencia operações relacionadas a usuários na API. Ele recebe requisições HTTP (POST) para ativar/desativar e editar informações de usuários, utilizando o serviço `IUsuarioService` para a lógica de negócios. A ação `DesativarAtivarUsuario` altera o status de um usuário, enquanto `EditarUsuario` (incompleto no trecho) provavelmente atualiza dados do usuário. O `UsuarioId` está fixo em 1, indicando um usuário específico para as operações. O controller usa `RespostaPadrao` para retornar resultados padronizados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.csproj": {
+        "descricao": "Este arquivo `Ecossistema.API.csproj` define o projeto da API web do sistema \"Ecossistema\". Utiliza o .NET 6 e habilita recursos como nullable reference types e implicit usings para um código mais limpo.\n\nEle inclui dependências para autenticação JWT, gerenciamento de identidade com Entity Framework Core, ferramentas do EF Core para migrações de banco de dados e Swagger para documentação da API.\n\nO projeto também referencia o projeto `Ecossistema.Services.csproj`, indicando que a API utiliza a camada de serviços para a lógica de negócios.  A configuração `appsettings.json` não é copiada para a pasta de publicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Program.cs": {
+        "descricao": "Este arquivo (Program.cs) é o ponto de entrada da API. Configura serviços essenciais como injeção de dependência, acesso ao banco de dados (DbContext), autenticação JWT e configurações de email. Ele lê configurações de arquivos JSON (appsettings.json) e variáveis de ambiente para definir URLs da API e detalhes de conexão com o banco.  Adiciona classes de acesso a dados (Repositories) e serviços (Services) para a lógica de negócio da aplicação. A autenticação é configurada usando o padrão JWT (Json Web Token).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    ".NETCoreApp,Version=v6.0.AssemblyAttributes.cs": {
+        "descricao": "Este arquivo, gerado automaticamente, define atributos de assembly para o projeto Ecossistema.API. Especificamente, ele informa que o assembly foi compilado para o .NET Core 6.0.  Essas informações são usadas pelo runtime para garantir compatibilidade e correto funcionamento da aplicação. Não contém lógica de negócio, apenas metadados de compilação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.AssemblyInfo.cs": {
+        "descricao": "Este arquivo, `Ecossistema.API.AssemblyInfo.cs`, contém metadados sobre a montagem (assembly) `Ecossistema.API`. Ele é gerado automaticamente durante o processo de build e armazena informações como nome da empresa, configuração (Debug), versão do arquivo, versão informativa, nome do produto, título da montagem e versão principal.  Esses atributos são usados pelo sistema .NET para identificar e gerenciar a aplicação. Alterações manuais neste arquivo não são recomendadas, pois serão sobrescritas na próxima compilação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.GeneratedMSBuildEditorConfig.editorconfig": {
+        "descricao": "Este arquivo `.editorconfig` é gerado automaticamente pelo MSBuild durante a compilação do projeto Ecossistema.API. Ele define propriedades de build como a versão do .NET (net6.0), plataformas suportadas (Linux, macOS, Windows) e o diretório raiz do projeto. Serve para padronizar configurações e garantir consistência no processo de build, especialmente em ambientes de desenvolvimento colaborativos. Não contém lógica de programação, apenas metadados de configuração.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.GlobalUsings.g.cs": {
+        "descricao": "Este arquivo, gerado automaticamente, define `usings` globais para o projeto Ecossistema.API. Ele importa namespaces essenciais do ASP.NET Core (Builder, Hosting, Http, Routing) e de bibliotecas .NET (Configuration, DependencyInjection, Logging, System).  Esses `usings` tornam classes e métodos desses namespaces disponíveis em todo o projeto sem a necessidade de declarações repetidas em cada arquivo, simplificando o código e facilitando o desenvolvimento. Essencialmente, centraliza as importações comuns do projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.MvcApplicationPartsAssemblyInfo.cs": {
+        "descricao": "Este arquivo, gerado automaticamente, define quais partes do código (assemblies) são consideradas como parte da aplicação MVC. Especificamente, ele inclui as assemblies \"Ecossistema.Services\" (contendo a lógica de negócios) e \"Swashbuckle.AspNetCore.SwaggerGen\" (para geração da documentação da API Swagger).  Isso permite que o ASP.NET Core encontre e utilize os controladores, views e outros componentes definidos nessas assemblies ao iniciar a aplicação. Não requer modificação manual.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.csproj.CopyComplete": {
+        "descricao": "Este arquivo é uma cópia completa do arquivo de projeto C# \"Ecossistema.API.csproj\" gerado durante o processo de build. Ele contém metadados sobre o projeto da API, incluindo referências a outros pacotes NuGet, configurações de compilação (como target framework .NET 6.0) e informações sobre os arquivos de código-fonte que compõem a API. Essencialmente, define *como* o projeto deve ser construído e quais dependências ele precisa para funcionar.  O \".CopyComplete\" indica que é uma versão completa e detalhada do arquivo de projeto, usada internamente pelo sistema de build.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.csproj.FileListAbsolute.txt": {
+        "descricao": "Este arquivo lista os caminhos absolutos dos arquivos gerados durante o processo de build da aplicação Ecossistema.API. Ele é um artefato intermediário criado pelo .NET SDK, especificamente após a compilação em modo Debug para o framework net6.0.\n\nInclui arquivos como o executável (.exe), arquivos de configuração (appsettings.Development.json), dependências (.deps.json) e assets estáticos (staticwebassets.runtime.json). Serve como um registro dos arquivos produzidos para a aplicação, útil para deploy ou análise do processo de build.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.csproj.nuget.g.props": {
+        "descricao": "Este arquivo é um arquivo de propriedades gerado pelo NuGet, o gerenciador de pacotes do .NET. Ele armazena configurações relacionadas à restauração de pacotes (dependências) do projeto Ecossistema.API. Define caminhos para os pacotes NuGet baixados, a ferramenta de restauração (NuGet) e o arquivo de ativos do projeto. Essencialmente, ele garante que o projeto possa encontrar e usar as bibliotecas externas de que precisa para funcionar corretamente, configurando o ambiente de restauração de pacotes.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "staticwebassets.pack.sentinel": {
+        "descricao": "Este arquivo, `staticwebassets.pack.sentinel`, é gerado automaticamente pelo processo de build da aplicação web. Ele serve como um indicador de que os recursos estáticos (como CSS, JavaScript, imagens) foram empacotados (packed) corretamente durante a compilação. A repetição do \"2.0\" indica a versão do pacote de assets estáticos. Sua presença garante que a aplicação utilizará a versão correta dos arquivos estáticos no momento da execução, evitando inconsistências e erros visuais ou funcionais. Não é um arquivo a ser modificado manualmente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.API.sln": {
+        "descricao": "Este arquivo é a solução principal do projeto \"Ecossistema\", criado no Visual Studio. Ele define a estrutura do projeto, listando os projetos que o compõem: Ecossistema.API (a API principal), Ecossistema.Util (utilitários), Ecossistema.Data (acesso a dados), Ecossistema.Domain (lógica de negócio) e Ecossistema.Services (serviços da aplicação).  O arquivo permite que o Visual Studio gerencie e construa todos esses projetos como uma única unidade.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Domain.csproj": {
+        "descricao": "Este arquivo `Ecossistema.Domain.csproj` define um projeto .NET 6 para a camada de domínio da aplicação \"Ecossistema\". Ele gerencia dependências, incluindo pacotes para Identity (autenticação/autorização) e um projeto utilitário interno (`Ecossistema.Util`). A camada de domínio contém a lógica de negócios principal, separada da interface (API) e da persistência de dados. `ImplicitUsings` e `Nullable` ativados simplificam o código e melhoram a segurança.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Aprovacao.cs": {
+        "descricao": "Arquivo `Aprovacao.cs` define a entidade \"Aprovacao\" (aprovação) no domínio da aplicação. Representa um registro de aprovação associado a diferentes tipos de dados (documentos, eventos, instituições, notícias, usuários) e seus históricos. Contém informações sobre a origem da aprovação, usuário que a realizou e data. Utiliza `HashSet` para armazenar as associações, evitando duplicidades. O construtor padrão inicializa as coleções associadas, enquanto o construtor com parâmetros define a origem, usuário e data da aprovação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AreaEvento.cs": {
+        "descricao": "O arquivo `AreaEvento.cs` define a entidade `AreaEvento`, representando uma área onde eventos ocorrem. Possui propriedades como ID, descrição, status de atividade e datas de criação/operação, associadas a usuários. A lista `Eventos` armazena os eventos relacionados a essa área, estabelecendo um relacionamento de um-para-muitos. É usada para organizar e categorizar eventos dentro do sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Arquivo.cs": {
+        "descricao": "O arquivo `Arquivo.cs` define a entidade `Arquivo` no domínio da aplicação. Representa um arquivo no sistema, armazenando informações como nome (sem extensão), extensão (em minúsculas) e histórico de origens (`ArquivosOrigens`). O construtor principal cria um novo arquivo a partir de um nome original, origem, usuário e data, inicializando o histórico e marcando-o como ativo. A classe utiliza `HashSet` e `List` para gerenciar as origens do arquivo, permitindo rastrear diferentes versões ou fontes. A classe `Recursos` é usada para auditoria.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ArquivoOrigem.cs": {
+        "descricao": "Arquivo `ArquivoOrigem.cs` define a entidade `ArquivoOrigem` que representa a fonte de um conteúdo no sistema. Armazena informações como a origem (parceiro, documento, etc.), título, usuário criador, data e IDs relacionados (instituição, documento). A origem determina o `TipoSegmentoId` e preenche IDs específicos conforme o caso, ligando o arquivo a outras entidades do domínio. É usado para rastrear a procedência de dados e segmentá-los.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Contato.cs": {
+        "descricao": "O arquivo `Contato.cs` define a entidade `Contato` do sistema. Representa um contato telefônico, armazenando telefone, status de atividade, datas de criação/operação e informações do usuário responsável. Possui construtores para criação básica e com auditoria, além de uma coleção `PessoasContatos` para relacionar o contato a pessoas. As propriedades de auditoria (`NaturezaOperacao`, `DataOperacao`, `UsuarioOperacaoId`) rastreiam modificações. A entidade se relaciona com a entidade `Usuario` para identificar o criador e o operador do contato.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Documento.cs": {
+        "descricao": "O arquivo `Documento.cs` define a entidade \"Documento\" no domínio da aplicação. Representa um documento com propriedades como nome, descrição, área, instituição, data de criação e usuário responsável. Possui relacionamentos com entidades `Aprovacao`, `ArquivoOrigem`, `HistoricoDocumento` e `TagItem` através de coleções, permitindo rastrear aprovações, arquivos de origem, histórico de versões e tags associadas ao documento. O construtor padrão inicializa as coleções relacionadas. Um construtor alternativo permite criar um documento com dados iniciais e já registra a primeira aprovação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoArea.cs": {
+        "descricao": "O arquivo `DocumentoArea.cs` define a entidade `DocumentoArea`, representando uma área temática para organização de documentos no sistema. Possui propriedades como ID, descrição, status de atividade, datas de criação/operação e IDs dos usuários responsáveis. As coleções `Documentos` e `HistoricoDocumentos` estabelecem relacionamentos com outras entidades, permitindo rastrear os documentos associados a cada área e seu histórico de alterações. Essencial para categorizar e gerenciar documentos dentro do ecossistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Endereco.cs": {
+        "descricao": "Arquivo Endereco.cs define a entidade Endereco no domínio da aplicação. Representa um endereço físico com campos como CEP, logradouro, número, complemento, ponto de referência, bairro, cidade e UF. Possui relacionamentos com Evento, Pessoa, HistoricoEvento e Instituicao através de coleções (HashSet) para representar associações muitos-para-muitos. O construtor padrão inicializa as coleções relacionadas e um construtor com parâmetros permite a criação de um endereço com dados específicos, incluindo ID do usuário e data de criação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Evento.cs": {
+        "descricao": "Arquivo Evento.cs define a entidade \"Evento\" do domínio. Representa um evento com informações como título, descrição, datas, local e responsável. Possui relacionamentos com Aprovacao, ArquivoOrigem, HistoricoEvento e TagItem, utilizando HashSet para evitar duplicidades. O construtor padrão inicializa as coleções relacionadas, enquanto o construtor com parâmetros define os atributos principais do evento. Essencial para modelar eventos no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConosco.cs": {
+        "descricao": "O arquivo `FaleConosco.cs` define a entidade \"Fale Conosco\" do sistema. Representa um registro de contato/solicitação de um usuário, contendo dados como nome, email, telefone, empresa, cargo, setor, descrição e status (ativo/inativo). Possui relacionamentos com as entidades `FaleConoscoSetor` e `Usuario`, permitindo rastrear o setor de origem da solicitação e quem a criou/modificou. As propriedades `DataCriacao`, `UsuarioCriacaoId`, `NaturezaOperacao`, `DataOperacao` e `UsuarioOperacaoId` auxiliam no controle de auditoria e histórico das interações.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetor.cs": {
+        "descricao": "O arquivo `FaleConoscoSetor.cs` define a entidade `FaleConoscoSetor`, que representa um setor dentro do sistema de \"Fale Conosco\". Ele armazena informações como descrição, status de atividade e dados de auditoria (criação/operação).  A entidade possui relacionamentos com `FaleConosco` (mensagens) e `FaleConoscoSetorContato` (contatos associados ao setor), permitindo organizar e direcionar as mensagens recebidas para os setores corretos e seus respectivos contatos. As propriedades `UsuarioCriacao` e `UsuarioOperacao` representam o usuário responsável pela criação e última modificação do registro, respectivamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetorContato.cs": {
+        "descricao": "Este arquivo define a entidade `FaleConoscoSetorContato`, que representa um contato específico dentro de um setor do \"Fale Conosco\". Armazena informações como nome, email e status de ativação do contato. Possui relacionamentos com `FaleConoscoSetor` (setor ao qual pertence) e `Usuario` (usuário que criou/modificou o registro), permitindo rastrear a autoria e histórico de alterações. As propriedades `DataCriacao`, `UsuarioCriacaoId`, `NaturezaOperacao`, `DataOperacao` e `UsuarioOperacaoId` auxiliam no controle de auditoria.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoDocumento.cs": {
+        "descricao": "Arquivo `HistoricoDocumento.cs` define a entidade \"Histórico de Documento\" no domínio da aplicação. Representa um registro de alterações ou eventos relacionados a um documento específico. Possui propriedades como ID, ID do documento associado, nome, descrição, área do documento, instituição, data, aprovação (opcional), status de aprovação, status de atividade e informações de criação (usuário e data). As propriedades com \"virtual\" indicam relacionamentos com outras entidades (Documento, DocumentoArea, Instituicao, Aprovacao) para navegação e acesso a dados relacionados. Essencial para rastrear o ciclo de vida e as modificações de documentos no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoEvento.cs": {
+        "descricao": "Arquivo `HistoricoEvento.cs` define a entidade `HistoricoEvento` que representa um registro de um evento no sistema. Armazena informações como ID, evento relacionado, instituição, tipo de evento, título, descrição, datas, local (com endereço opcional), link externo e flag para exibir no mapa. Possui relacionamentos com as entidades `Evento`, `Instituicao`, `TipoEvento` e `Endereco`, permitindo a consulta de dados relacionados. A propriedade `Responsavel` indica quem registrou o evento. É uma classe central para rastrear e exibir eventos históricos no ecossistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoInstituicao.cs": {
+        "descricao": "O arquivo `HistoricoInstituicao.cs` define a entidade `HistoricoInstituicao` que representa o histórico de uma instituição. Ele armazena informações como razão social, CNPJ, área de atuação, classificação, descrição, missão, visão, valores e tipo da instituição em diferentes momentos. As propriedades `InstituicaoId`, `InstituicaoAreaId`, `InstituicaoClassificacaoId` e `TipoInstituicaoId` são chaves estrangeiras que relacionam este histórico a outras entidades do domínio, permitindo a consulta de informações detalhadas sobre a instituição, sua área, classificação e tipo. A propriedade `Id` é a chave primária da entidade.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoNoticia.cs": {
+        "descricao": "O arquivo `HistoricoNoticia.cs` define a entidade `HistoricoNoticia`, responsável por registrar o histórico de alterações de uma notícia no sistema. Ele armazena informações como título, descrição, data de publicação e status de aprovação da notícia em um determinado momento. Possui relacionamentos com as entidades `Noticia`, `Aprovacao` e `Usuario`, permitindo rastrear quem criou/alterou a notícia e qual foi o status da aprovação. A propriedade `NaturezaOperacao` indica o tipo de alteração (criação, edição, etc.). É usado para auditoria e versionamento das notícias.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoUsuario.cs": {
+        "descricao": "O arquivo `HistoricoUsuario.cs` define a entidade `HistoricoUsuario` que registra informações sobre o histórico de um usuário no sistema. Ele armazena o ID do usuário (`UsuarioId`), informações da pessoa associada (`PessoaId`), instituição (`InstituicaoId`), e a data do último login (`UltimoLogin`). Possui relacionamentos com as entidades `Usuario`, `Pessoa` e `Instituicao` através de propriedades de navegação, permitindo acessar dados relacionados. Serve para rastrear a atividade do usuário e auxiliar em auditorias e relatórios.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Instituicao.cs": {
+        "descricao": "Arquivo `Instituicao.cs`: Define a entidade \"Instituicao\" (Instituição) no domínio da aplicação. Representa uma instituição com informações como razão social, CNPJ e responsável. Possui relacionamentos com outras entidades como aprovações, arquivos, documentos, eventos, usuários e históricos, implementados via `HashSet` para evitar duplicidades. O construtor padrão inicializa as coleções de relacionamentos. Um construtor alternativo (incompleto no trecho) provavelmente recebe dados básicos para criar uma nova instituição. Essencial para modelar e persistir dados de instituições no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoArea.cs": {
+        "descricao": "Arquivo `InstituicaoArea.cs` define a entidade \"Área da Instituição\" no domínio da aplicação. Representa uma categorização (ex: \"Ensino\", \"Saúde\") à qual uma instituição pode pertencer. Possui propriedades como ID, descrição, status de atividade, datas de criação/operação e usuários responsáveis. As coleções `Instituicoes` e `HistoricoInstituicoes` estabelecem relacionamentos com outras entidades, permitindo rastrear quais instituições pertencem a cada área e seu histórico. Essencial para organizar e filtrar instituições no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoClassificacao.cs": {
+        "descricao": "Este arquivo define a entidade `InstituicaoClassificacao`. Representa uma classificação para instituições (ex: \"Ensino Fundamental\", \"Hospital\"). Possui um ID, descrição, status de ativo, datas de criação/operação e informações sobre os usuários que realizaram essas operações.  As propriedades `Insituicoes` e `HistoricoInstituicoes` armazenam as instituições associadas a esta classificação e seu histórico, respectivamente, permitindo relacionamentos um-para-muitos. É usada para categorizar e rastrear informações sobre as instituições no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoEndereco.cs": {
+        "descricao": "Arquivo `InstituicaoEndereco.cs` define a entidade que relaciona uma instituição a um endereço específico, com um tipo (ex: sede, filial). Armazena IDs da instituição, endereço e tipo de endereço, além de informações de auditoria (usuário e data de criação/modificação). Possui construtor para facilitar a criação e propriedades de navegação para as entidades `Instituicao` e `Endereco`, permitindo acesso aos dados relacionados. A propriedade `Ativo` indica se a relação está ativa.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Noticia.cs": {
+        "descricao": "Arquivo Noticia.cs define a entidade Noticia do domínio. Representa uma notícia com título, descrição, subtítulo, data de publicação e usuário criador. Possui relacionamentos com Aprovacao, ArquivoOrigem, HistoricoNoticia e TagItem, utilizando coleções para representar esses vínculos. O construtor principal inicializa a notícia com dados básicos e registra uma aprovação inicial. A classe serve como modelo de dados para operações relacionadas a notícias no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Origem.cs": {
+        "descricao": "O arquivo `Origem.cs` define a entidade `Origem` no domínio da aplicação. Representa a fonte de dados ou processo de onde informações são originadas. Possui propriedades como descrição, status de atividade, datas de criação/operação, usuários responsáveis e campos para rastrear aprovações e arquivos associados. As coleções `Aprovacoes`, `ArquivosOrigens` e `TagsItens` estabelecem relacionamentos com outras entidades do sistema, permitindo rastrear o ciclo de vida e a categorização dos dados de origem. É uma classe central para o controle de dados na aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Pagina.cs": {
+        "descricao": "O arquivo `Pagina.cs` define a entidade `Pagina` no domínio da aplicação. Representa uma página dentro do sistema, com propriedades como nome, status (ativo/inativo), datas de criação/operação e usuários responsáveis. Possui relacionamentos com `Usuario` (criador e operador) e coleções de `ArquivoOrigem` e `PaginaSegmento`, indicando que uma página pode ter múltiplos arquivos de origem e segmentos associados. O construtor inicializa as coleções para evitar erros de referência nula.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PaginaSegmento.cs": {
+        "descricao": "O arquivo `PaginaSegmento.cs` define a entidade `PaginaSegmento`, que representa uma seção específica dentro de uma página do sistema. Ele armazena informações como título, descrição e status de atividade para cada segmento. Possui relacionamentos com as entidades `Pagina`, `TipoSegmento` e `Usuario` (criador e operador), permitindo rastrear quem e quando o segmento foi criado/modificado. As propriedades `NaturezaOperacao` e `DataOperacao` registram o tipo e data da última alteração. Essencial para organizar o conteúdo das páginas e controlar o acesso/modificações.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Permissao.cs": {
+        "descricao": "O arquivo `Permissao.cs` define a entidade \"Permissão\" no domínio da aplicação. Representa um tipo de acesso ou autorização dentro do sistema. Possui propriedades como ID, descrição, status (ativo/inativo), datas de criação/operação e usuários associados (criador e operadores). As coleções `Usuarios` e `HistoricoUsuarios` armazenam as relações com usuários que possuem ou tiveram essa permissão, permitindo rastrear o histórico de acesso. É central para o controle de acesso e auditoria do sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Pessoa.cs": {
+        "descricao": "Arquivo `Pessoa.cs`: Define a entidade \"Pessoa\" no domínio da aplicação. Representa uma pessoa física com dados como nome, CPF e data de nascimento. Possui relacionamentos com outras entidades como contatos (`PessoaContato`), endereços (`PessoaEndereco`) e usuários (`Usuario`, `HistoricoUsuario`). O construtor principal permite criar uma pessoa com dados básicos e registra a criação via auditoria (classe `Recursos`). A propriedade `Ativo` indica se a pessoa está ativa no sistema. É a base para informações de usuários e clientes no ecossistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaContato.cs": {
+        "descricao": "O arquivo `PessoaContato.cs` define a entidade `PessoaContato`, que representa a ligação entre uma pessoa e um contato no sistema. Ele armazena informações como o ID da pessoa, ID do contato, tipo de contato e data de criação. Possui construtores para criação padrão e com dados iniciais, além de propriedades de navegação para as entidades `Pessoa`, `Contato` e `TipoContato`, permitindo relacionamentos no banco de dados. A classe também inclui campos para auditoria (data de criação e usuário) e status de ativação. Essencial para gerenciar informações de contato associadas a cada pessoa no ecossistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaEndereco.cs": {
+        "descricao": "O arquivo `PessoaEndereco.cs` define a entidade `PessoaEndereco`, que representa a ligação entre uma pessoa e um endereço. Ele armazena informações como o ID da pessoa, ID do endereço, tipo de endereço (residencial, comercial, etc.) e status de ativo. Possui construtores para criação básica e com auditoria (registro de usuário e data de criação/alteração). As propriedades `Pessoa`, `Endereco` e `TipoEndereco` são navegações para outras entidades relacionadas, permitindo acessar detalhes da pessoa, endereço e tipo de endereço associados. Essa entidade é crucial para modelar relacionamentos e informações de localização no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "SituacaoAprovacao.cs": {
+        "descricao": "O arquivo `SituacaoAprovacao.cs` define uma entidade para representar os diferentes status de aprovação dentro do sistema. Cada instância armazena informações como descrição do status, se está ativo, datas de criação/operação, usuários responsáveis e uma coleção de aprovações associadas a este status. A propriedade `Aprovacoes` permite relacionar múltiplas aprovações a um único status, facilitando o rastreamento do fluxo de aprovação. A classe possui propriedades para auditoria (usuário e data de criação/operação).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Tag.cs": {
+        "descricao": "O arquivo Tag.cs define a entidade `Tag` do domínio. Representa uma etiqueta/categoria associada a elementos do sistema. Possui propriedades como descrição, status de atividade, datas de criação/operação e IDs dos usuários responsáveis. A classe inclui um construtor para criar tags com descrição, usuário e data, ativando-a por padrão e registrando a auditoria. As propriedades `UsuarioCriacao` e `UsuarioOperacao` permitem relacionar a tag com as entidades `Usuario`, facilitando o rastreamento de quem criou/modificou a tag. A classe suporta auditoria básica com campos para `NaturezaOperacao` e `DataOperacao`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagItem.cs": {
+        "descricao": "O arquivo TagItem.cs define uma classe para representar a associação de uma tag a um item (documento, notícia ou evento). Ele armazena o ID da tag, o ID do item associado (dependendo da origem), data de criação, usuário que criou e um status de ativo. A classe possui um construtor que recebe a origem do item, ID da tag, ID do usuário e data, populando os campos relevantes. A classe utiliza enums (EOrigem) e uma classe utilitária (Recursos) para auditoria. Essencialmente, modela a relação muitos-para-muitos entre tags e os diferentes tipos de conteúdo no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoContato.cs": {
+        "descricao": "O arquivo `TipoContato.cs` define a entidade `TipoContato` no domínio da aplicação. Representa um tipo de contato (ex: email, telefone, endereço). Possui propriedades como ID, descrição, status de ativo, datas de criação/operação e usuários responsáveis. A coleção `PessoasContatos` relaciona este tipo de contato a múltiplas pessoas através da entidade `PessoaContato`, permitindo associar um tipo de contato a vários registros de pessoas. É usado para categorizar e gerenciar diferentes formas de contato dentro do sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoDocumento.cs": {
+        "descricao": "O arquivo `TipoDocumento.cs` define a entidade `TipoDocumento` no domínio da aplicação. Representa um tipo de documento (ex: RG, CPF, Contrato) com propriedades como descrição, status de atividade, datas de criação/operação e usuários responsáveis. Possui relacionamentos com as entidades `Documento` e `HistoricoDocumento`, permitindo rastrear documentos associados a este tipo e seu histórico. A classe inclui construtores para inicializar coleções de documentos e histórico, facilitando o gerenciamento de dados relacionados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoEndereco.cs": {
+        "descricao": "O arquivo `TipoEndereco.cs` define a entidade `TipoEndereco` no domínio da aplicação. Representa tipos de endereço (ex: Residencial, Comercial). Possui propriedades como ID, descrição, status de ativo, datas de criação/operação e usuários responsáveis. As coleções `PessoasEnderecos` e `InstituicoesEnderecos` estabelecem relacionamentos com outras entidades, indicando onde este tipo de endereço é utilizado (pessoas e instituições). É usado para categorizar endereços no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoEvento.cs": {
+        "descricao": "O arquivo `TipoEvento.cs` define a entidade `TipoEvento` no domínio da aplicação. Representa um tipo de evento (ex: \"Reunião\", \"Treinamento\") com propriedades como descrição, status de atividade e informações de criação/operação (usuário, data). Possui relacionamentos com as entidades `Evento` e `HistoricoEvento`, indicando que um tipo de evento pode ter múltiplos eventos e registros de histórico associados. A classe inclui construtores para inicializar coleções de eventos e histórico, facilitando a criação de novas instâncias.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoInstituicao.cs": {
+        "descricao": "O arquivo `TipoInstituicao.cs` define a entidade `TipoInstituicao` no domínio da aplicação. Representa o tipo de uma instituição (ex: escola, hospital). Possui propriedades como ID, descrição, status de atividade, datas de criação/operação e usuários responsáveis.  Relaciona-se com as entidades `Instituicao` (lista de instituições deste tipo) e `HistoricoInstituicao` (histórico de alterações). As coleções `Insituicoes` e `HistoricoInstituicoes` usam `HashSet` para garantir unicidade.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoSegmento.cs": {
+        "descricao": "O arquivo `TipoSegmento.cs` define a entidade `TipoSegmento` no domínio da aplicação. Representa um tipo de segmento, com propriedades como descrição, status de atividade e informações de criação/operação (usuário, data). Possui relacionamentos com `Usuario` (criador e operador) e coleções de `ArquivoOrigem` e `PaginaSegmento`, indicando que um tipo de segmento pode estar associado a múltiplos arquivos de origem e páginas de segmento. A classe inclui construtores para inicializar as coleções relacionadas.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Token.cs": {
+        "descricao": "O arquivo `Token.cs` define a classe `Token`, responsável por representar um token no sistema. Um token é criado com um valor string único e imutável (definido no construtor). A propriedade `Value` permite acessar esse valor. Essa classe é uma entidade de domínio básica, usada para encapsular e gerenciar tokens, provavelmente para autenticação ou autorização dentro da aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Usuario.cs": {
+        "descricao": "O arquivo `Usuario.cs` define a entidade `Usuario` do sistema. Representa um usuário com informações básicas e relacionamentos com outras entidades como `Aprovacao`, `HistoricoUsuario` e `Arquivo`. Possui coleções para rastrear aprovações (criadas, recebidas, operadas), arquivos criados e origens de arquivos associadas ao usuário. É a classe central para gerenciar informações de usuários dentro do domínio da aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Domain.AssemblyInfo.cs": {
+        "descricao": "Este arquivo, `Ecossistema.Domain.AssemblyInfo.cs`, é gerado automaticamente durante o processo de build do projeto. Ele contém metadados sobre o assembly `Ecossistema.Domain`, como nome da empresa, versão, título e configuração (Debug neste caso). Essas informações são usadas pelo sistema para identificar e gerenciar o assembly, e não contêm lógica de negócio. Alterações manuais neste arquivo serão sobrescritas na próxima compilação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Domain.GeneratedMSBuildEditorConfig.editorconfig": {
+        "descricao": "Este arquivo `.editorconfig` é gerado automaticamente pelo MSBuild durante a compilação do projeto `Ecossistema.Domain`. Ele define propriedades de build como o framework alvo (`net6.0`), plataformas suportadas (Linux, macOS, Windows) e o diretório raiz do projeto.  Sua função é padronizar configurações de estilo de código e análise para garantir consistência em todo o projeto, influenciando ferramentas como formatadores e linters. O `is_global = true` indica que essas configurações se aplicam a todos os arquivos no diretório e subdiretórios.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Domain.GlobalUsings.g.cs": {
+        "descricao": "Este arquivo, gerado automaticamente, define \"usings\" globais para o domínio da aplicação. Isso significa que os namespaces listados (System, Collections.Generic, etc.) estarão disponíveis em todos os arquivos do projeto `Ecossistema.Domain` sem precisar ser explicitamente declarados em cada um. Simplifica o código, evitando repetições e facilitando a leitura. Essencialmente, ele importa bibliotecas básicas do .NET para uso geral dentro da camada de domínio.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Domain.csproj.CopyComplete": {
+        "descricao": "Este arquivo é um artefato gerado durante o processo de build do projeto `Ecossistema.Domain`. Ele contém uma cópia completa do arquivo de projeto C# (`Ecossistema.Domain.csproj`) após a conclusão da compilação em modo Debug para o framework .NET 6.0.  Não é um arquivo de código fonte editável, mas sim um snapshot do projeto usado para construir a aplicação. Ele serve como referência para o estado do projeto no momento do build e pode ser útil para debugging ou análise do processo de compilação. Essencialmente, define as dependências e configurações do domínio da aplicação \"Ecossistema\".",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Domain.csproj.FileListAbsolute.txt": {
+        "descricao": "Este arquivo lista os caminhos absolutos dos arquivos gerados durante a compilação do projeto `Ecossistema.Domain`. Inclui o arquivo de dependências (`.deps.json`), a biblioteca principal (`.dll`), informações de depuração (`.pdb`) e outras dependências (`Ecossistema.Util.dll`). Serve como um registro dos artefatos produzidos para a versão `Debug` do projeto, facilitando a identificação e localização dos componentes do domínio da aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Domain.csproj.nuget.g.props": {
+        "descricao": "Este arquivo é gerado automaticamente pelo NuGet, gerenciador de pacotes do .NET. Ele armazena configurações importantes para o processo de restauração de dependências do projeto `Ecossistema.Domain`.\n\nEspecificamente, define onde os pacotes NuGet são procurados (pastas `NuGetPackageRoot` e `NuGetPackageFolders`), qual ferramenta usar para restaurar os pacotes (`RestoreTool`), e o arquivo que contém informações sobre os pacotes já restaurados (`ProjectAssetsFile`).\n\nEssas configurações garantem que o projeto tenha acesso às bibliotecas externas necessárias para funcionar corretamente, sem precisar que o desenvolvedor as especifique manualmente. O arquivo é essencial para o build do projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Data.csproj": {
+        "descricao": "Este arquivo .csproj define o projeto `Ecossistema.Data`, responsável pela camada de acesso a dados da aplicação. Ele utiliza o .NET 6.0 e o Entity Framework Core para interagir com um banco de dados SQL Server. As referências incluem pacotes para Identity (autenticação), Entity Framework Core e ferramentas para migrações de banco.  O projeto depende do projeto `Ecossistema.Domain` (modelos de dados) e `Ecossistema.Util` (utilitários). Um arquivo de repositório antigo foi removido (`TipoEventoRepository - Cópia.cs`).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EcossistemaContext.cs": {
+        "descricao": "Este arquivo define a classe `EcossistemaContext`, responsável pela interação com o banco de dados. Ele herda de `IdentityDbContext`, integrando autenticação e autorização de usuários. A classe expõe `DbSet`s para as entidades do domínio (Aprovacao, Arquivo, Contato, Documento, etc.), permitindo operações de CRUD (Create, Read, Update, Delete) nessas tabelas. O construtor recebe as opções de configuração do contexto (DbContextOptions) para definir a conexão com o banco de dados. Essencialmente, ele mapeia as entidades do projeto para tabelas no banco de dados, facilitando o acesso e a persistência dos dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IAprovacaoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IAprovacaoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados a aprovações no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (como criar, ler, atualizar ou deletar aprovações) ainda não foram definidas.  Ela será implementada por uma classe concreta para fornecer a lógica de acesso aos dados de aprovação, possivelmente interagindo com um banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IArquivoOrigemRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IArquivoOrigemRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo caso, `IArquivoOrigemRepository` está vazia, ou seja, não declara nenhum método. Isso sugere que ela serve como um marcador ou ponto de extensão futuro. Provavelmente, será usada para definir operações de acesso a dados relacionadas a \"arquivos de origem\" (origem de dados, talvez?). Outras partes do projeto dependerão desta interface para interagir com a lógica de persistência/acesso a esses arquivos, sem saber a implementação específica.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IArquivoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IArquivoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define um contrato para operações relacionadas a arquivos, mas *não especifica quais operações* devem ser implementadas.  Ela serve como um ponto de extensão futuro para definir métodos como salvar, ler, deletar ou listar arquivos, permitindo flexibilidade e testabilidade no projeto.  Outras partes do código usarão esta interface para interagir com a lógica de acesso a arquivos sem depender de uma implementação específica.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IBaseRepository.cs": {
+        "descricao": "IBaseRepository<T> define a interface para acesso a dados. Permite operações CRUD (Create, Read, Update, Delete) básicas para entidades do tipo T. Inclui métodos para buscar por ID (síncrono e assíncrono), listar todos, e filtrar registros usando expressões lambda. Suporta paginação (take/skip) e ordenação. É a base para repositórios específicos, abstraindo a implementação do acesso aos dados (ex: Entity Framework).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IContatoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IContatoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo momento, `IContatoRepository` está vazia, ou seja, não define nenhum método.  Ela serve como um marcador para definir as operações que serão realizadas com dados de contato (como adicionar, buscar, atualizar e deletar contatos) em uma camada de acesso a dados.  Outras classes, como uma implementação concreta do repositório, fornecerão a lógica real para interagir com o banco de dados ou outra fonte de dados.  Ela faz parte da camada de repositório do projeto, separando a lógica de acesso a dados da lógica de negócios.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IDocumentoAreaRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IDocumentoAreaRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, ou seja, não define nenhum método.\n\nProvavelmente, esta interface representa um repositório de dados para a área de documentos no sistema \"Ecossistema\".  Ela serve como um ponto de acesso para operações de persistência (salvar, buscar, atualizar, deletar) relacionadas a documentos, mas a implementação específica (como os dados são armazenados - banco de dados, arquivos, etc.) será definida em outra classe que implemente esta interface.  A ausência de métodos sugere que a funcionalidade ainda será definida.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IDocumentoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IDocumentoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define apenas a *intenção* de existir um repositório para lidar com documentos, mas ainda não especifica *como* isso será feito.  Provavelmente, métodos para criar, ler, atualizar e deletar documentos (CRUD) serão adicionados a esta interface no futuro, e classes concretas implementarão esses métodos para interagir com a fonte de dados (banco de dados, arquivos, etc.).  Ela serve como um ponto de abstração para o acesso a dados de documentos no projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IEnderecoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IEnderecoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo momento, a interface está vazia, ou seja, não define nenhum método. Isso indica que ela está preparada para receber métodos relacionados a operações de endereço (como buscar, criar, atualizar ou deletar endereços) no futuro.\n\nEla faz parte da camada de repositório do projeto, responsável por abstrair o acesso aos dados de endereço, permitindo flexibilidade na escolha da tecnologia de persistência (banco de dados, arquivos, etc.).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IEventoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IEventoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo momento, a interface `IEventoRepository` está vazia, ou seja, não define nenhum método.  Ela serve como um marcador para definir operações relacionadas a \"Eventos\" no sistema.  Futuramente, métodos para criar, ler, atualizar e deletar eventos (CRUD) serão adicionados aqui, permitindo a troca da implementação concreta (ex: acesso a banco de dados) sem alterar o restante do código que usa essa interface.  Faz parte da camada de acesso a dados do projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IFaleConoscoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IFaleConoscoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define um marcador para um repositório relacionado à funcionalidade \"Fale Conosco\", mas ainda não especifica quais operações (como criar, ler, atualizar ou deletar registros) este repositório deve suportar.  Ela serve como ponto de partida para definir as operações de acesso a dados para a área de \"Fale Conosco\" no projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IFaleConoscoSetorContatoRepository.cs": {
+        "descricao": "Este arquivo define uma interface para acesso a dados relacionados aos setores de contato do \"Fale Conosco\". A interface `IFaleConoscoSetorContatoRepository` serve como um contrato, definindo que qualquer classe que a implemente deverá fornecer métodos para interagir com a persistência (banco de dados, por exemplo) desses setores. Atualmente, a interface está vazia, indicando que as operações específicas (criar, ler, atualizar, deletar) ainda não foram definidas, mas serão implementadas em outra classe. Ela faz parte da camada de repositório do projeto, responsável por abstrair a lógica de acesso aos dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IFaleConoscoSetorRepository.cs": {
+        "descricao": "Este arquivo define uma interface para acesso a dados relacionados aos setores do \"Fale Conosco\". A interface `IFaleConoscoSetorRepository` expõe um único método assíncrono, `ObterTodosGenerico()`, que retorna uma lista de setores.  Ela serve como contrato para classes que implementam a lógica de busca desses dados, permitindo a troca de diferentes implementações de persistência (ex: banco de dados, API externa) sem alterar o restante do código. O tipo de retorno `object` sugere flexibilidade na estrutura dos dados retornados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IHistoricoDocumentoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IHistoricoDocumentoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular o histórico de documentos no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (como salvar, buscar, atualizar ou deletar histórico) ainda não foram definidas.  Ela é parte da camada de repositório, responsável por abstrair o acesso aos dados, permitindo flexibilidade na implementação do armazenamento (ex: banco de dados).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IHistoricoEventoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IHistoricoEventoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados ao histórico de eventos no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (como adicionar, buscar, atualizar ou deletar eventos) ainda não foram definidas.  Classes que implementarem esta interface serão responsáveis por fornecer a lógica para interagir com a fonte de dados do histórico de eventos (ex: banco de dados).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IHistoricoInstituicaoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IHistoricoInstituicaoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo momento, a interface está vazia, ou seja, não define nenhum método. Isso sugere que ela está reservada para futuras funcionalidades relacionadas ao histórico de uma instituição dentro do sistema \"Ecossistema\".  Ela provavelmente será usada para definir operações de acesso a dados (CRUD - Create, Read, Update, Delete) para informações de histórico institucional, separando a lógica de acesso aos dados da lógica de negócios.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IHistoricoNoticiaRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IHistoricoNoticiaRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados ao histórico de notícias. Atualmente, a interface está vazia, indicando que as operações específicas (como salvar, buscar, atualizar ou deletar histórico de notícias) ainda não foram definidas.  Ela será implementada por uma classe concreta para fornecer a lógica de acesso aos dados, possivelmente interagindo com um banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IHistoricoUsuarioRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IHistoricoUsuarioRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados do histórico de um usuário. Atualmente, a interface está vazia, indicando que as operações específicas (como salvar, buscar, atualizar ou deletar registros de histórico) ainda não foram definidas.  Ela é parte da camada de repositório do projeto, responsável por abstrair o acesso à fonte de dados (ex: banco de dados).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IInstituicaoAreaRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IInstituicaoAreaRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define apenas a *intenção* de existir um repositório para lidar com dados relacionados a \"Instituição\" e \"Área\", mas ainda não especifica *como* esses dados serão acessados ou manipulados (ex: criar, ler, atualizar, deletar).  Ela serve como um ponto de conexão para a camada de acesso a dados no projeto Ecossistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IInstituicaoClassificacaoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IInstituicaoClassificacaoRepository`. Interfaces em C# definem um contrato: ela especifica quais métodos uma classe *deve* implementar. Neste caso, a interface está vazia, o que significa que ela define um contrato para operações relacionadas à classificação de instituições, mas ainda não especifica *quais* operações.  Outras partes do projeto usarão esta interface para interagir com a lógica de acesso a dados (repositório) responsável por gerenciar informações sobre a classificação de instituições, sem depender de uma implementação específica.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IInstituicaoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IInstituicaoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo momento, a interface está vazia, ou seja, não define nenhum método.  Ela serve como um marcador de intenção, indicando que, futuramente, esta interface será responsável por definir as operações de acesso a dados (CRUD - Create, Read, Update, Delete) relacionadas à entidade \"Instituição\" no projeto.  Ela atua como uma abstração para a camada de persistência, permitindo flexibilidade na escolha da tecnologia de banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "INoticiaRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `INoticiaRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define apenas a *intenção* de existir um repositório para operações relacionadas a notícias, mas ainda não especifica *quais* operações serão suportadas (como criar, ler, atualizar ou deletar notícias).  Ela serve como um ponto de partida para definir como o acesso a dados de notícias será abstraído no projeto, permitindo flexibilidade na escolha da tecnologia de persistência (banco de dados, arquivos, etc.).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IOrigemRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IOrigemRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define um marcador para representar um repositório de \"Origem\" (a natureza de \"Origem\" não está definida aqui), mas ainda não especifica *quais* operações este repositório deve suportar (como adicionar, buscar, atualizar ou deletar dados).  Ela serve como um ponto de extensão futuro para definir as operações de acesso a dados relacionadas à entidade \"Origem\".",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IPaginaRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IPaginaRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, `IPaginaRepository` está vazia, ou seja, não define nenhum método.\n\nSua função no projeto é servir como um ponto de definição para operações de acesso a dados relacionadas a \"páginas\". Classes concretas implementarão esta interface para interagir com um banco de dados ou outra fonte de dados, permitindo a leitura, criação, atualização e exclusão de páginas. A ausência de métodos indica que a interface está em desenvolvimento ou será preenchida posteriormente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IPaginaSegmentoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IPaginaSegmentoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo caso, `IPaginaSegmentoRepository` está vazia, ou seja, não declara nenhum método. Isso sugere que ela está reservada para futuras operações de acesso a dados relacionadas a \"páginas de segmento\" (provavelmente partes de conteúdo ou dados organizados em páginas).\n\nNo contexto do projeto, ela provavelmente será usada para desacoplar a lógica de negócios da lógica de acesso a dados, permitindo diferentes implementações de repositório (ex: usando Entity Framework, Dapper, etc.) sem alterar o código que usa o repositório.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IPermissaoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IPermissaoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define um contrato para gerenciar permissões, mas ainda não especifica *como* essa gestão deve ser feita (quais métodos existirão para adicionar, listar, atualizar ou remover permissões).  Ela serve como um ponto de extensão para diferentes implementações de acesso a dados (ex: banco de dados, arquivos, etc.) relacionadas a permissões no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IPessoaContatoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IPessoaContatoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define apenas a *intenção* de existir um repositório para dados de contato de pessoas, sem especificar *quais* operações esse repositório deve ter.  Provavelmente, métodos para criar, ler, atualizar e deletar (CRUD) contatos de pessoas serão adicionados posteriormente. Ela serve como ponto de entrada para acesso a dados relacionados a contatos de pessoas, separando a lógica de acesso a dados do restante da aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IPessoaEnderecoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IPessoaEnderecoRepository`. Ela serve como um contrato para classes que irão acessar e manipular dados relacionados a endereços de pessoas no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (como adicionar, buscar, atualizar ou remover endereços) ainda não foram definidas. Classes que implementarem esta interface serão responsáveis por fornecer a lógica para interagir com a fonte de dados (ex: banco de dados) para gerenciar informações de endereços associadas a pessoas.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IPessoaRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IPessoaRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define apenas a *intenção* de existir um repositório para operações relacionadas a \"Pessoa\", mas ainda não especifica *quais* operações serão suportadas (como adicionar, buscar, atualizar ou deletar).  Ela serve como ponto de partida para definir como o acesso a dados de pessoas será feito no projeto, permitindo flexibilidade e testabilidade.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ISituacaoAprovacaoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ISituacaoAprovacaoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela.\n\nNo caso, a interface está vazia, ou seja, não declara nenhum método. Isso sugere que ela está sendo definida como um marcador ou placeholder para futuras operações relacionadas ao gerenciamento de \"Situações de Aprovação\" no sistema.  Ela provavelmente será usada para desacoplar a lógica de negócios da camada de acesso a dados, permitindo diferentes implementações de repositório (ex: usando Entity Framework, Dapper, etc.).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITagItemRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ITagItemRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define apenas a *intenção* de existir um repositório para interagir com itens de tag, mas ainda não especifica *como* essa interação deve acontecer (quais métodos de leitura, escrita, etc. estarão disponíveis).  Ela serve como um ponto de extensão futuro para definir as operações de acesso a dados relacionadas a itens de tag no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITagRepository.cs": {
+        "descricao": "Este arquivo define a interface `ITagRepository`. Ela serve como um contrato para classes que implementam a lógica de acesso a dados (repositório) para entidades de \"Tag\" no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (criar, ler, atualizar, deletar tags) ainda não foram definidas. Futuras implementações desta interface fornecerão a funcionalidade para persistir e recuperar informações sobre tags, provavelmente em um banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITipoContatoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ITipoContatoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados a tipos de contato (ex: telefone, email). Atualmente, a interface está vazia, indicando que as operações específicas (criar, ler, atualizar, deletar) ainda não foram definidas. Classes que implementarem esta interface fornecerão a lógica para interagir com a fonte de dados (banco de dados, API, etc.) para gerenciar os tipos de contato no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITipoDocumentoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ITipoDocumentoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados a tipos de documentos no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (como listar, criar, atualizar ou deletar tipos de documentos) ainda não foram definidas.  Ela é usada para desacoplar a lógica de acesso a dados do restante da aplicação, permitindo diferentes implementações de repositório (ex: usando Entity Framework, Dapper, etc.).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITipoEnderecoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ITipoEnderecoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados a tipos de endereço (ex: Residencial, Comercial). Atualmente, a interface está vazia, indicando que as operações específicas (criar, ler, atualizar, deletar) ainda não foram definidas.  Ela é usada para desacoplar a lógica de acesso a dados do restante da aplicação, permitindo diferentes implementações de repositório.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITipoEventoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ITipoEventoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados a tipos de eventos no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (como listar, criar, atualizar ou deletar tipos de eventos) ainda não foram definidas.  Classes que implementam esta interface fornecerão a lógica real para interagir com a fonte de dados (ex: banco de dados) dos tipos de eventos.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITipoInstituicaoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ITipoInstituicaoRepository`. Interfaces em C# definem um contrato: qualquer classe que \"implementar\" esta interface deve fornecer a implementação dos métodos declarados nela. Neste caso, a interface está vazia, o que significa que ela define apenas a *intenção* de existir um repositório para dados de \"Tipo de Instituição\", mas ainda não especifica *quais* operações (como buscar, adicionar, atualizar, deletar) este repositório deve suportar.  Ela serve como ponto de partida para definir como o acesso a dados de tipos de instituição será abstraído no projeto, permitindo flexibilidade na escolha da tecnologia de persistência (banco de dados, arquivos, etc.).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITipoSegmentoRepository.cs": {
+        "descricao": "Este arquivo define uma interface chamada `ITipoSegmentoRepository`. Ela serve como um contrato para classes que precisam acessar e manipular dados relacionados a \"Tipos de Segmento\" no sistema. Atualmente, a interface está vazia, indicando que as operações específicas (como listar, criar, atualizar ou deletar tipos de segmento) ainda não foram definidas.  Classes que implementarem esta interface fornecerão a lógica real para interagir com a fonte de dados (ex: banco de dados) para gerenciar os tipos de segmento.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IUnitOfWork.cs": {
+        "descricao": "IUnitOfWork define a interface para gerenciar as operações de acesso a dados no projeto. Ele atua como um ponto central para interagir com múltiplos repositórios de entidades (Aprovacao, Arquivo, Contato, Documento, Endereco, Evento, etc.). Cada propriedade expõe um repositório específico, permitindo criar, ler, atualizar e deletar dados relacionados a cada entidade de forma consistente. Implementa o padrão Unit of Work para garantir que todas as operações de banco de dados em uma transação sejam completadas com sucesso ou revertidas em caso de falha, mantendo a integridade dos dados. Também implementa `IDisposable` para liberar recursos.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IUsuarioRepository.cs": {
+        "descricao": "Este arquivo define a interface `IUsuarioRepository`. Ela serve como um contrato para classes que implementam a lógica de acesso a dados de usuários. Atualmente, a interface está vazia, indicando que as operações específicas (criar, ler, atualizar, deletar usuários) ainda não foram definidas.  Ela será utilizada para desacoplar a camada de serviço da camada de persistência, permitindo diferentes implementações de repositório (ex: SQL Server, MongoDB) sem alterar o código da aplicação principal.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AprovacaoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `Aprovacao` (aprovação) é mapeada para o banco de dados. Define o nome da tabela (`Aprovacao` no schema `dbo`) e a chave primária (`Id`). Estabelece relacionamentos com outras entidades: `Origem` (um para muitos), `UsuarioAprovacao` (um para muitos, opcional) e `Instituicao` (um para muitos).  Esses relacionamentos são definidos através de chaves estrangeiras, garantindo a integridade referencial e a correta modelagem dos dados no banco.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ArquivoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade 'Arquivo' será mapeada para o banco de dados. Define o nome da tabela ('Arquivo' no schema 'dbo') e a chave primária (Id). Também configura os relacionamentos da entidade 'Arquivo' com a entidade 'Usuario': 'UsuarioCriacao' e 'UsuarioOperacao', definindo as chaves estrangeiras correspondentes (UsuarioCriacaoId e UsuarioOperacaoId). Essencial para o Entity Framework Core persistir e consultar dados de arquivos corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ArquivoOrigemConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `ArquivoOrigem` é mapeada para o banco de dados. Define o nome da tabela (`ArquivoOrigem` no schema `dbo`) e a chave primária (`Id`).  Estabelece relacionamentos (chaves estrangeiras) com as entidades `Origem`, `TipoSegmento` e `Arquivo`, permitindo que o Entity Framework Core gerencie a integridade referencial e consultas eficientes entre essas tabelas. Essencial para a persistência e recuperação de dados relacionados a arquivos de origem no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ContatoConfiguration.cs": {
+        "descricao": "Este arquivo (ContatoConfiguration.cs) define como a entidade 'Contato' será mapeada para o banco de dados usando o Entity Framework Core. Ele especifica que a tabela correspondente é 'Contato' no schema 'dbo', e que o campo 'Id' é a chave primária. Além disso, configura os relacionamentos de um para muitos entre 'Contato' e as entidades 'Usuario', definindo as chaves estrangeiras 'UsuarioCriacaoId' e 'UsuarioOperacaoId' para rastrear quem criou e modificou cada contato. Essencialmente, ele garante que a estrutura da tabela 'Contato' no banco de dados corresponda à classe 'Contato' no código.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoAreaConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `DocumentoArea` é mapeada para o banco de dados usando o Entity Framework Core. Define o nome da tabela (`DocumentoArea` no schema `dbo`) e a chave primária (`Id`).  Estabelece relacionamentos entre `DocumentoArea` e as entidades `Usuario`, indicando que um `DocumentoArea` pode ser criado e/ou operado por um usuário. As colunas `UsuarioCriacaoId` e `UsuarioOperacaoId` são chaves estrangeiras que ligam a tabela `DocumentoArea` às tabelas de usuários, permitindo rastrear quem criou e modificou cada registro.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `Documento` é mapeada para o banco de dados. Define o nome da tabela (`Documento` no schema `dbo`) e a chave primária (`Id`). Estabelece relacionamentos (chaves estrangeiras) com as tabelas `DocumentoArea`, `Instituicao` e `Aprovacao`, permitindo a navegação entre os dados. A relação com `Aprovacao` não é obrigatória. Essencial para o Entity Framework Core persistir e consultar dados de documentos.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EnderecoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `Endereco` (Endereço) é mapeada para o banco de dados. Define o nome da tabela como \"Endereco\" no schema \"dbo\" e especifica a chave primária como \"Id\".  Além disso, configura relacionamentos com as entidades `UsuarioCriacao` e `UsuarioOperacao`, indicando que um endereço pode ser criado e/ou modificado por um usuário, utilizando as chaves estrangeiras `UsuarioCriacaoId` e `UsuarioOperacaoId` respectivamente. Essencial para o funcionamento do Entity Framework Core, garantindo a persistência correta dos dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EventoConfiguration.cs": {
+        "descricao": "Arquivo EventoConfiguration.cs: Define como a entidade 'Evento' será mapeada para a tabela 'Evento' no banco de dados. Configura a chave primária (Id) e os relacionamentos com outras entidades: Instituicao (um-para-muitos), TipoEvento (um-para-muitos) e Endereco (opcional, um-para-muitos). Utiliza o Entity Framework Core para definir essas configurações de mapeamento.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `FaleConosco` (Fale Conosco) é mapeada para o banco de dados. Define o nome da tabela (`FaleConosco` no schema `dbo`) e a chave primária (`Id`).  Estabelece relacionamentos com outras entidades: `FaleConoscoSetor` (setor do fale conosco) e `Usuario` (usuário que criou/operou o registro), definindo as chaves estrangeiras correspondentes. Essencial para o Entity Framework Core persistir e recuperar dados de \"Fale Conosco\" corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetorConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `FaleConoscoSetor` será mapeada para o banco de dados. Define o nome da tabela (`FaleConoscoSetor` no schema `dbo`) e a chave primária (`Id`). Também configura os relacionamentos com as entidades `UsuarioCriacao` e `UsuarioOperacao`, definindo as chaves estrangeiras (`UsuarioCriacaoId` e `UsuarioOperacaoId`) e o tipo de relacionamento (um-para-muitos). Essencial para o Entity Framework Core persistir e consultar dados de setores do \"Fale Conosco\".",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetorContatoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `FaleConoscoSetorContato` é mapeada para o banco de dados. Define o nome da tabela (\"FaleConoscoSetorContato\" no schema \"dbo\") e a chave primária (Id).  Estabelece relacionamentos com outras entidades: `FaleConoscoSetor` (um para muitos), `UsuarioCriacao` e `UsuarioOperacao` (um para muitos em ambos os casos), definindo as chaves estrangeiras correspondentes. Essencial para o Entity Framework Core persistir e recuperar dados desta entidade corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoDocumentoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `HistoricoDocumento` é mapeada para o banco de dados. Define o nome da tabela (`HistoricoDocumento` no schema `dbo`) e a chave primária (`Id`).  Estabelece relacionamentos (chaves estrangeiras) com as entidades `Documento`, `DocumentoArea` e `Instituicao`, permitindo que o Entity Framework Core gerencie a integridade referencial e consultas eficientes entre essas tabelas. Essencial para a persistência e recuperação dos dados de histórico de documentos no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoEventoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `HistoricoEvento` será mapeada para a tabela `HistoricoEvento` no banco de dados. Define a chave primária (`Id`) e os relacionamentos com outras entidades: `Evento`, `Instituicao` e `TipoEvento`, utilizando chaves estrangeiras (`EventoId`, `InstituicaoId`, `TipoEventoId`). Essencial para o Entity Framework Core persistir e recuperar dados corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoInstituicaoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `HistoricoInstituicao` é mapeada para o banco de dados. Define o nome da tabela (\"HistoricoInstituicao\" no schema \"dbo\") e a chave primária (Id). Também configura relacionamentos com outras entidades: `Instituicao`, `InstituicaoArea` e `InstituicaoClassificacao`, definindo as chaves estrangeiras correspondentes (InstiuicaoId, InstituicaoAreaId). Essencial para o Entity Framework Core persistir e recuperar dados corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoNoticiaConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `HistoricoNoticia` é mapeada para o banco de dados. Define o nome da tabela (`HistoricoNoticia` no schema `dbo`) e a chave primária (`Id`). Estabelece relacionamentos com outras entidades: `Noticia` (um para muitos), `Aprovacao` (um para muitos, opcional) e `UsuarioCriacao` (um para muitos). Essencial para o Entity Framework Core persistir e recuperar dados de histórico de notícias corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoUsuarioConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `HistoricoUsuario` é mapeada para o banco de dados. Define o nome da tabela (`HistoricoUsuario` no schema `dbo`) e a chave primária (`Id`). Também estabelece relacionamentos (chaves estrangeiras) com as tabelas `Usuario`, `Pessoa` e `Instituicao`, permitindo que o Entity Framework Core gerencie a integridade referencial e consultas relacionadas a histórico de usuários. Essencial para a persistência e recuperação de dados de histórico no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `Instituicao` é mapeada para o banco de dados. Define o nome da tabela (`Instituicao` no schema `dbo`) e a chave primária (`Id`). Também configura relacionamentos com outras entidades: `InstituicaoArea`, `InstituicaoClassificacao` e `TipoInstituicao`, definindo as chaves estrangeiras correspondentes. Essencial para o Entity Framework Core persistir e recuperar dados da instituição corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoEnderecoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `InstituicaoEndereco` será mapeada para o banco de dados. Define o nome da tabela (`InstituicaoEndereco` no schema `dbo`) e a chave primária (`Id`). Estabelece relacionamentos com as entidades `Instituicao`, `Endereco` e `TipoEndereco` usando chaves estrangeiras (`InstituicaoId`, `EnderecoId`). Essencial para o Entity Framework Core persistir e recuperar dados corretamente, garantindo a integridade relacional entre as tabelas.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "NoticiaConfiguration.cs": {
+        "descricao": "Este arquivo (NoticiaConfiguration.cs) define como a entidade 'Noticia' será mapeada para a tabela 'Noticia' no banco de dados. Utiliza o Entity Framework Core para configurar as colunas, chaves primárias e relacionamentos. Especifica que 'Noticia' tem uma chave primária 'Id', relacionamentos opcionais com 'Aprovacao' (via 'AprovacaoId') e relacionamentos obrigatórios com 'UsuarioCriacao' e 'UsuarioOperacao' (via seus respectivos IDs). Garante a integridade referencial e a estrutura correta da tabela no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "OrigemConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `Origem` é mapeada para o banco de dados. Define o nome da tabela como \"Origem\" no schema \"dbo\" e especifica a coluna \"Id\" como chave primária. Também configura relacionamentos com as entidades `UsuarioCriacao` e `UsuarioOperacao`, definindo as chaves estrangeiras correspondentes (`UsuarioCriacaoId` e `UsuarioOperacaoId`) e o tipo de relacionamento (um-para-muitos). Essencial para o Entity Framework Core persistir e consultar dados de `Origem` corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PaginaConfiguration.cs": {
+        "descricao": "Arquivo PaginaConfiguration.cs define como a entidade 'Pagina' será mapeada para o banco de dados. Ele usa o Entity Framework Core para configurar a tabela 'Pagina' no schema 'dbo', definindo 'Id' como chave primária. Também configura relacionamentos entre 'Pagina' e as entidades 'Usuario', indicando que uma página pode ser criada e modificada por um usuário específico, através das chaves estrangeiras 'UsuarioCriacaoId' e 'UsuarioOperacaoId', respectivamente. Essencial para a persistência e integridade dos dados relacionados a páginas no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PaginaSegmentoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `PaginaSegmento` é mapeada para o banco de dados. Define o nome da tabela (`PaginaSegmento` no schema `dbo`) e a chave primária (`Id`). Estabelece relacionamentos (chaves estrangeiras) com as entidades `Pagina`, `TipoSegmento` e `UsuarioCriacao`, definindo como os dados relacionados são conectados no banco. Essencial para o Entity Framework Core persistir e recuperar dados de `PaginaSegmento` corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PermissaoConfiguration.cs": {
+        "descricao": "Este arquivo define como a entidade `Permissao` será mapeada para a tabela \"Permissao\" no banco de dados. Ele configura a chave primária como o campo \"Id\" e define relacionamentos com as tabelas de usuários, especificando as chaves estrangeiras `UsuarioCriacaoId` e `UsuarioOperacaoId`. Essencialmente, ele garante que o Entity Framework Core entenda a estrutura da tabela e como ela se relaciona com outras entidades no sistema. O código está comentado, indicando que pode estar em desenvolvimento ou não sendo utilizado no momento.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaConfiguration.cs": {
+        "descricao": "Este arquivo (PessoaConfiguration.cs) define como a entidade `Pessoa` será mapeada para a tabela \"Pessoa\" no banco de dados. Ele usa o Entity Framework Core para configurar a tabela, sua chave primária (Id) e os relacionamentos com outras entidades: `UsuarioCriacao` e `UsuarioOperacao`.  Especificamente, define as chaves estrangeiras `UsuarioCriacaoId` e `UsuarioOperacaoId` que ligam cada pessoa ao usuário que a criou e ao usuário que realizou a última operação, respectivamente. Essencial para a persistência e recuperação de dados de pessoas no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaContatoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `PessoaContato` é mapeada para o banco de dados. Define o nome da tabela (`PessoaContato` no schema `dbo`) e a chave primária (`Id`).  Estabelece relacionamentos (chaves estrangeiras) com as entidades `Pessoa`, `Contato` e `TipoContato`, permitindo que o Entity Framework Core gerencie a persistência e o acesso aos dados relacionados. Essencial para o funcionamento do repositório de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaEnderecoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `PessoaEndereco` será mapeada para a tabela \"PessoaEndereco\" no banco de dados. Define a chave primária como \"Id\" e estabelece relacionamentos (chaves estrangeiras) com as tabelas \"Pessoa\", \"Endereco\" e \"TipoEndereco\".  Esses relacionamentos permitem associar uma pessoa a múltiplos endereços, cada um com um tipo específico (residencial, comercial, etc.). Faz parte da camada de acesso a dados do projeto, utilizando Entity Framework Core para definir a estrutura do banco.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "SituacaoAprovacaoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `SituacaoAprovacao` é mapeada para o banco de dados. Define o nome da tabela (`SituacaoAprovacao` no schema `dbo`) e a chave primária (`Id`). Também configura os relacionamentos com as entidades `UsuarioCriacao` e `UsuarioOperacao`, definindo as chaves estrangeiras (`UsuarioCriacaoId` e `UsuarioOperacaoId`) e como esses relacionamentos são estruturados (um usuário pode criar/operar várias situações de aprovação). Essencial para o funcionamento do Entity Framework Core, garantindo a persistência correta dos dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagConfiguration.cs": {
+        "descricao": "O arquivo TagConfiguration.cs define como a entidade 'Tag' será mapeada para o banco de dados usando o Entity Framework Core. Ele especifica que a tabela correspondente é 'Tag' no schema 'dbo', com 'Id' como chave primária.  Além disso, configura relacionamentos entre 'Tag' e a entidade 'Usuario', definindo chaves estrangeiras ('UsuarioCriacaoId' e 'UsuarioOperacaoId') para rastrear quem criou e modificou cada tag. Essencialmente, este arquivo garante a correta persistência e relacionamento dos dados de tags no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagItemConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `TagItem` é mapeada para o banco de dados usando o Entity Framework Core. Define o nome da tabela (`TagItem` no schema `dbo`) e a chave primária (`Id`). Estabelece relacionamentos (chaves estrangeiras) entre `TagItem` e outras entidades: `Origem` (obrigatório), `Documento` (opcional) e `Noticia` (opcional). Garante a integridade referencial e define como os dados de `TagItem` serão armazenados e acessados. Essencial para a persistência e recuperação de dados relacionados a tags e seus itens.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoContatoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `TipoContato` será mapeada para o banco de dados usando o Entity Framework Core. Define o nome da tabela (`TipoContato` no schema `dbo`) e a chave primária (`Id`). Também configura os relacionamentos da entidade com a tabela de `Usuario`, especificando as chaves estrangeiras (`UsuarioCriacaoId` e `UsuarioOperacaoId`) e como esses relacionamentos são estruturados (um usuário pode criar/operar vários tipos de contato). Essencialmente, define a estrutura da tabela e seus links com outras tabelas no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoDocumentoConfiguration.cs": {
+        "descricao": "Este arquivo define a configuração de mapeamento para a entidade `TipoDocumento` no contexto do Entity Framework Core. Ele especifica como a entidade se relaciona com o banco de dados, definindo o nome da tabela (\"TipoDocumento\" no schema \"dbo\") e a chave primária (Id).  Além disso, configura relacionamentos de um-para-muitos com as entidades `UsuarioCriacao` e `UsuarioOperacao`, utilizando as chaves estrangeiras `UsuarioCriacaoId` e `UsuarioOperacaoId` respectivamente.  O código está comentado, indicando que pode não estar em uso no momento.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoEnderecoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `TipoEndereco` é mapeada para o banco de dados usando o Entity Framework Core. Define o nome da tabela (`TipoEndereco` no schema `dbo`) e a chave primária (`Id`). Também configura relacionamentos com as tabelas de usuários, indicando que um `TipoEndereco` pode ser criado e/ou modificado por um usuário, rastreando quem realizou essas operações através das chaves estrangeiras `UsuarioCriacaoId` e `UsuarioOperacaoId`. Essencialmente, define a estrutura e relacionamentos da tabela `TipoEndereco` no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoEventoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `TipoEvento` será mapeada para o banco de dados. Define o nome da tabela (`TipoEvento` no schema `dbo`) e a chave primária (`Id`). Também configura os relacionamentos da entidade: `TipoEvento` possui referências para `UsuarioCriacao` e `UsuarioOperacao`, definindo as chaves estrangeiras correspondentes (`UsuarioCriacaoId` e `UsuarioOperacaoId`). Essencial para o Entity Framework Core persistir e recuperar dados de `TipoEvento` corretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoInstituicaoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `TipoInstituicao` é mapeada para o banco de dados usando o Entity Framework Core. Define o nome da tabela (`TipoInstituicao` no schema `dbo`) e a chave primária (`Id`). Também configura relacionamentos com as tabelas de `Usuario`, indicando que um `TipoInstituicao` pode ser criado e/ou modificado por um usuário, rastreando os IDs dos usuários responsáveis pelas operações de criação e operação. Essencial para a persistência e integridade dos dados no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoSegmentoConfiguration.cs": {
+        "descricao": "Este arquivo configura como a entidade `TipoSegmento` é mapeada para o banco de dados usando o Entity Framework Core. Define o nome da tabela (`TipoSegmento` no schema `dbo`) e a chave primária (`Id`). Também configura relacionamentos com as entidades `Usuario`, indicando que `TipoSegmento` possui chaves estrangeiras (`UsuarioCriacaoId` e `UsuarioOperacaoId`) que se referenciam a usuários que criaram ou operaram o segmento. Essencialmente, define a estrutura da tabela e seus links com outras tabelas no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UsuarioConfiguration.cs": {
+        "descricao": "Este arquivo (UsuarioConfiguration.cs) define como a entidade 'Usuario' será mapeada para a tabela 'Usuario' no banco de dados. Ele usa o Entity Framework Core para configurar o esquema da tabela, definindo a chave primária (Id) e os relacionamentos com outras entidades: 'Pessoa', 'Instituicao' e 'Aprovacao'.  Esses relacionamentos são implementados através de chaves estrangeiras (PessoaId, InstituicaoId). Essencialmente, ele garante que a estrutura da tabela 'Usuario' corresponda à estrutura da classe 'Usuario' no código, facilitando a persistência e recuperação de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AprovacaoRepository.cs": {
+        "descricao": "O arquivo `AprovacaoRepository.cs` implementa a lógica para acessar e manipular dados da entidade `FaleConosco` no banco de dados. Ele atua como um repositório, fornecendo uma camada de abstração entre a lógica de negócios e o acesso aos dados. Herda de `BaseRepository` para funcionalidades comuns e implementa a interface `IAprovacaoRepository`. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações no banco de dados. Essencialmente, permite salvar, buscar, atualizar e deletar registros de `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AreaEventoRepository.cs": {
+        "descricao": "Este arquivo define a classe `AreaEventoRepository` responsável por acessar e manipular dados da entidade `FaleConosco` no banco de dados. Implementa a interface `ITipoEventoRepository`, sugerindo uma relação com tipos de eventos, embora a implementação pareça incompleta (usa `FaleConosco` em vez de um tipo de evento). Utiliza a classe base `BaseRepository` para operações CRUD (criar, ler, atualizar, deletar) e recebe uma instância de `EcossistemaContext` para interagir com o banco de dados. Essencialmente, serve como camada de acesso a dados para a entidade `FaleConosco` dentro do projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ArquivoOrigemRepository.cs": {
+        "descricao": "O `ArquivoOrigemRepository.cs` é responsável por acessar e manipular dados da entidade `FaleConosco` no banco de dados. Ele implementa a interface `IArquivoOrigemRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` no construtor para interagir com o banco, permitindo operações como criar, ler, atualizar e deletar registros de `FaleConosco`. Essencialmente, atua como uma camada de acesso a dados para a entidade `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ArquivoRepository.cs": {
+        "descricao": "O `ArquivoRepository.cs` implementa a interface `IArquivoRepository` e é responsável por acessar e manipular dados da entidade `FaleConosco` no banco de dados. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso a dados (como o contexto do banco). Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações de persistência. Essencialmente, serve como camada de acesso a dados para a entidade `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "BaseRepository.cs": {
+        "descricao": "Este arquivo define a classe `BaseRepository<T>`, uma classe genérica que fornece operações básicas de acesso a dados para entidades do tipo `T`. Utiliza o `EcossistemaContext` (do pacote `Ecossistema.Data`) para interagir com o banco de dados via Entity Framework Core.\n\nImplementa a interface `IBaseRepository<T>`, oferecendo métodos para listar todos os registros (`GetAll`, `GetAllAsync`), buscar por ID (`GetById`, `GetByIdAsync`) e, potencialmente, outros métodos de CRUD (Create, Read, Update, Delete) em classes derivadas. Serve como base para repositórios específicos de cada entidade no projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ContatoRepository.cs": {
+        "descricao": "O arquivo `ContatoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco` (Contato). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados, e implementa a interface `IContatoRepository`. Sua função é permitir operações de CRUD (criar, ler, atualizar, deletar) para contatos, utilizando o contexto `EcossistemaContext` para interagir com a base de dados. Recebe o contexto no construtor para gerenciar a conexão.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoAreaRepository.cs": {
+        "descricao": "Este arquivo implementa o repositório `DocumentoAreaRepository` responsável por acessar e manipular dados da entidade `FaleConosco` (Fale Conosco). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados através do `EcossistemaContext`.  Sua função é prover uma camada de abstração para operações de persistência relacionadas a mensagens de \"Fale Conosco\", isolando a lógica de negócios do acesso direto ao banco de dados. Implementa a interface `IDocumentoAreaRepository`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoRepository.cs": {
+        "descricao": "O `DocumentoRepository.cs` é responsável por acessar e manipular dados da entidade `FaleConosco` no banco de dados. Ele implementa a interface `IDocumentoRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` no construtor para interagir com o banco, permitindo operações como criar, ler, atualizar e deletar registros de `FaleConosco`. Essencialmente, age como uma camada de acesso a dados para a entidade `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EnderecoRepository.cs": {
+        "descricao": "O arquivo `EnderecoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco` (contato). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados. Sua função é permitir operações de CRUD (criar, ler, atualizar, deletar) para dados de contato, utilizando o contexto `EcossistemaContext` para interagir com o banco de dados. Implementa a interface `IEnderecoRepository`, definindo o contrato para essas operações. Essencialmente, age como um intermediário entre a lógica de negócios e o armazenamento persistente dos dados de contato.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EventoRepository.cs": {
+        "descricao": "O arquivo `EventoRepository.cs` implementa a interface `IEventoRepository` para acesso a dados relacionados à entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (através do `EcossistemaContext`). Sua função é fornecer métodos para persistir, consultar, atualizar e deletar registros de `FaleConosco` no banco de dados, atuando como camada de acesso a dados para a lógica de negócio. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoRepository.cs": {
+        "descricao": "O arquivo `FaleConoscoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógicas comuns de acesso ao banco de dados (CRUD). Sua função é permitir que outras partes da aplicação (como serviços) interajam com os dados de \"Fale Conosco\" armazenados no banco, através do contexto `EcossistemaContext`. Recebe o contexto no construtor para realizar as operações. Implementa a interface `IFaleConoscoRepository`, definindo o contrato para acesso a esses dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetorContatoRepository.cs": {
+        "descricao": "Este repositório (FaleConoscoSetorContatoRepository) gerencia o acesso a dados da entidade `FaleConoscoSetorContato`. Ele implementa a interface `IFaleConoscoSetorContatoRepository` e herda funcionalidades de `BaseRepository` para operações CRUD (criar, ler, atualizar, deletar) no banco de dados, utilizando o contexto `EcossistemaContext` para interagir com a base de dados. Essencialmente, ele fornece uma camada de abstração para persistir e recuperar informações sobre setores de contato para o formulário \"Fale Conosco\".",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetorRepository.cs": {
+        "descricao": "Este repositório (FaleConoscoSetorRepository) gerencia o acesso a dados da entidade `FaleConoscoSetor`. Ele herda de `BaseRepository` para operações CRUD básicas e implementa a interface `IFaleConoscoSetorRepository`.\n\nSua função principal é fornecer métodos para buscar e manipular informações sobre os setores de \"Fale Conosco\" no banco de dados. O método `ObterTodosGenerico` retorna uma lista simplificada (ID e Descrição) de todos os setores, útil para preencher dropdowns ou listas na interface do usuário. Utiliza o `EcossistemaContext` para interagir com o banco de dados via Entity Framework Core.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoDocumentoRepository.cs": {
+        "descricao": "Este repositório (HistoricoDocumentoRepository) é responsável por acessar e gerenciar dados da entidade `FaleConosco` no banco de dados. Ele implementa a interface `IHistoricoDocumentoRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` para interagir com o banco, permitindo operações como salvar, buscar, atualizar e deletar registros de `FaleConosco`. Essencialmente, serve como camada de acesso a dados para a entidade `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoEventoRepository.cs": {
+        "descricao": "Este arquivo define a classe `HistoricoEventoRepository` responsável por acessar e manipular dados da entidade `FaleConosco` (equivalente a \"Fale Conosco\"). Ele implementa a interface `IHistoricoEventoRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados.\n\nA classe utiliza o `EcossistemaContext` para interagir com o banco de dados, permitindo operações como salvar, buscar, atualizar e excluir registros de `FaleConosco`. Essencialmente, atua como uma camada de acesso a dados para a entidade, separando a lógica de negócios da interação direta com o banco.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoInstituicaoRepository.cs": {
+        "descricao": "Este arquivo define a classe `HistoricoInstituicaoRepository` responsável por acessar e manipular dados da entidade `FaleConosco` (contatos) no banco de dados. Implementa a interface `IHistoricoInstituicaoRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` (representando a conexão com o banco) no construtor para realizar as operações. Essencialmente, serve como camada de acesso a dados para a entidade `FaleConosco` dentro do projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoNoticiaRepository.cs": {
+        "descricao": "Este arquivo implementa o repositório `HistoricoNoticiaRepository` responsável por acessar e gerenciar dados da entidade `FaleConosco` (apesar do nome, usa `FaleConosco`). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados através do `EcossistemaContext`.  Sua função é fornecer uma camada de abstração para operações de persistência relacionadas a `FaleConosco`, isolando a lógica de negócios do acesso direto ao banco de dados. Implementa a interface `IHistoricoNoticiaRepository`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "HistoricoUsuarioRepository.cs": {
+        "descricao": "Este repositório (HistoricoUsuarioRepository) é responsável por acessar e gerenciar dados da entidade `FaleConosco` no banco de dados. Ele implementa a interface `IHistoricoUsuarioRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` no construtor para interagir com o banco, permitindo operações como salvar, buscar e atualizar registros de `FaleConosco`. Essencialmente, serve como camada de acesso a dados para o histórico de interações do usuário.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoAreaRepository.cs": {
+        "descricao": "Este arquivo define a classe `InstituicaoAreaRepository` responsável por acessar e manipular dados da entidade `FaleConosco` no banco de dados. Implementa a interface `IInstituicaoAreaRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` no construtor para interagir com o banco de dados, permitindo operações de CRUD (Create, Read, Update, Delete) para a entidade `FaleConosco`. Essencialmente, atua como uma camada de acesso a dados para a funcionalidade de \"Fale Conosco\" dentro do sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoClassificacaoRepository.cs": {
+        "descricao": "Este repositório (InstituicaoClassificacaoRepository) é responsável por acessar e manipular dados da entidade `FaleConosco` no banco de dados. Ele implementa a interface `IInstituicaoClassificacaoRepository` e herda funcionalidades de `BaseRepository` para operações CRUD (criar, ler, atualizar, deletar) básicas. Utiliza o contexto `EcossistemaContext` para interagir com o banco de dados, recebendo-o no construtor. Essencialmente, serve como camada de acesso a dados para a entidade `FaleConosco` dentro do sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoRepository.cs": {
+        "descricao": "O arquivo `InstituicaoRepository.cs` implementa a interface `IInstituicaoRepository` para acesso a dados de entidades `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (via `EcossistemaContext`). Sua função é fornecer métodos para persistir, consultar, atualizar e deletar registros de `FaleConosco` no banco de dados, atuando como camada de acesso a dados para a entidade. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "NoticiaRepository.cs": {
+        "descricao": "O arquivo `NoticiaRepository.cs` implementa a camada de acesso a dados para entidades do tipo `FaleConosco` (Feedback/Contato). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (CRUD).  Recebe uma instância de `EcossistemaContext` (representando a conexão com o banco) no construtor e implementa a interface `INoticiaRepository`, definindo operações específicas para `FaleConosco`. Essencialmente, este repositório permite que outras partes da aplicação interajam com os dados de `FaleConosco` de forma organizada e desacoplada.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "OrigemRepository.cs": {
+        "descricao": "O arquivo `OrigemRepository.cs` implementa a lógica para acessar e manipular dados da entidade `FaleConosco` (Fale Conosco). Ele atua como um repositório, abstraindo a interação direta com o banco de dados através do `EcossistemaContext`.  Herda de `BaseRepository` para funcionalidades comuns (CRUD) e implementa a interface `IOrigemRepository`, definindo o contrato para operações específicas relacionadas a `FaleConosco`. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PaginaRepository.cs": {
+        "descricao": "O arquivo `PaginaRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (CRUD). Sua função é fornecer métodos para interagir com a tabela `FaleConosco` no banco de dados através do `EcossistemaContext`, permitindo que outras partes da aplicação (como a API) busquem e persistam dados relacionados ao formulário de contato. Implementa a interface `IPaginaRepository`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PaginaSegmentoRepository.cs": {
+        "descricao": "O arquivo `PaginaSegmentoRepository.cs` implementa a interface `IPaginaSegmentoRepository` para acesso a dados da entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (via `EcossistemaContext`). Sua função é fornecer métodos para persistir, consultar, atualizar e deletar registros de `FaleConosco` no banco de dados, atuando como camada de acesso a dados para a entidade. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PermissaoRepository.cs": {
+        "descricao": "O arquivo `PermissaoRepository.cs` define uma classe para acessar e manipular dados relacionados a permissões no banco de dados. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` (representando a conexão com o banco) no construtor e, embora comentado, parece ter sido originalmente projetado para trabalhar com a entidade `FaleConosco` e implementar a interface `IPermissaoRepository`. Atualmente, o código está inativo devido aos comentários.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaContatoRepository.cs": {
+        "descricao": "O arquivo `PessoaContatoRepository.cs` implementa a interface `IPessoaContatoRepository` para gerenciar dados de \"FaleConosco\" (contatos) no banco de dados. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. A classe usa `EcossistemaContext` para interagir com o banco, permitindo operações como salvar, buscar e atualizar informações de contato. Essencialmente, ele age como uma camada de acesso a dados para a entidade `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaEnderecoRepository.cs": {
+        "descricao": "Este arquivo define a classe `PessoaEnderecoRepository` responsável por acessar e manipular dados relacionados a entidades do tipo `FaleConosco` (contato) no banco de dados. Ele implementa a interface `IPessoaEnderecoRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. O construtor recebe uma instância de `EcossistemaContext` (representando a conexão com o banco) para realizar as operações. Essencialmente, serve como camada de acesso a dados para a entidade `FaleConosco` dentro do projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaRepository.cs": {
+        "descricao": "O arquivo `PessoaRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco` (Feedback/Contato). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (CRUD). Recebe uma instância de `EcossistemaContext` (representando a conexão com o banco) no construtor e implementa a interface `IPessoaRepository`, definindo as operações específicas para `FaleConosco`. Essencialmente, este repositório permite que outras partes da aplicação interajam com os dados de `FaleConosco` de forma organizada e desacoplada.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "SituacaoAprovacaoRepository.cs": {
+        "descricao": "Este repositório (SituacaoAprovacaoRepository) gerencia o acesso a dados da entidade `FaleConosco` no banco de dados. Ele implementa a interface `ISituacaoAprovacaoRepository` e herda funcionalidades de `BaseRepository` para operações CRUD (criar, ler, atualizar, deletar). Recebe uma instância de `EcossistemaContext` para interagir com o banco de dados, permitindo persistência e recuperação de informações sobre os registros de `FaleConosco`. Essencialmente, ele atua como uma camada de acesso a dados para a entidade `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagItemRepository.cs": {
+        "descricao": "O arquivo `TagItemRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógicas comuns de acesso ao banco de dados (CRUD). Sua função é permitir que outras partes da aplicação interajam com os dados de `FaleConosco` armazenados no banco, através de métodos como adicionar, buscar, atualizar e remover registros. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações no banco de dados. Implementa a interface `ITagItemRepository`, definindo o contrato para acesso a dados de `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagRepository.cs": {
+        "descricao": "O arquivo `TagRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógicas comuns de acesso ao banco de dados (CRUD). A classe utiliza o `EcossistemaContext` para interagir com a base de dados, permitindo operações como buscar, inserir, atualizar e deletar registros de `FaleConosco`. Implementa a interface `ITagRepository`, definindo o contrato para acesso a dados desta entidade no projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoContatoRepository.cs": {
+        "descricao": "O arquivo `TipoContatoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco` (que representa um tipo de contato). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados. A classe utiliza o `EcossistemaContext` para interagir com a base de dados, permitindo operações como criação, leitura, atualização e exclusão de registros de `FaleConosco`. Implementa a interface `ITipoContatoRepository`, definindo o contrato para acesso a dados dessa entidade no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoDocumentoRepository.cs": {
+        "descricao": "O arquivo `TipoDocumentoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (CRUD). A classe utiliza o contexto `EcossistemaContext` para interagir com a base de dados, recebendo-o no construtor. Implementa a interface `ITipoDocumentoRepository`, definindo o contrato para operações com `FaleConosco`. Essencialmente, este repositório permite que outras partes da aplicação persistam e recuperem dados de `FaleConosco` no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoEnderecoRepository.cs": {
+        "descricao": "O arquivo `TipoEnderecoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco` (contato). Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (CRUD). A classe utiliza o contexto `EcossistemaContext` para interagir com a base de dados, recebendo-o no construtor. Implementa a interface `ITipoEnderecoRepository`, definindo o contrato para operações com `FaleConosco`. Essencialmente, este repositório permite salvar, buscar, atualizar e deletar registros de `FaleConosco` no banco de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoEventoRepository - Cópia.cs": {
+        "descricao": "Este arquivo define a classe `TipoEventoRepository` responsável por acessar e manipular dados da entidade `FaleConosco` no banco de dados. Implementa a interface `ITipoEventoRepository` e herda de `BaseRepository`, reutilizando lógica comum de acesso a dados. Recebe uma instância de `EcossistemaContext` no construtor para interagir com o banco de dados, permitindo operações como criação, leitura, atualização e exclusão de registros de `FaleConosco`. Apesar do nome, trabalha com a entidade `FaleConosco` e não `TipoEvento`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoEventoRepository.cs": {
+        "descricao": "O arquivo `TipoEventoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógicas comuns de acesso ao banco de dados (CRUD). Sua função é permitir que outras partes do sistema interajam com os dados de `FaleConosco` armazenados no banco, através de métodos como adicionar, buscar, atualizar e remover registros. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações no banco de dados. Implementa a interface `ITipoEventoRepository`, definindo o contrato para acesso a dados de `FaleConosco`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoInstituicaoRepository.cs": {
+        "descricao": "O arquivo `TipoInstituicaoRepository.cs` implementa a interface `ITipoInstituicaoRepository` para acesso a dados relacionados a entidades do tipo `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados através do `EcossistemaContext`. Sua função é fornecer métodos para persistência (salvar, atualizar, excluir) e consulta de dados de `FaleConosco` no banco de dados, atuando como camada de acesso a dados no projeto. Recebe o contexto do banco de dados via injeção de dependência no construtor.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TipoSegmentoRepository.cs": {
+        "descricao": "O arquivo `TipoSegmentoRepository.cs` implementa a camada de acesso a dados para a entidade `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (contexto e operações CRUD básicas).  Sua função é fornecer métodos para interagir com os dados de `FaleConosco` no banco de dados, através do contexto `EcossistemaContext`, implementando a interface `ITipoSegmentoRepository`. Essencialmente, age como um intermediário entre a lógica de negócios e o armazenamento persistente dos dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UsuarioRepository.cs": {
+        "descricao": "O arquivo `UsuarioRepository.cs` implementa a interface `IUsuarioRepository` para acesso a dados de entidades `FaleConosco`. Ele herda de `BaseRepository`, reutilizando lógica comum de acesso ao banco de dados (via `EcossistemaContext`). Sua função é fornecer métodos para persistir, buscar, atualizar e deletar registros de `FaleConosco` no banco de dados, atuando como camada de acesso a dados para a entidade. Recebe uma instância de `EcossistemaContext` no construtor para realizar as operações.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UnitOfWork.cs": {
+        "descricao": "O arquivo `UnitOfWork.cs` implementa o padrão Unit of Work, centralizando o acesso aos repositórios de dados. Ele gerencia as operações de persistência, garantindo que múltiplas operações sejam tratadas como uma única transação. A classe `UnitOfWork` recebe uma instância de `EcossistemaContext` (contexto do Entity Framework) e expõe propriedades para acessar repositórios específicos de entidades como `Aprovacao`, `Arquivo`, `Contato` e `Documento`. Isso facilita a organização e o controle das operações de banco de dados na aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Data.AssemblyInfo.cs": {
+        "descricao": "Este arquivo (Ecossistema.Data.AssemblyInfo.cs) contém metadados sobre a assembly \"Ecossistema.Data\". Ele é gerado automaticamente durante o processo de build e define informações como nome da empresa, versão do assembly (1.0.0.0), configuração (Debug) e título.  Esses atributos são usados para identificar e versionar a biblioteca de dados dentro do projeto Ecossistema. Não requer modificação manual, pois é sobrescrito a cada build.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Data.GeneratedMSBuildEditorConfig.editorconfig": {
+        "descricao": "Este arquivo `.editorconfig` é gerado automaticamente pelo MSBuild durante a compilação do projeto `Ecossistema.Data`. Ele define propriedades de build como o framework alvo (`net6.0`), plataformas suportadas (Linux, macOS, Windows) e o diretório do projeto.  Sua função é padronizar configurações de estilo de código e análise para garantir consistência no projeto `Ecossistema.Repository`, especificamente na camada de dados. `is_global = true` indica que essas configurações se aplicam a todos os arquivos no diretório e subdiretórios.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Data.GlobalUsings.g.cs": {
+        "descricao": "Este arquivo, gerado automaticamente, define `usings` globais para o projeto. Ele importa namespaces essenciais do .NET (System, Collections, IO, Linq, Http, Threading) tornando-os disponíveis em todo o código da camada de dados (Ecossistema.Data) sem necessidade de declaração repetida em cada arquivo. Simplifica o código e melhora a legibilidade, centralizando as importações comuns.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Data.csproj.CopyComplete": {
+        "descricao": "Este arquivo é um artefato gerado durante o processo de build do projeto `Ecossistema.Repository`. Especificamente, é uma cópia completa do arquivo de projeto C# (`Ecossistema.Data.csproj`) após a conclusão da compilação em modo Debug para o framework .NET 6.0. Ele contém metadados sobre as dependências, configurações de compilação e outros detalhes necessários para reconstruir o projeto `Ecossistema.Data`, que provavelmente é responsável pelo acesso e manipulação de dados dentro da aplicação `Ecossistema`. Não é um arquivo de código fonte editável, mas sim um snapshot do projeto em um estado específico.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Data.csproj.FileListAbsolute.txt": {
+        "descricao": "Este arquivo lista os caminhos absolutos dos arquivos gerados durante o processo de build do projeto `Ecossistema.Data`. Inclui o arquivo DLL principal (`Ecossistema.Data.dll`), arquivos de dependência (`.deps.json`), configuração de runtime (`.runtimeconfig.json`) e informações de debug (`.pdb`). Serve como um registro dos artefatos criados para a biblioteca de dados do projeto Ecossistema.API.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Data.csproj.nuget.g.props": {
+        "descricao": "Este arquivo é um arquivo de propriedades gerado pelo NuGet, um gerenciador de pacotes para .NET. Ele armazena configurações relacionadas à restauração de pacotes NuGet no projeto `Ecossistema.Data`.\n\nEspecificamente, define caminhos para arquivos de ativos do projeto, a raiz dos pacotes NuGet do usuário e a versão da ferramenta NuGet utilizada. Garante que as dependências do projeto (pacotes NuGet) sejam restauradas corretamente durante o processo de build, a menos que explicitamente excluídas. Essencial para o funcionamento do projeto, mas geralmente não requer modificação manual.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AprovacaoDto.cs": {
+        "descricao": "O arquivo `AprovacaoDto.cs` define uma classe chamada `AprovacaoDto` que serve como um modelo de dados (DTO - Data Transfer Object) para informações de aprovação. Ele contém propriedades como ID da aprovação, origem, data, usuário que aprovou, motivo, e IDs relacionados a instituições, usuários, eventos, notícias, documentos e status da aprovação. É usado para transferir dados de aprovação entre diferentes camadas da aplicação, como a API e os serviços. As propriedades com `?` indicam que podem ser nulas.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ArquivoDto.cs": {
+        "descricao": "ArquivoDto define a estrutura de dados para representar um arquivo no sistema. Contém o ID, nome original, extensão e os bytes do arquivo em si. É usado para transferir informações sobre arquivos entre diferentes camadas da aplicação, como entre a API e os serviços, facilitando a comunicação e o manuseio de dados de arquivos. O tipo `byte[]?` permite que o arquivo seja opcional.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AtivarDesativarUserDto.cs": {
+        "descricao": "Este DTO (Data Transfer Object) `AtivarDesativarUserDto` é usado para receber o ID de um usuário que será ativado ou desativado na API. Ele contém apenas uma propriedade: `Id`, que é um inteiro anulável (pode ser nulo). A ausência de valor em `Id` pode indicar um erro ou necessidade de validação na camada de serviço. É utilizado como modelo de entrada para operações de ativação/desativação de usuários, simplificando a transferência de dados entre a camada de apresentação e a lógica de negócios.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ConfiguracaoEmail.cs": {
+        "descricao": "O arquivo `ConfiguracaoEmail.cs` define uma classe simples para armazenar as configurações necessárias para enviar e-mails. Ele contém propriedades como nome do remetente (`Name`), endereço de e-mail do remetente (`From`), servidor SMTP (`SmtpServer`), porta (`Port`), nome de usuário (`UserName`) e senha (`Password`) para autenticação no servidor SMTP. Essa classe é usada para encapsular as informações de configuração do e-mail, facilitando a passagem dessas informações entre diferentes partes da aplicação, como serviços de envio de e-mail e configurações do sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoDto.cs": {
+        "descricao": "`DocumentoDto.cs` define um Data Transfer Object (DTO) para representar dados de um documento. Ele contém propriedades como ID, nome, descrição, área do documento, instituição, datas e uma lista de tags associadas. Serve como modelo para transferir informações sobre documentos entre diferentes camadas da aplicação (ex: API e serviços), facilitando a comunicação e evitando exposição direta das entidades de domínio. A propriedade `Arquivo` (comentada) sugere a intenção de suportar upload de arquivos.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoEditDto.cs": {
+        "descricao": "`DocumentoEditDto.cs` define uma classe para transferir dados (DTO) relacionados à edição de documentos. Ele contém propriedades como ID, nome, descrição, área do documento, instituição e data. Usado na API para receber ou enviar informações sobre documentos durante operações de criação ou atualização, facilitando a comunicação entre diferentes camadas da aplicação. As propriedades podem ser nulas (`?`) indicando que não são sempre obrigatórias.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EnderecoDto.cs": {
+        "descricao": "O arquivo EnderecoDto.cs define uma classe para representar dados de endereço. Serve como um modelo de transferência de dados (DTO) entre diferentes camadas da aplicação, como a API e os serviços. Contém propriedades como ID, tipo de endereço, CEP, logradouro, número, complemento, ponto de referência, bairro, cidade e UF. O uso de `?` após os tipos indica que as propriedades podem ser nulas. Essencial para encapsular e transmitir informações de endereço de forma organizada.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EventoArquivosDto.cs": {
+        "descricao": "Este arquivo define a classe `EventoArquivosDto`, usada para transferir dados relacionados a eventos e seus arquivos associados. Recebe o nome do evento (`Evento`), uma lista de arquivos (`Arquivo` - tipo `IFormFile` para upload) e uma lista de tags (`Tags`) que descrevem o evento/arquivos. É usado na API para receber informações de eventos com arquivos, provavelmente para serem processados ou armazenados. A propriedade `Arquivo` pode ser nula, permitindo o envio de eventos sem arquivos.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EventoDto.cs": {
+        "descricao": "O arquivo EventoDto.cs define uma classe para transferir dados (DTO) relacionados a eventos. Ele contém propriedades como ID, título, descrição, datas, local e informações de instituição/tipo de evento. Serve como modelo para comunicação entre diferentes camadas da aplicação (ex: API e serviços), facilitando a troca de informações sobre eventos sem expor a estrutura interna das entidades. Inclui também dados de endereço e link externo, além de um indicador para exibir ou não o evento no mapa.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EventoGetImagenDto.cs": {
+        "descricao": "O arquivo `EventoGetImagenDto.cs` define uma classe para transferir dados de um evento, incluindo sua imagem, entre diferentes partes da aplicação. Ele contém propriedades como ID, título, datas, local, responsável, usuário associado, área do evento, um array de bytes representando a imagem (`Arquivo`), uma lista de tags e a data da última operação. A propriedade `LinkImagem` armazena o link para a imagem do evento. Essa classe é usada para representar os dados de um evento quando a imagem precisa ser incluída na transferência, por exemplo, ao exibir detalhes de um evento na interface do usuário ou ao enviar dados para outras APIs.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoDTO.cs": {
+        "descricao": "O arquivo `FaleConoscoDTO.cs` define uma classe para transportar dados do formulário \"Fale Conosco\". Ele atua como um modelo para receber informações como nome, email, telefone, empresa, cargo, setor e a mensagem do usuário.  Esses dados são usados para comunicação entre a interface (API) e a lógica de negócio do sistema, facilitando o envio de mensagens e o registro de solicitações. O `SetorId` é opcional (int?).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoDto.cs": {
+        "descricao": "O arquivo `InstituicaoDto.cs` define a classe `InstituicaoDto`, usada para transferir dados de uma instituição entre diferentes partes da aplicação. Ela contém propriedades como ID, razão social, CNPJ, responsável, áreas e classificações associadas, além de descrição, missão, visão e valores da instituição. Serve como modelo para representar informações de instituições na API, facilitando a comunicação entre serviços e a camada de apresentação. O `?` após os tipos indica que as propriedades podem ser nulas.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "LoginDto.cs": {
+        "descricao": "O arquivo LoginDto.cs define uma classe simples para transportar dados de login. Ela possui duas propriedades: Email e Password, ambas do tipo string e marcadas como obrigatórias ([Required]). Essa classe é usada para receber as credenciais do usuário na API, facilitando a validação e o processamento das informações de login no serviço. Essencialmente, atua como um modelo para os dados de entrada da requisição de login.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "LoginSucessoDto.cs": {
+        "descricao": "O `LoginSucessoDto.cs` define uma classe para transferir dados após um login bem-sucedido. Ele encapsula informações essenciais do usuário autenticado, como ID, nome de usuário, ID da instituição à qual pertence, um token de acesso e uma lista de papéis (roles) associados ao usuário. Este DTO é usado para retornar os dados necessários para a aplicação cliente após a autenticação, permitindo que ela personalize a experiência do usuário e controle o acesso a funcionalidades.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Mensagem.cs": {
+        "descricao": "O arquivo `Mensagem.cs` define uma classe para representar uma mensagem de e-mail. Ele contém propriedades para os destinatários (`Para`), assunto (`Assunto`, com prefixo padrão \"Ecossistema - \") e conteúdo (`Conteudo`). A classe utiliza a biblioteca MimeKit para estruturar a mensagem.  A constante `TopHtml` armazena o cabeçalho HTML padrão para formatação do corpo do e-mail, incluindo estilos CSS básicos para compatibilidade e responsividade. Este DTO (Data Transfer Object) é usado para encapsular os dados necessários para o envio de e-mails dentro do sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "NoticiaDetalhesDto.cs": {
+        "descricao": "`NoticiaDetalhesDto.cs` define uma classe para transferir dados detalhados de uma notícia. Serve como modelo para representar informações como ID, título, autor, datas de publicação/operação, descrição, subtítulo, lista de tags associadas e um arquivo (imagem/documento) em formato byte array. É usado para comunicação entre diferentes camadas da aplicação, como a API e os serviços, facilitando a passagem de dados da notícia.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "NoticiaDto.cs": {
+        "descricao": "O arquivo `NoticiaDto.cs` define a estrutura de dados (DTO - Data Transfer Object) para representar uma notícia. Ele contém propriedades como ID, título, descrição, subtítulo e data de publicação. A lista de `TagDto` permite associar tags à notícia. Este DTO é usado para transferir dados de notícias entre diferentes camadas da aplicação (ex: API e serviços), desacoplando a lógica de negócios da representação dos dados. O uso de `?` indica que as propriedades podem ser nulas.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "NoticiaListaDto.cs": {
+        "descricao": "`NoticiaListaDto.cs` define uma classe para representar dados de notícias em formato simplificado para listagem. Contém propriedades como ID, título, nome do usuário que publicou, datas de publicação e operação, descrição, subtítulo, lista de tags associadas e um arquivo (imagem/documento). É usado para transferir dados de notícias entre as camadas de serviço e apresentação da API, facilitando a exibição de listas de notícias. As propriedades podem ser nulas (`?`) indicando que nem todos os campos são obrigatórios.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "PessoaNomeDto.cs": {
+        "descricao": "O arquivo `PessoaNomeDto.cs` define um modelo de dados simples (DTO - Data Transfer Object) chamado `PessoaNomeDto`. Ele é usado para transferir informações básicas de uma pessoa entre diferentes partes da aplicação, especificamente o ID e o nome completo. Serve como estrutura para representar dados de pessoa em camadas da API, como na comunicação entre serviços e controllers. Não contém lógica de negócio, apenas propriedades para armazenar dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "RedefinirSenhaDto.cs": {
+        "descricao": "O arquivo RedefinirSenhaDto.cs define uma classe para transportar dados relacionados à redefinição de senha. Ele contém propriedades para o email do usuário, o código OTP (One-Time Password) recebido, a nova senha desejada e a confirmação da nova senha. Este DTO (Data Transfer Object) é usado para receber informações da API e passar para a lógica de redefinição de senha, garantindo que os dados necessários estejam organizados e seguros.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ResgistrarLoginDto.cs": {
+        "descricao": "O arquivo `ResgistrarLoginDto.cs` define uma classe (DTO - Data Transfer Object) usada para receber dados de um novo usuário durante o registro ou login. Ele contém propriedades como `Username`, `Cargo`, `InstituicaoId`, `Role`, `Email`, `Password` e `ConfirmPassword`, todas marcadas como obrigatórias (`Required`). A propriedade `Email` também possui validação para garantir um formato de e-mail válido (`EmailAddress`). Este DTO é usado para transferir dados entre a camada de apresentação (ex: API) e a camada de serviço, facilitando a validação e organização dos dados do usuário.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ResgistrarUsuarioComumDto.cs": {
+        "descricao": "Este arquivo define a classe `ResgistrarUsuarioComumDto`, usada para receber dados de um novo usuário comum na API. Ele contém propriedades como nome, CPF, data de nascimento, telefone, cargo, instituição, role (padrão 4) e localização (UF/Cidade). As anotações `[Required]` garantem que esses campos sejam preenchidos durante o registro, exibindo mensagens de erro caso contrário. Essa DTO (Data Transfer Object) serve como modelo para a requisição de criação de um usuário comum no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Response.cs": {
+        "descricao": "O arquivo `Response.cs` define uma classe simples para padronizar as respostas da API. Ela contém duas propriedades: `Status` (string, opcional) para indicar o resultado da operação (ex: \"Sucesso\", \"Erro\") e `Message` (string, opcional) para fornecer uma mensagem descritiva ao usuário. Essa classe é usada para encapsular informações de retorno de serviços, facilitando a comunicação entre a API e o cliente. É um DTO (Data Transfer Object) para representar a estrutura de resposta.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "RespostaPadrao.cs": {
+        "descricao": "Este arquivo define a classe `RespostaPadrao`, usada para padronizar as respostas da API. Ela encapsula um código de status (`Codigo`), uma mensagem descritiva (`Resposta`) e dados de retorno opcionais (`Retorno`).  Possui construtores para criar respostas com diferentes combinações de código, mensagem e dados, facilitando o envio de respostas consistentes e informativas para as requisições. A classe serve como um modelo para respostas em diversos serviços da aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagDto.cs": {
+        "descricao": "O arquivo TagDto.cs define uma classe simples chamada `TagDto`. Essa classe serve como um modelo de dados (DTO - Data Transfer Object) para representar uma tag, contendo apenas uma propriedade: `Descricao`, que armazena a descrição textual da tag. É usada para transferir dados relacionados a tags entre diferentes camadas da aplicação, como entre a camada de serviços e a camada de apresentação (API). A propriedade `Descricao` é do tipo string e permite valores nulos.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UrlStringsDto.cs": {
+        "descricao": "O arquivo `UrlStringsDto.cs` define uma classe simples chamada `UrlStringsDto`. Essa classe serve como um Data Transfer Object (DTO) para encapsular a URL da API. Ela possui uma única propriedade pública, `ApiUrl` (string), que armazena o endereço base da API. O DTO é usado para transferir essa informação entre diferentes camadas da aplicação, promovendo organização e desacoplamento. Essencialmente, centraliza a configuração da URL da API.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UserRolesDto.cs": {
+        "descricao": "O arquivo UserRolesDto.cs define constantes de string representando os diferentes papéis de usuário no sistema. Ele serve como um repositório centralizado para esses nomes, evitando \"magic strings\" no código. As constantes incluem \"AdminMaster\", \"AdminGeral\", \"AdminParceiro\" e \"UsuarioComum\", que são usados para controlar o acesso e as permissões dos usuários na aplicação Ecossistema. É usado por outros componentes para verificar e atribuir roles.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UsuarioCriacaoDto.cs": {
+        "descricao": "O arquivo `UsuarioCriacaoDto.cs` define uma classe para transportar dados de criação de um usuário. Ele atua como um modelo simplificado, recebendo informações como `Id` e `Cargo` para o processo de criação. Propriedades comentadas indicam campos que podem ter sido considerados, mas não são essenciais para a criação básica. Este DTO (Data Transfer Object) facilita a comunicação entre diferentes camadas da aplicação, separando a lógica de negócios da estrutura de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UsuarioNoticiaDto.cs": {
+        "descricao": "Este arquivo define a classe `UsuarioNoticiaDto`, um Data Transfer Object (DTO) usado para transferir dados relacionados à associação entre um usuário (`PessoaId`) e uma notícia (`Id`). Serve como modelo simplificado para comunicação entre diferentes camadas da aplicação, como a API e os serviços, evitando exposição direta das entidades do domínio (`Ecossistema.Domain.Entities`). `Id` é o identificador da associação, e `PessoaId` identifica o usuário relacionado.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Services.csproj": {
+        "descricao": "Este arquivo `Ecossistema.Services.csproj` define um projeto .NET 6 para a camada de serviços da aplicação \"Ecossistema\". Ele gerencia as dependências necessárias para essa camada, incluindo bibliotecas para envio de e-mail (MailKit, MimeKit), autenticação JWT (Microsoft.AspNetCore.Authentication.JwtBearer), gerenciamento de identidade (Microsoft.AspNetCore.Identity.EntityFrameworkCore) e acesso a dados via Entity Framework Core (Microsoft.EntityFrameworkCore.Tools).  Além disso, inclui uma referência a outro projeto dentro da solução, `Ecossistema.Data.csproj` (camada de repositório/dados), indicando que a camada de serviços depende da camada de dados para persistência.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IAprovacaoService.cs": {
+        "descricao": "Define a interface `IAprovacaoService` para gerenciar aprovações no sistema. Oferece métodos para incluir, editar e excluir registros de aprovação (`AprovacaoDto`). O método `Vincular` associa uma aprovação a uma origem específica (`EOrigem`) e registra o resultado em `RespostaPadrao`.  Utiliza `RespostaPadrao` para padronizar respostas de operações e exige identificação do usuário (`usuarioId`) em inclusão/edição. Essencial para controlar fluxos de aprovação dentro do ecossistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IArquivoService.cs": {
+        "descricao": "Interface que define as operações para gerenciar arquivos no sistema. Permite vincular arquivos a entidades (identificadas por origem e ID), listar arquivos associados, baixar arquivos, excluir e atualizar metadados. Utiliza `IFormFile` para receber arquivos via HTTP e `ArquivoDto` para representar dados do arquivo. A interface também inclui métodos para lidar com respostas padronizadas (`RespostaPadrao`) e identificar o tipo de origem do arquivo (`EOrigem`).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IAutenticacaoService.cs": {
+        "descricao": "Interface que define as operações de autenticação e gerenciamento de usuários. Expõe métodos para login, logout, registro de administrador e usuário comum, geração de código para redefinição de senha e efetiva redefinição. Utiliza `RespostaPadrao` para padronizar o retorno das operações e DTOs específicos para cada ação, como `LoginDto` e `RedefinirSenhaDto`. Serve como contrato para serviços concretos que implementam a lógica de autenticação no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IDocumentoService.cs": {
+        "descricao": "Este arquivo define a interface `IDocumentoService`, responsável por operações relacionadas a documentos no sistema. Ela expõe métodos para incluir, editar, excluir e listar documentos, tanto de forma geral quanto por usuário. Os métodos recebem objetos DTO (`DocumentoDto`) e arquivos (`IFormFile`) para manipulação dos dados e utilizam um ID de usuário para controle de acesso e auditoria. A interface retorna um objeto `RespostaPadrao` indicando o sucesso ou falha da operação, além de dados relevantes. Serve como contrato para qualquer implementação concreta do serviço de documentos.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IEmailService.cs": {
+        "descricao": "Este arquivo define a interface `IEmailService`, responsável por encapsular a lógica de envio de e-mails na aplicação. A interface expõe um único método assíncrono, `EnviarEmail`, que recebe um objeto `Mensagem` (definido em `Ecossistema.Services.Dto`) contendo os detalhes do e-mail a ser enviado (destinatário, assunto, corpo, etc.).  Outras classes implementarão esta interface para fornecer a funcionalidade real de envio, permitindo flexibilidade e testabilidade. Essencialmente, define o contrato para qualquer serviço que precise enviar e-mails.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IEnderecoService.cs": {
+        "descricao": "Este arquivo define a interface `IEnderecoService`, responsável por operações relacionadas a endereços no sistema. Ela expõe métodos para incluir, editar, excluir e vincular informações de endereço (representadas pelo `EnderecoDto`). Cada método retorna um `RespostaPadrao` indicando sucesso/falha, e alguns exigem o ID do usuário para controle de acesso/auditoria. A função `Vincular` é um caso especial, recebendo dados e uma resposta pré-existente para possível atualização. Essencial para a camada de serviço que gerencia a lógica de negócio de endereços.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IEventoService.cs": {
+        "descricao": "IEventoService define a interface para operações relacionadas a eventos. Permite criar, editar, excluir e listar eventos, além de obter detalhes de um evento específico. Oferece métodos para listar tipos de eventos, áreas, endereços (filtrados por instituição e tipo) e organizadores. As operações utilizam `EventoArquivosDto` para dados e `RespostaPadrao` para retorno, exigindo um token de autenticação para inclusão/edição e um ID de login para exclusão. A interface facilita a separação entre a lógica de negócios de eventos e sua implementação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IFaleConoscoService.cs": {
+        "descricao": "Este arquivo define a interface `IFaleConoscoService`, responsável por operações relacionadas ao \"Fale Conosco\" na aplicação. Ela expõe métodos para: obter informações gerais do \"Fale Conosco\", recuperar contatos de um setor específico (identificado por `faleConoscoSetorId`), e registrar uma nova mensagem/solicitação (`FaleConoscoDTO`), retornando uma resposta padrão (`RespostaPadrao`).  Essa interface serve como contrato para qualquer implementação concreta do serviço, permitindo flexibilidade e testabilidade.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IFaleConoscoSetorService.cs": {
+        "descricao": "Este arquivo define uma interface chamada `IFaleConoscoSetorService`. Ela expõe um único método assíncrono: `ObterTodosFaleConoscoSetor()`. Este método retorna uma `RespostaPadrao` contendo informações sobre os setores do \"Fale Conosco\".  A interface serve para definir um contrato para serviços que precisam listar os setores disponíveis para contato, permitindo flexibilidade na implementação (ex: acesso a banco de dados, API externa). O `Dto` `RespostaPadrao` provavelmente encapsula o resultado da operação e possíveis erros.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IInstituicaoService.cs": {
+        "descricao": "IInstituicaoService define a interface para operações relacionadas a instituições. Permite criar, editar, excluir e buscar informações de instituições e seus endereços. Inclui métodos para vincular endereços a instituições, buscar todas as instituições, parceiros por área e uma instituição específica por ID. Retorna `RespostaPadrao` para indicar sucesso/falha e dados relevantes. Usa `InstituicaoDto` e `EnderecoDto` para transferência de dados. O `idLogin` e `usuarioId` são usados para controle de acesso/autorização.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "INoticiaService.cs": {
+        "descricao": "Este arquivo define a interface `INoticiaService`, responsável por operações relacionadas a notícias. Ela expõe métodos para criar (`Incluir`), atualizar (`Editar`), excluir (`Excluir`) e listar notícias, com opções de paginação e filtro por autor. Permite obter detalhes de uma notícia específica (`Detalhes`) e listar autores (`ListarAutores`). Os métodos recebem um DTO (`NoticiaDto`), um arquivo (opcional) e um ID de login para controle de acesso, retornando uma `RespostaPadrao` com o resultado da operação. A interface serve como contrato para a implementação do serviço de notícias na aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ITagService.cs": {
+        "descricao": "Este arquivo define a interface `ITagService`, responsável por operações relacionadas a tags no sistema. Ela expõe dois métodos assíncronos: `CadastrarTag` que recebe um objeto `TagDto` e o ID do usuário para criar uma nova tag, retornando uma `RespostaPadrao` indicando sucesso ou falha; e `ListarTodas` que retorna uma lista de todas as tags existentes, também encapsulada em `RespostaPadrao`. Essa interface serve como contrato para qualquer implementação concreta do serviço de tags, promovendo a separação de responsabilidades e facilitando testes.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "IUsuarioService.cs": {
+        "descricao": "Este arquivo define a interface `IUsuarioService`, responsável por operações relacionadas a usuários no sistema. Ela expõe métodos para cadastrar (comentado), editar, ativar/desativar, excluir, listar e obter detalhes de um usuário. Cada método retorna um `RespostaPadrao` (provavelmente contendo dados e status da operação). A interface serve como contrato para qualquer implementação concreta do serviço de usuário, promovendo a separação de responsabilidades e testabilidade.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AprovacaoService.cs": {
+        "descricao": "O `AprovacaoService` gerencia a lógica de aprovação no sistema. Recebe dados de aprovação (`AprovacaoDto`) e o ID do usuário que está solicitando a aprovação. Utiliza `IUnitOfWork` para persistir as informações no banco de dados. A função `Incluir` processa a aprovação com base na origem (definida em `EOrigem`), direcionando o fluxo para diferentes tipos de entidades (Parceiro, etc.). Retorna uma `RespostaPadrao` indicando sucesso ou falha.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ArquivoService.cs": {
+        "descricao": "O `ArquivoService` gerencia o armazenamento e recuperação de arquivos. Ele usa `IUnitOfWork` para acessar dados e `IWebHostEnvironment` para obter o caminho da aplicação.  Salva arquivos em pastas específicas (RepositoryFiles, Documents, etc.) dentro do diretório da aplicação. Implementa a interface `IArquivoService`, oferecendo métodos para upload e acesso a arquivos, provavelmente utilizados para documentos, imagens de notícias e eventos no sistema.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "AutenticacaoService.cs": {
+        "descricao": "Este serviço (AutenticacaoService) gerencia a autenticação e autorização de usuários. Ele usa o UserManager do ASP.NET Identity para criar, validar e autenticar usuários, além de gerenciar roles. A principal função é receber credenciais, verificar a senha, gerar tokens JWT para acesso seguro à API e, potencialmente, enviar e-mails de confirmação/recuperação de senha via IEmailService. Ele interage com o banco de dados através de IUnitOfWork para persistência de dados do usuário e com a configuração (IConfiguration) para obter chaves de segurança.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "DocumentoService.cs": {
+        "descricao": "Este serviço (DocumentoService) gerencia documentos no sistema. Ele permite criar, atualizar, excluir e listar documentos, interagindo com o banco de dados via `IUnitOfWork`. Utiliza `IArquivoService` para lidar com uploads/downloads de arquivos e `ITagService` para associar tags aos documentos. Recebe configurações de URL via `UrlStringsDto`. A classe implementa a interface `IDocumentoService`, definindo o contrato para operações com documentos na aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EmailService.cs": {
+        "descricao": "O arquivo `EmailService.cs` implementa a lógica para envio de emails. Ele recebe uma configuração de email (`ConfiguracaoEmail`) e utiliza a biblioteca MailKit para conectar a um servidor SMTP e enviar mensagens. A função principal `EnviarEmail` recebe um objeto `Mensagem` (contendo destinatários, assunto e corpo) e o converte para o formato `MimeMessage` do MailKit, enviando-o através do servidor configurado. Essencialmente, este serviço encapsula o envio de emails, abstraindo a complexidade da conexão SMTP e formatação da mensagem.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EnderecoService.cs": {
+        "descricao": "O `EnderecoService` gerencia a criação de endereços no sistema. Recebe dados do tipo `EnderecoDto`, valida-os e, se válidos, cria uma nova entidade `Endereco` persistindo-a via `IUnitOfWork`.  A validação é feita pelo método `ValidarIncluir`. Retorna uma `RespostaPadrao` indicando sucesso ou falha, incluindo mensagens de erro se houver. É usado para cadastrar endereços associados a um usuário específico (identificado por `usuarioId`).",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "EventoService.cs": {
+        "descricao": "EventoService gerencia operações de eventos. Recebe injeção de dependências para acesso a dados (IUnitOfWork), serviços de aprovação, arquivo, endereço, tag e gerenciamento de usuários. Implementa IEventoService, fornecendo métodos para criar, listar, atualizar e excluir eventos, incluindo validações e interações com outros serviços para funcionalidades como aprovação e upload de arquivos. Utiliza DTOs para transferência de dados e o UserManager para autenticação/autorização.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoService.cs": {
+        "descricao": "O `FaleConoscoService` gerencia informações de \"Fale Conosco\". Ele busca dados do repositório (`IUnitOfWork`) e retorna uma lista formatada como DTOs, incluindo nome, email, telefone, empresa e cargo. Utiliza `IEmailService` (não implementado no trecho) para envio de emails relacionados ao contato. A classe depende de injeção de dependência para `IUnitOfWork` e `IEmailService`.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "FaleConoscoSetorService.cs": {
+        "descricao": "Este serviço (FaleConoscoSetorService) busca e retorna os setores de \"Fale Conosco\" ativos no sistema. Utiliza a interface `IUnitOfWork` para acessar os dados, filtrando apenas os registros com `Ativo = true`.  A resposta é formatada como `RespostaPadrao` contendo uma lista simplificada com ID e descrição de cada setor. Serve para alimentar interfaces que exibem as opções de setor para o usuário.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "InstituicaoService.cs": {
+        "descricao": "Este arquivo define a classe `InstituicaoService` responsável pela lógica de negócios relacionada a instituições. Ele implementa a interface `IInstituicaoService` e utiliza `IUnitOfWork` para acesso ao banco de dados e `IEnderecoService` para validar/criar endereços.\n\nA função principal é `Incluir`, que recebe um `InstituicaoDto` e o ID do usuário logado, valida os dados (usando `ValidarIncluir`, não implementado no trecho) e, se válidos, persiste a instituição no banco de dados. Retorna um objeto `RespostaPadrao` com o resultado da operação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "NoticiaService.cs": {
+        "descricao": "O `NoticiaService` gerencia operações relacionadas a notícias. Ele usa `IUnitOfWork` para acesso ao banco de dados, `IArquivoService` para lidar com arquivos (imagens, etc.), `ITagService` para tags e `UserManager` para informações do usuário.\n\nSua função principal é criar, atualizar, excluir e listar notícias, validando dados e interagindo com outros serviços para armazenar arquivos e associar tags. Implementa a interface `INoticiaService`, definindo o contrato para essas operações.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "TagService.cs": {
+        "descricao": "O arquivo `TagService.cs` implementa a lógica para gerenciar tags no sistema. Ele recebe uma instância de `IUnitOfWork` para acessar o banco de dados. A função principal, `CadastrarTag`, recebe um objeto `TagDto` e o ID do usuário, converte a descrição da tag para minúsculas, verifica se já existe uma tag com a mesma descrição e, se não existir, a cadastra. Retorna um objeto `RespostaPadrao` com o ID da tag (nova ou existente) e uma mensagem de sucesso ou erro. Este serviço atua como intermediário entre a API e a camada de dados para operações relacionadas a tags.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UsuarioService.cs": {
+        "descricao": "O `UsuarioService` gerencia a ativação/desativação de usuários. Recebe um DTO (`AtivarDesativarUserDto`) e o ID do usuário via parâmetro. Utiliza `IUnitOfWork` para acessar dados, buscando o usuário no banco. Se encontrado, atualiza o status (ativo/inativo) e data de modificação. Retorna uma `RespostaPadrao` indicando sucesso ou falha. É a camada de serviço responsável por essa lógica de negócio, separando-a da camada de dados.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Services.AssemblyInfo.cs": {
+        "descricao": "Este arquivo, `Ecossistema.Services.AssemblyInfo.cs`, é gerado automaticamente durante o processo de build do projeto. Ele contém metadados sobre o assembly `Ecossistema.Services`, como nome da empresa, versão, título e configuração (Debug neste caso). Essas informações são usadas pelo sistema para identificar e gerenciar o assembly em tempo de execução e não devem ser modificadas manualmente, pois serão sobrescritas na próxima compilação. Essencialmente, ele define atributos que descrevem o assembly para o .NET runtime.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Services.GeneratedMSBuildEditorConfig.editorconfig": {
+        "descricao": "Este arquivo `.editorconfig` é gerado automaticamente pelo MSBuild durante a compilação do projeto `Ecossistema.Services`. Ele define propriedades de build específicas para o projeto, como a versão do framework (.NET 6.0), plataformas suportadas (Linux, macOS, Windows) e o diretório raiz do projeto.  `is_global = true` indica que estas configurações se aplicam a todo o repositório, se não houver configurações mais específicas em outros arquivos `.editorconfig`. Essencialmente, ele configura o ambiente de build para garantir a compilação correta do serviço.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Services.GlobalUsings.g.cs": {
+        "descricao": "Este arquivo, gerado automaticamente, define `usings` globais para o projeto Ecossistema.Services. Ele importa namespaces comuns do .NET (System, Collections, IO, Linq, Http, Threading) para que estejam disponíveis em todo o código do projeto sem precisar ser declarados individualmente em cada arquivo. Simplifica o código e melhora a legibilidade, centralizando as importações essenciais.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Services.csproj.CopyComplete": {
+        "descricao": "Este arquivo é um artefato gerado durante o processo de build do projeto `Ecossistema.Services`. Ele contém uma cópia completa do arquivo de projeto `.csproj`, incluindo todas as referências, configurações de build e metadados.  É usado internamente pelo .NET SDK para rastrear e gerenciar as dependências do projeto e garantir builds consistentes. Não é um arquivo de código-fonte que você precisa editar diretamente; ele é um subproduto do processo de compilação. Sua presença indica que o projeto foi compilado com sucesso até um certo ponto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Services.csproj.FileListAbsolute.txt": {
+        "descricao": "Este arquivo lista os caminhos absolutos dos arquivos gerados durante o processo de build do projeto `Ecossistema.Services`. Inclui arquivos como DLLs (código executável), arquivos de dependência (.deps.json), arquivos de configuração de runtime (.runtimeconfig.json) e arquivos de depuração (.pdb). Serve como um registro dos artefatos produzidos para a aplicação, útil para rastreamento e deploy. O caminho base indica que o build foi feito localmente pelo usuário 'estagio.startup37'.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Services.csproj.nuget.g.props": {
+        "descricao": "Este arquivo é gerado automaticamente pelo NuGet, gerenciador de pacotes do .NET. Ele armazena configurações importantes para o processo de restauração de dependências do projeto `Ecossistema.Services`.\n\nDefine caminhos para pacotes NuGet (onde as bibliotecas são baixadas), a ferramenta de restauração (NuGet) e o arquivo que lista os assets do projeto. Garante que as dependências do projeto sejam resolvidas corretamente durante a compilação, evitando erros de bibliotecas faltantes. Essencial para o funcionamento do projeto, mas não requer modificação manual.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Atribuitos.cs": {
+        "descricao": "O arquivo `Atribuitos.cs` define dois atributos personalizados: `StringValueAttribute` e `Int32ValueAttribute`. Atributos são metadados que podem ser aplicados a elementos do código (classes, enums, etc.).\n\n`StringValueAttribute` associa uma string a um elemento, acessível via propriedade `StringValue`. `Int32ValueAttribute` faz o mesmo, mas com um inteiro, via `Int32Value`.\n\nEsses atributos servem para adicionar informações extras aos elementos do código, que podem ser lidas em tempo de execução para customizar o comportamento da aplicação ou gerar documentação. São usados para definir valores associados a enums, por exemplo.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Enum.cs": {
+        "descricao": "O arquivo Enum.cs define tipos enumerados (enums) usados para representar valores fixos no sistema. Contém ENaturezaOperacao (Inclusão, Alteração, Exclusão), EOrigem (Usuário, Parceiro, etc.) e ESituacaoAprovacao. Cada valor do enum possui atributos que mapeiam para um valor inteiro e uma string descritiva, facilitando a utilização em diferentes contextos (banco de dados, interface, etc.). Esses enums ajudam a manter o código mais legível e consistente, evitando o uso de \"números mágicos\".",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "OrderBy.cs": {
+        "descricao": "O arquivo OrderBy.cs define constantes para representar a ordem de classificação de dados. Ele contém duas strings: \"ASC\" para ordem crescente e \"DESC\" para ordem decrescente. Essas constantes são usadas em outros componentes da API para especificar a direção da ordenação em consultas e exibições de dados, promovendo consistência e legibilidade no código.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "RandomNumberGeneartor.cs": {
+        "descricao": "O arquivo `RandomNumberGeneartor.cs` define uma classe estática para gerar números aleatórios. Ele contém um único método público, `Generate(int min, int max)`, que retorna um inteiro aleatório dentro do intervalo especificado (inclusive o `min`, exclusivo o `max`). A classe utiliza uma instância privada e estática de `Random` para garantir que a geração de números seja pseudoaleatória e consistente durante a execução da aplicação. É usado para gerar valores aleatórios em outras partes do projeto, como simulações ou testes.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Util.csproj": {
+        "descricao": "Este arquivo `Ecossistema.Util.csproj` define um projeto de biblioteca de classes .NET 6.0. Ele habilita recursos como \"Implicit Usings\" (uso implícito de namespaces) e \"Nullable Reference Types\" (tipos de referência anuláveis) para maior segurança e concisão do código. A dependência `Newtonsoft.Json` (versão 13.0.1) é incluída, indicando que esta biblioteca provavelmente fornece utilitários para trabalhar com dados JSON, como serialização e deserialização, dentro do ecossistema da API. Essencialmente, é um projeto de suporte com funções auxiliares e manipulação de JSON.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Extensoes.cs": {
+        "descricao": "O arquivo Extensoes.cs fornece métodos de extensão para a classe string em C#. Ele adiciona funcionalidades para converter strings em tipos numéricos (int, long) com tratamento de erros, retornando 0 ou null caso a conversão falhe. Esses métodos facilitam a conversão segura de valores de string recebidos, por exemplo, de configurações ou requisições, evitando erros de formatação. O código faz parte da biblioteca de utilidades do projeto Ecossistema.API.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Recursos.cs": {
+        "descricao": "Arquivo `Recursos.cs`: Fornece métodos utilitários para auditoria de objetos. A função `Auditoria<T>` recebe um objeto, ID do usuário e data (opcional) e preenche campos de auditoria (DataCriacao, UsuarioCriacao, DataAlteracao, UsuarioAlteracao) se presentes nas propriedades do objeto. Busca o ID do objeto via propriedade \"Id\" para fins de log. Utiliza reflexão para acessar propriedades dinamicamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Substitucoes.cs": {
+        "descricao": "O arquivo `Substitucoes.cs` define um método de extensão para a classe `string` chamado `RemoverAcentos`. Este método remove acentos e diacríticos de uma string, normalizando a string para a forma decomposta e removendo caracteres de marcação não espaçados. O resultado é uma string sem acentos, útil para comparações de texto ou para padronização de dados. Ele utiliza `StringBuilder` para eficiência na manipulação de strings.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "ValidacaoUtil.cs": {
+        "descricao": "O arquivo `ValidacaoUtil.cs` contém métodos estáticos para validação de dados, focando inicialmente na validação de logins. A função `ValidaLogin` verifica se o login é um email (loginId == 1) e, nesse caso, chama `ValidaEMail`. `ValidaEMail` verifica se o email é válido, normalizando o domínio e utilizando expressões regulares para garantir o formato correto. Retorna `true` se o email for válido, `false` caso contrário ou se for nulo/vazio. Este utilitário centraliza a lógica de validação, promovendo reutilização e consistência no projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Util.AssemblyInfo.cs": {
+        "descricao": "Este arquivo, `Ecossistema.Util.AssemblyInfo.cs`, é gerado automaticamente durante o processo de compilação. Ele contém metadados sobre o assembly `Ecossistema.Util`, como nome da empresa, versão, título e configuração (Debug neste caso). Essas informações são usadas para identificar e versionar a biblioteca, sendo importantes para o gerenciamento de dependências e rastreamento de versões do projeto. Não requer modificação manual, pois é sobrescrito a cada compilação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Util.GeneratedMSBuildEditorConfig.editorconfig": {
+        "descricao": "Este arquivo `.editorconfig` é gerado automaticamente pelo MSBuild durante o processo de build do projeto `Ecossistema.Util`. Ele define propriedades de build específicas para o projeto, como a versão do framework (.NET 6.0), plataformas suportadas (Linux, macOS, Windows) e o diretório raiz do projeto.  `is_global = true` indica que essas configurações se aplicam a todo o projeto e seus subprojetos. Essencialmente, ele configura o ambiente de desenvolvimento e build para garantir a consistência e o correto funcionamento do projeto.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Util.GlobalUsings.g.cs": {
+        "descricao": "Este arquivo, gerado automaticamente, define `usings` globais para o projeto Ecossistema.Util. Ele importa namespaces comuns do .NET (System, Collections, IO, Linq, Http, Threading) para que estejam disponíveis em todo o código da biblioteca, sem necessidade de declaração explícita em cada arquivo. Simplifica o código e melhora a legibilidade, centralizando as importações essenciais.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Util.csproj.FileListAbsolute.txt": {
+        "descricao": "Este arquivo lista os caminhos absolutos dos arquivos gerados durante o processo de build do projeto `Ecossistema.Util`. Inclui o arquivo DLL principal (`Ecossistema.Util.dll`), arquivos de dependência (`.deps.json`), símbolos de depuração (`.pdb`) e arquivos de cache do assembly. É usado internamente pelo sistema de build do .NET para rastrear e carregar os componentes do projeto. Não é um arquivo de código fonte a ser editado diretamente.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Ecossistema.Util.csproj.nuget.g.props": {
+        "descricao": "Este arquivo é um arquivo de propriedades gerado pelo NuGet, um gerenciador de pacotes para .NET. Ele armazena configurações relacionadas à restauração de pacotes NuGet para o projeto `Ecossistema.Util`.\n\nEspecificamente, define caminhos para arquivos de ativos do projeto, a raiz dos pacotes NuGet do usuário e a versão da ferramenta NuGet utilizada. Garante que as dependências do projeto sejam resolvidas corretamente durante o processo de build, buscando pacotes no local configurado e utilizando a versão especificada do NuGet. A condição ` '$(ExcludeRestorePackageImports)' != 'true' ` garante que essas configurações sejam aplicadas apenas quando a restauração de pacotes não for explicitamente excluída.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "LoginModel.cs": {
+        "descricao": "O arquivo `LoginModel.cs` define uma classe simples para representar os dados de login de um usuário. Ele contém duas propriedades: `Email` e `Password`, ambas do tipo string e marcadas como obrigatórias (`[Required]`). Essa classe é usada para receber as credenciais de login (usuário e senha) vindas de uma requisição, provavelmente na API de autenticação do sistema. A validação básica de campos obrigatórios é feita através das anotações `[Required]`, exibindo mensagens de erro caso não sejam preenchidos. Faz parte do namespace `Ecossistema.Services.Dto`, indicando que é um Data Transfer Object (DTO) usado para transportar dados entre camadas da aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "RegisterModel.cs": {
+        "descricao": "O arquivo `RegisterModel.cs` define uma classe para representar os dados necessários para registrar um novo usuário no sistema. Ele contém três propriedades: `Username`, `Email` e `Password`, todas marcadas como obrigatórias (`Required`). O `Email` também possui validação para garantir que seja um endereço de email válido (`EmailAddress`). Essa classe é usada para receber e validar os dados de registro enviados pelo cliente (ex: formulário web) antes de criar a conta do usuário. Faz parte do namespace `Ecossistema.Services.Dto`, indicando que é um Data Transfer Object (DTO) usado para transportar dados entre diferentes camadas da aplicação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "UserRoles.cs": {
+        "descricao": "O arquivo UserRoles.cs define constantes de string que representam os diferentes papéis de usuário no sistema. Esses papéis (AdminMaster, AdminGeral, AdminParceiro) são usados para controlar o acesso a funcionalidades e dados dentro da aplicação. Ele serve como um local centralizado para definir e referenciar esses papéis, facilitando a manutenção e evitando erros de digitação ao longo do código. É usado principalmente na lógica de autorização e autenticação da API.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "Esossitema.Auth.csproj": {
+        "descricao": "Este arquivo `Esossitema.Auth.csproj` define um projeto ASP.NET Core Web API (versão 6.0) responsável pela autenticação e autorização do ecossistema. Ele habilita recursos como valores nulos anuláveis e inferência implícita de `using`. A dependência `Swashbuckle.AspNetCore` é incluída para gerar documentação da API (Swagger/OpenAPI), facilitando testes e integração com outros sistemas. Essencialmente, é o ponto de partida para construir o serviço de autenticação.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    },
+    "azure-pipelines.yml": {
+        "descricao": "Este arquivo `azure-pipelines.yml` define um pipeline de integração contínua (CI) no Azure DevOps. Ele é acionado sempre que há um commit na branch `master`. O pipeline utiliza o pool de agentes `rebecka_azure` para executar as tarefas. A principal tarefa é construir uma imagem Docker a partir do `Dockerfile` presente no repositório e enviá-la para o registro de contêiner `eldorado percepcao registry` no repositório `ecossistema`. A imagem é taggeada com o ID da build atual (`$(Build.BuildId)`). Essencialmente, automatiza a construção e publicação de imagens Docker.",
+        "referencia": "REFERÊNCIA PADRÃO"
+    }
 }
