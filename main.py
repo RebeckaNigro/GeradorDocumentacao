@@ -8,7 +8,8 @@ import html
 
 
 
-def gerar_descricao_com_gemini(caminho_arquivo, info_projeto):
+def gerar_descricao_com_gemini(caminho_arquivo, projeto_path):
+
     print(f"\n📄 Gerando descrição para: {caminho_arquivo.name}")
     try:
         api_key = os.environ.get("GEMINI_API_KEY")
@@ -33,7 +34,7 @@ Sua tarefa é gerar uma descrição técnica e funcional para o arquivo de códi
 
 ## CÓDIGO-FONTE PARA ANÁLISE
 - Nome do Arquivo: {caminho_arquivo.name}
-- Caminho: {str(caminho_arquivo.relative_to(info_projeto['path']))}
+- Caminho: {str(caminho_arquivo.relative_to(projeto_path))}
 
 {conteudo_arquivo[:1000]}
 """
@@ -81,7 +82,7 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
             
             # Verifica se precisa gerar nova descrição
             if nome_arquivo not in descricoes:
-                descricao_gerada = gerar_descricao_com_gemini(valor, info_projeto)
+                descricao_gerada = gerar_descricao_com_gemini(valor, projeto_path)
                 descricoes[nome_arquivo] = {
                     'descricao': descricao_gerada,
                     'referencia': ""  # Inicializa referência vazia
@@ -141,13 +142,6 @@ def main():
         sys.exit(1)
 
     # Informações básicas do projeto (agora definidas automaticamente)
-    info_projeto = {
-        "nome": projeto_path.name,
-        "linguagem": "Python",  # Você pode modificar para detectar automaticamente
-        "arquitetura": "Modular",
-        "objetivo": "Documentação automática do projeto",
-        "path": projeto_path
-    }
 
     # Configurações iniciais
     Path("output").mkdir(exist_ok=True)
@@ -178,7 +172,7 @@ def main():
             descricoes = json.load(f)
 
     with tqdm(total=len(arquivos), desc="Gerando documentação") as barra:
-        conteudo_html = gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto, barra)
+        conteudo_html = gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, projeto_path, barra)
 
     # Gerar HTML final
     template = Path("template.html").read_text(encoding="utf-8")
