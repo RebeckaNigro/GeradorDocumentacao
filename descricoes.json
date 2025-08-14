@@ -1514,5 +1514,801 @@
     "FaleConosco.vue": {
         "descricao": "O arquivo `FaleConosco.vue` é a página \"Fale Conosco\" da aplicação. Ele exibe um banner com imagem e título, seguido por um cabeçalho com descrição e, finalmente, um formulário de contato. Utiliza componentes reutilizáveis: `Banner`, `ExternalHeader` e `Formulario`, importados de outros arquivos para construir a interface. A página é construída usando a composição API do Vue 3 ( `<script setup>` ). Não há estilos específicos definidos neste arquivo, utilizando apenas o escopo `scoped` para evitar conflitos.",
         "referencia": ""
+    },
+    ".dockerignore": {
+        "descricao": "O arquivo `.dockerignore` especifica arquivos e diretórios que devem ser ignorados durante a construção da imagem Docker. Neste caso, ele exclui o ambiente virtual Python (`venv`) e diretórios de cache (`__pycache__`) para reduzir o tamanho da imagem e evitar inclusão de arquivos desnecessários. Isso otimiza o processo de build e garante que apenas o código fonte essencial seja copiado para o container.",
+        "referencia": ""
+    },
+    ".env": {
+        "descricao": "Arquivo `.env` define variáveis de ambiente para a aplicação Ellis. A variável `APP_ENV` especifica o ambiente atual, configurado como \"development\". Isso influencia o comportamento da aplicação, como logs e conexões com bancos de dados, adaptando-se para desenvolvimento em vez de produção. Essencial para configurar a aplicação sem alterar o código.",
+        "referencia": ""
+    },
+    "app.py": {
+        "descricao": "`app.py` é o ponto de entrada da API. Inicializa o FastAPI, define título, descrição e versão. Cria as tabelas do banco de dados (alunos, cursos, matrículas) usando a engine definida em `database.py`. Inclui os roteadores (definidos em `routers/`) para alunos, cursos e matrículas, expondo seus endpoints na API principal. Essencialmente, configura e monta a aplicação FastAPI, conectando as rotas de negócio.",
+        "referencia": ""
+    },
+    "database.py": {
+        "descricao": "Este arquivo (database.py) configura a conexão com o banco de dados SQLite 'escola.db'. Ele usa a biblioteca SQLAlchemy para criar um 'engine' de conexão e uma classe 'SessionLocal' para gerenciar as sessões de banco de dados. A função 'get_db()' fornece uma sessão de banco de dados para ser usada em outras partes do projeto, garantindo que a conexão seja fechada após o uso, evitando vazamentos de recursos. 'Base' é usada para definir as tabelas do banco de dados como classes Python.",
+        "referencia": ""
+    },
+    "models.py": {
+        "descricao": "O arquivo `models.py` define as tabelas do banco de dados usando SQLAlchemy. Ele cria as classes `Aluno`, `Curso` e `Matricula`, representando alunos, cursos e as relações de matrícula entre eles. `Aluno` tem nome, email e telefone. `Curso` possui nome e código único. `Matricula` liga alunos a cursos, permitindo rastrear quem está inscrito em qual curso. As relações `relationship` configuram como as tabelas se conectam no banco de dados, facilitando consultas e manipulação de dados. Este arquivo é essencial para a estrutura de dados da aplicação.",
+        "referencia": ""
+    },
+    "alunos.py": {
+        "descricao": "O arquivo `alunos.py` define rotas para gerenciar alunos usando FastAPI. Ele expõe dois endpoints: `/alunos` (GET) para listar todos os alunos e `/alunos/{aluno_id}` (GET) para buscar um aluno específico pelo ID. Utiliza SQLAlchemy para interagir com o banco de dados, buscando dados da tabela `Aluno` (definida em `models.py`) e retornando-os no formato `Aluno` (definido em `schemas.py`). A função `get_db` (de `database.py`) fornece a conexão com o banco de dados. Lança um erro 404 se o aluno não for encontrado.",
+        "referencia": ""
+    },
+    "cursos.py": {
+        "descricao": "Este arquivo define as rotas (endpoints) para gerenciar cursos. Utiliza FastAPI para criar uma API que permite listar, criar e atualizar cursos no banco de dados. As operações interagem com os modelos `Curso` (definido em `models.py`) e schemas `Curso` (definido em `schemas.py`) para mapear dados entre a API e o banco de dados, usando SQLAlchemy para acesso ao banco. A função `get_db` (em `database.py`) fornece a conexão com o banco de dados.",
+        "referencia": ""
+    },
+    "matriculas.py": {
+        "descricao": "Arquivo `matriculas.py`: define endpoints para gerenciar matrículas. Permite criar uma nova matrícula (`/matriculas` via POST), validando a existência do aluno e curso informados no banco de dados. Utiliza FastAPI para roteamento e SQLAlchemy para interação com o banco, retornando a matrícula criada em caso de sucesso ou um erro 404 se aluno/curso não existirem. Depende dos schemas e models definidos em outros arquivos.",
+        "referencia": ""
+    },
+    "schemas.py": {
+        "descricao": "O arquivo `schemas.py` define estruturas de dados (schemas) usando a biblioteca Pydantic para validar e representar informações sobre alunos, cursos e matrículas. `Aluno` possui nome, email e telefone. `Curso` tem nome, código e descrição. `Matricula` associa um aluno a um curso pelos seus IDs. As classes `Alunos`, `Cursos` e `Matriculas` são listas dessas estruturas, facilitando o manuseio de múltiplos registros. Esses schemas são usados para definir o formato dos dados que entram e saem da aplicação, garantindo a consistência e a tipagem correta.",
+        "referencia": ""
+    },
+    "next-env.d.ts": {
+        "descricao": "Este arquivo define tipos para o Next.js, permitindo que o TypeScript entenda melhor as funcionalidades do framework. Ele inclui definições para `next` e `next/image`, habilitando autocompletar e verificação de tipos em componentes e páginas. Não deve ser editado diretamente; as configurações são feitas via `next.config.js`. Essencial para projetos Next.js com TypeScript.",
+        "referencia": ""
+    },
+    "next.config.mjs": {
+        "descricao": "Este arquivo configura o Next.js, framework usado no projeto. Define a saída como 'standalone', gerando uma pasta com tudo necessário para rodar a aplicação, facilitando o deploy. A seção 'images' permite carregar imagens de um domínio externo específico ('startupsesims.blob.core.windows.net') com um padrão de caminho ('/webassets/**'), evitando problemas de CORS e otimizando o carregamento. Essencial para exibir imagens hospedadas nesse serviço.",
+        "referencia": ""
+    },
+    "postcss.config.mjs": {
+        "descricao": "Este arquivo configura o PostCSS, uma ferramenta para transformar CSS com JavaScript. Ele define quais plugins o PostCSS deve usar. Neste caso, ele ativa o Tailwind CSS (para estilos utilitários) e o Autoprefixer (para adicionar prefixos de navegador automaticamente, garantindo compatibilidade). Essencialmente, prepara o CSS para ser usado no projeto, otimizando e compatibilizando estilos.",
+        "referencia": ""
+    },
+    "server-only.d.ts": {
+        "descricao": "Este arquivo declara um módulo chamado 'server-only'. Ele serve como um marcador para código que *só* deve ser executado no servidor (backend) e nunca no cliente (frontend).  Importar este módulo em código do cliente resultará em erro de compilação, garantindo que lógicas sensíveis ou dependências do servidor não sejam expostas. É usado para impor a separação entre código cliente e servidor no projeto.",
+        "referencia": ""
+    },
+    "globals.css": {
+        "descricao": "Arquivo CSS global para o projeto. Aplica estilos base do Tailwind CSS e define utilitários customizados. O `.scrollbar-hide` remove a barra de rolagem em navegadores, e estilos para inputs numéricos removem os botões de incremento/decremento.  `.file-input-color` estiliza o botão de seleção de arquivos, alterando cor de fundo e texto. Integra-se com componentes da aplicação para padronização visual.",
+        "referencia": ""
+    },
+    "layout.tsx": {
+        "descricao": "O arquivo `layout.tsx` define o layout base para as páginas do setor \"indústria 2023\" da aplicação. Ele importa e renderiza os componentes `Header` e `Footer` (localizados em `@components/industria2023/`) em volta do conteúdo dinâmico (`children`) passado para cada página. Essencialmente, ele fornece uma estrutura consistente com cabeçalho e rodapé para todas as rotas dentro do segmento \"indústria 2023\", simplificando a organização e manutenção da interface. O componente aceita `children` como prop, permitindo a inserção de diferentes conteúdos em cada página.",
+        "referencia": ""
+    },
+    "page.tsx": {
+        "descricao": "O arquivo `page.tsx` define a página principal do desafio \"Indústria 2023\". Ele é um componente React que renderiza diversas seções pré-definidas (importadas de `@components/industria2023/`). Essas seções incluem a seção principal, informações sobre o desafio, detalhes da premiação, objetivos/resultados e informações sobre a trilha/inscrição. A estrutura utiliza `div`s com `id`s para permitir navegação interna via âncoras. Essencialmente, este arquivo monta a interface visual completa da página do desafio.",
+        "referencia": ""
+    },
+    "not-found.tsx": {
+        "descricao": "O arquivo `not-found.tsx` define uma página personalizada para erros 404 (página não encontrada) no projeto Next.js. Sua função principal é redirecionar o usuário automaticamente para a página inicial (`/`) quando uma rota inexistente é acessada.  Utiliza a função `redirect` do `next/navigation` para realizar este redirecionamento, garantindo uma melhor experiência ao usuário ao invés de exibir uma página de erro padrão.",
+        "referencia": ""
+    },
+    "Footer.tsx": {
+        "descricao": "O componente `Footer` exibe o rodapé da aplicação. Utiliza a função `imageUrl` para carregar logos (startup e Fundect) e apresenta informações de contato e endereço da \"Startup Sesi Fiems\".  É construído com elementos HTML dentro de um `footer` estilizado com classes Tailwind CSS para definir cor de fundo, padding e texto. As imagens são renderizadas com o componente `Image` do Next.js.",
+        "referencia": ""
+    },
+    "Header.tsx": {
+        "descricao": "O `Header.tsx` cria a barra de navegação superior do site. Utiliza componentes `Image` e `Link` do Next.js para exibir um logo (obtido via `imageUrl`) e links para seções específicas da página (ex: \"#sobre-desafio\").  Inclui um menu dropdown responsivo para telas menores, com links estilizados. O componente é estilizado com Tailwind CSS, definindo cores, padding e layout.",
+        "referencia": ""
+    },
+    "SecaoObjetivosResultados.tsx": {
+        "descricao": "Este componente `SecaoObjetivosResultados` exibe uma seção com o título \"O que buscamos no sistema?\". Ele apresenta um texto informativo sobre a busca por soluções de software que conectem dispositivos industriais e entreguem dados integrados. Utiliza estilos CSS para formatação e uma imagem de fundo. Faz uso das bibliotecas `next/image` e `next/link` para otimização de imagens e links, respectivamente, e da função `imageUrl` para gerenciar URLs de imagens. O componente é responsivo, adaptando-se a diferentes tamanhos de tela.",
+        "referencia": ""
+    },
+    "SecaoPremiacao.tsx": {
+        "descricao": "Componente `SecaoPremiacao` exibe uma seção visual sobre a premiação do evento \"Indústria 2023\". Utiliza o componente `Image` do Next.js para renderizar imagens SVG decorativas (símbolo, bolas e laranjas) posicionadas absolutamente dentro de um container branco.  Inclui um texto chamativo (\"Confira a premiação!\") com estilo definido via CSS. As imagens e o texto são responsivos, ajustando-se a diferentes tamanhos de tela (mobile, tablet e desktop) através de classes CSS do Tailwind. A função `imageUrl` é usada para construir os caminhos das imagens.",
+        "referencia": ""
+    },
+    "SecaoPrincipal.tsx": {
+        "descricao": "O `SecaoPrincipal.tsx` é um componente React que exibe a seção principal da página do desafio de inovação. Ele combina um teaser (componente `Teaser`) com uma imagem do logo do desafio e um texto descritivo, incentivando a participação. Um link direciona o usuário para a seção \"pitch\" da página. Utiliza a função `imageUrl` para carregar a imagem do logo e componentes `Image` e `Link` do Next.js para otimização e navegação. O layout é responsivo, adaptando-se a diferentes tamanhos de tela.",
+        "referencia": ""
+    },
+    "SecaoSobreDesafio.tsx": {
+        "descricao": "Este componente `SecaoSobreDesafio` exibe uma seção informativa sobre o desafio da indústria 2023. Utiliza `next/image` para mostrar uma imagem estilizada e texto formatado com classes CSS para definir o layout e a aparência. A imagem é responsiva, ajustando-se a diferentes tamanhos de tela, e o texto possui um título chamativo em laranja. O componente é parte da interface do usuário, fornecendo contexto sobre o desafio aos usuários.",
+        "referencia": ""
+    },
+    "SecaoTrilha.tsx": {
+        "descricao": "Arquivo SecaoTrilha.tsx: Componente React que exibe a seção de trilha do evento \"Indústria 2023\". Apresenta informações sobre a fase de inscrição, utilizando texto formatado e uma imagem SVG. Possui estilos responsivos para diferentes tamanhos de tela (mobile, tablet, desktop) através de classes CSS do Tailwind. Utiliza a função `imageUrl` para obter o caminho da imagem. Contém um link implícito para a próxima fase (não visível no trecho).",
+        "referencia": ""
+    },
+    "Teaser.tsx": {
+        "descricao": "O componente `Teaser` exibe um vídeo de fundo (teaser) adaptável. Ele verifica a largura da tela: se for menor que 768px, usa uma versão vertical do vídeo; caso contrário, usa uma versão horizontal. O vídeo é reproduzido automaticamente em loop e com opacidade reduzida, servindo como um elemento visual de fundo. Utiliza a função `imageUrl` para construir o caminho do vídeo. O componente recarrega e reproduz o vídeo quando a janela é redimensionada.",
+        "referencia": ""
+    },
+    "Carousel.tsx": {
+        "descricao": "O `Carousel.tsx` é um componente React que exibe uma lista de itens (imagens, títulos, descrições) em um carrossel horizontal. Recebe um array de objetos `CarouselItem` como prop `items`. Utiliza estados para controlar o índice do item atualmente visível e funções `previousSlide` e `nextSlide` para navegar entre os itens. A exibição é responsiva, adaptando-se a telas maiores com botões de navegação. O componente usa `next/image` para otimizar as imagens e `next/link` para tornar os itens clicáveis, se um link for fornecido.",
+        "referencia": ""
+    },
+    "CarrousselElements.tsx": {
+        "descricao": "Este componente `CarrousselElement` exibe um item do carrossel. Recebe imagem (`img`), título (`title`), subtítulo (`subtitle`) e conteúdo adicional (`children`) como props. Limita o tamanho do título, subtítulo e conteúdo para evitar quebras de layout, truncando-os com \"...\". Utiliza o componente `Image` do Next.js para exibir a imagem e aplica estilos CSS para formatação. É usado na renderização do carrossel principal da aplicação.",
+        "referencia": ""
+    },
+    "DesafioDestaque.tsx": {
+        "descricao": "Este componente `DesafioDestaque` exibe um banner promocional para o desafio \"Turismo 2024\". Utiliza a biblioteca `next/image` para mostrar uma imagem e `next/link` para criar um link para a página do desafio (`/turismo2024`). O banner possui estilos responsivos, adaptando-se a diferentes tamanhos de tela (mobile, tablet, desktop) com layout flexível e cores definidas via CSS. A função principal é direcionar o usuário para a página do desafio, promovendo o evento.",
+        "referencia": ""
+    },
+    "DesafiosAbertos.tsx": {
+        "descricao": "Este componente `DesafiosAbertos` (server-only) exibe um carrossel de desafios em aberto. Utiliza o componente `Carousel` para apresentar informações como imagem, título, tema e descrição de cada desafio. Os dados dos desafios são definidos internamente como um array de objetos, incluindo links para páginas de detalhes. A função `imageUrl` é usada para construir URLs de imagens. O componente é usado na raiz da aplicação para promover os desafios ativos.",
+        "referencia": ""
+    },
+    "DesafiosAnteriores.tsx": {
+        "descricao": "Este componente `DesafiosAnteriores` exibe um carrossel de desafios passados. Utiliza o componente `Carousel` (lado cliente) e dados hardcoded com informações como imagem, link, título, tema e descrição de cada desafio. A função `imageUrl` é usada para construir os caminhos das imagens. O componente é renderizado apenas no servidor (`server-only`). Ele serve para apresentar um histórico de eventos/competições anteriores no site.",
+        "referencia": ""
+    },
+    "EmpresasParceiras.tsx": {
+        "descricao": "Componente `EmpresasParceiras` para exibir logos de empresas parceiras. Utiliza `next/image` para otimizar imagens (buscadas via `imageUrl`) e `next/link` (não usado diretamente no trecho, mas importado).  Apresenta um título e descrição, seguido de um grid responsivo com os logos das empresas. É um componente do lado do servidor (`server-only`).",
+        "referencia": ""
+    },
+    "Inicio.tsx": {
+        "descricao": "O arquivo `Inicio.tsx` é um componente React responsável por renderizar a página inicial do desafio. Ele exibe um banner com uma imagem de fundo e um gradiente, além de um título e uma breve descrição do desafio. Utiliza a função `imageUrl` para obter o caminho da imagem do banner e componentes `Image` e `Link` do Next.js para otimização e navegação, respectivamente. É um componente \"server-only\", indicando que é renderizado apenas no servidor.",
+        "referencia": ""
+    },
+    "MetodologiaChallenge.tsx": {
+        "descricao": "Este componente `MetodologiaChallenge` exibe informações sobre a metodologia do \"Startup Challenge SESI FIEMS\". Utiliza Next.js para renderização no servidor ('server-only') e apresenta um título, descrição e possivelmente uma imagem (não presente no trecho).  Faz uso de funções utilitárias para manipulação de URLs de imagens (`imageUrl`) e links (`Link`). O componente é estilizado com classes Tailwind CSS para definir layout e aparência, incluindo cores e tipografia específicas. Ele é projetado para ser uma seção dentro da página principal, identificada pelo `id=\"challenge\"`.",
+        "referencia": ""
+    },
+    "Navbar.tsx": {
+        "descricao": "Este componente `Navbar` cria a barra de navegação principal da aplicação. Ele exibe links para as seções \"DESAFIOS ABERTOS\", \"DESAFIOS ANTERIORES\" e \"STARTUP CHALLENGE\" usando o componente `Link` do Next.js para navegação interna.  A estilização é feita via classes CSS, definindo cores, fontes e comportamento ao passar o mouse. O componente é renderizado apenas no servidor (`server-only`).",
+        "referencia": ""
+    },
+    "SobreStartup.tsx": {
+        "descricao": "O componente `SobreStartup` exibe informações sobre a startup SESI FIEMS. Utiliza `next/image` para imagens e `next/link` para navegação. Apresenta um título chamativo e dois parágrafos descritivos sobre o propósito e atuação da startup, focando em transformação de problemas em soluções e inovação na indústria. É renderizado apenas no servidor (`server-only`).",
+        "referencia": ""
+    },
+    "AddressForm.tsx": {
+        "descricao": "O `AddressForm.tsx` é um formulário React para coletar e validar informações de endereço. Recebe um objeto `address` inicial (opcional) e uma função `setAddress` para atualizar o endereço. Utiliza componentes de input reutilizáveis (TextInput, NumberInput, OptionInput) e validação via `AddressValidator`.  Integra-se com uma API de CEP (`CEPApi`) para preenchimento automático e usa máscaras (`CEPMask`) para formatação. Permite desabilitar campos e exibir erros de validação.  Está preparado para ser usado em um contexto de inscrição, possivelmente associado a membros de equipe (`ITeamMember`).",
+        "referencia": ""
+    },
+    "DocumentStep.tsx": {
+        "descricao": "Componente `DocumentStep` para o formulário de inscrição. Coleta o link de um vídeo de solução (URL) e permite o upload de documentos. Utiliza componentes reutilizáveis de input (`TextInput`, `SingleFileInput`). Recebe `props` para controlar estado desabilitado, validação e exibição de erros. Integra-se com o contexto de registro (`RegistrationContext`) para gerenciar os dados do formulário. Valida os campos com `DocumentsValidator`.",
+        "referencia": ""
+    },
+    "LegalEntityStep.tsx": {
+        "descricao": "Este componente `LegalEntityStep` é um passo de formulário para inscrição de entidades legais (empresas). Coleta dados como CNPJ, nome fantasia e endereço. Utiliza `TextInput` para campos de texto, `AddressForm` para o endereço e validações via `LegalEntityValidator`.  O CNPJ é formatado com `CNPJMask` e pode ser validado via API (`CNPJApi`).  O estado do formulário é gerenciado com `useState` e `useContext` (RegistrationContext) para integração com outros passos. O componente recebe `corrects`, `showErrors` e `disabled` como props para controlar exibição de erros e estado do formulário.",
+        "referencia": ""
+    },
+    "MembersStep.tsx": {
+        "descricao": "MembersStep.tsx é um componente React responsável pelo terceiro passo do formulário de inscrição. Coleta dados dos membros da equipe (líder e participantes), incluindo nome, CPF, telefone, data de nascimento, endereço e se o membro é o líder. Utiliza componentes de input reutilizáveis (DateInput, TextInput, etc.) e valida os dados via MembersValidator. Integra-se com o RegistrationContext para acessar e atualizar os dados da inscrição. O componente exibe erros de validação condicionalmente, controlados pela prop `showErrors`.",
+        "referencia": ""
+    },
+    "TeamStep.tsx": {
+        "descricao": "O `TeamStep.tsx` é um componente React responsável por coletar informações sobre a equipe inscrita no evento. Ele utiliza inputs customizados (TextInput, TextAreaInput, OptionInput) para nome da equipe, categoria e descrição da solução proposta. Recebe via props um objeto `corrects` com validações e um booleano `showErrors` para exibir erros de validação. Utiliza o `RegistrationContext` para pré-popular os campos com dados existentes e atualizar o estado da inscrição conforme o usuário interage. `useRef` é usado para acessar diretamente os elementos do DOM para manipulação.",
+        "referencia": ""
+    },
+    "RegistrationForm.tsx": {
+        "descricao": "Este componente `RegistrationForm` gerencia o formulário de inscrição, dividido em etapas (equipe, dados legais, membros, documentos). Utiliza contextos (`RegistrationContext`) para controlar o estado do formulário e `next/navigation` para roteamento. Validações são feitas com funções importadas de `@lib/validators`. Exibe o passo atual do formulário (componentes `TeamStep`, `LegalEntityStep`, etc.) e permite a navegação entre eles. Recebe uma lista de etapas (`steps`) como propriedade.",
+        "referencia": ""
+    },
+    "RegistrationProvider.tsx": {
+        "descricao": "Este componente `RegistrationProvider` gerencia o estado do processo de inscrição. Ele carrega dados de inscrição salvos no `localStorage` ao iniciar, ou usa valores padrão.  Utiliza `useRef` para manter os dados de inscrição (`registration`) e `useState` para controlar o passo atual do formulário (`step`).  Disponibiliza esses valores para componentes filhos através do `RegistrationContext`, permitindo que eles acessem e modifiquem o estado da inscrição. Essencialmente, ele centraliza e persiste os dados de inscrição durante a sessão do usuário.",
+        "referencia": ""
+    },
+    "RegistrationContext.ts": {
+        "descricao": "Este arquivo define o `RegistrationContext`, usado para gerenciar os dados de inscrição no componente de turismo 2024. Ele cria um contexto React com um estado inicial (`defaultRegistration`) contendo informações sobre a entidade legal, equipe, líder e documentos. O contexto permite compartilhar e atualizar esses dados entre os componentes da tela de inscrição, facilitando o fluxo de informações durante o processo. A tipagem `IRegistration` e `IRegistrationContext` define a estrutura dos dados gerenciados.",
+        "referencia": ""
+    },
+    "ConfirmForm.tsx": {
+        "descricao": "ConfirmForm.tsx é um componente React que exibe e gerencia os passos finais de um formulário de inscrição (dados jurídicos, time, membros, documentos). Utiliza um contexto (RegistrationContext) para armazenar e atualizar os dados da inscrição e controlar o passo atual. Permite navegação entre os passos e, ao final, prepara o envio dos dados (lógica de envio incompleta no trecho fornecido). Inclui tratamento básico de erros e utiliza máscaras para entrada de dados numéricos. O componente é \"client-side\" (use client) e usa o useRouter do Next.js para roteamento.",
+        "referencia": ""
+    },
+    "index.d.ts": {
+        "descricao": "Este arquivo define interfaces TypeScript para gerenciar dados de inscrição no evento \"Turismo 2024\". Ele estrutura informações sobre a inscrição (IRegistration), dados da equipe (ITeam), entidade legal (ILegalEntity), membros (ITeamMember) e documentos (IDocuments).  `IRegistrationContext` define o contexto React usado para compartilhar o estado da inscrição e controlar o passo do formulário. As interfaces detalham os campos esperados para cada seção do processo de inscrição, facilitando a tipagem e validação dos dados.",
+        "referencia": ""
+    },
+    "Documentos.tsx": {
+        "descricao": "Componente `Documentos` para a seção de downloads do turismo 2024. Exibe um título e uma lista de links para documentos (regulamento) hospedados no Azure Blob Storage. Utiliza a função `imageUrl` para construir os caminhos das imagens e o componente `Image` do Next.js para renderizá-las. Os links abrem em nova aba (`target=\"_blank\"`). O componente é \"server-only\", indicando que roda apenas no servidor.",
+        "referencia": ""
+    },
+    "Landing.tsx": {
+        "descricao": "Arquivo Landing.tsx: Componente React server-side para a página inicial do desafio de turismo 2024. Exibe um teaser (componente Teaser) e informações sobre o desafio, incluindo o logo e uma breve descrição. Utiliza a função `imageUrl` para carregar a imagem do logo e o componente `Image` do Next.js para otimização. Possui layout responsivo, adaptando-se a diferentes tamanhos de tela.",
+        "referencia": ""
+    },
+    "Objetivos.tsx": {
+        "descricao": "O componente `Objetivos` exibe a seção de objetivos do projeto Turismo 2024. Utiliza imagens (via `next/image` e a função `imageUrl`) e texto para comunicar o que se busca em soluções inovadoras para o turismo. É responsivo, adaptando o layout para mobile e desktop, com a imagem superior visível apenas em telas médias e grandes. Contém um link implícito para a página principal, dada a estrutura do projeto Next.js.",
+        "referencia": ""
+    },
+    "Premiacao.tsx": {
+        "descricao": "O componente `Premiacao.tsx` exibe a seção de premiação do evento \"Turismo 2024\". Utiliza imagens dinâmicas (função `imageUrl`) para mostrar o título das categorias e ícones representando cada categoria de premiação. O layout é responsivo, adaptando-se a diferentes tamanhos de tela (mobile, tablet, desktop) através de classes CSS do Tailwind. Ele organiza as categorias em um grid, exibindo ícones e descrições de cada uma.",
+        "referencia": ""
+    },
+    "Sobre.tsx": {
+        "descricao": "O componente `Sobre.tsx` exibe a seção \"Sobre o Desafio\" da página de turismo. Utiliza a função `imageUrl` para carregar uma imagem com o título do desafio e apresenta um texto descritivo sobre o Startup Challenge Turismo, focando na busca por soluções inovadoras para o ecoturismo. Inclui também o componente `Documentos` (não detalhado aqui) para exibir documentos relacionados. É renderizado apenas no servidor (`server-only`).",
+        "referencia": ""
+    },
+    "StepCounter.tsx": {
+        "descricao": "StepCounter.tsx é um componente React que exibe o progresso de um processo em etapas (ex: inscrição). Recebe um array de strings `steps` representando cada etapa. Utiliza o contexto `RegistrationContext` para obter o `step` atual e calcula a porcentagem de conclusão.  Apresenta um indicador visual de progresso circular e uma lista das etapas, marcando as etapas já completadas com um risco. É usado para fornecer feedback visual ao usuário sobre sua posição no fluxo.",
+        "referencia": ""
+    },
+    "DateInput.tsx": {
+        "descricao": "DateInput.tsx é um componente React para entrada de datas. Recebe `label`, datas mínima/máxima (`minDate`, `maxDate`), estado de desabilitado (`disabled`), obrigatoriedade (`required`), mensagem de erro (`errorMessage`) e função `onChange` para lidar com a mudança da data. Exibe o label, indicador de campo obrigatório e mensagem de erro (se `showError` for true). Utiliza um input do tipo \"date\" e encaminha a referência (ref) para manipulação externa.",
+        "referencia": ""
+    },
+    "NumberInput.tsx": {
+        "descricao": "Este componente `NumberInput` é um campo de entrada numérico reutilizável para formulários. Recebe um `label`, propriedades de desabilitação/obrigatoriedade, mensagem de erro e funções `onChange` e `onFocus`. Exibe o label, um indicador de campo obrigatório (se `required` for true) e mensagens de erro (se `showError` for true). Utiliza `forwardRef` para permitir acesso direto ao elemento input, facilitando manipulações externas como foco. É estilizado com classes Tailwind CSS para consistência visual.",
+        "referencia": ""
+    },
+    "OptionInput.tsx": {
+        "descricao": "Este componente `OptionInput` renderiza um campo `<select>` (dropdown) para seleção de opções. Recebe um array de `options` (strings) e permite definir um `label`, estado de erro (`showError`), desabilitado (`disabled`), valor selecionado (`value`), se é obrigatório (`required`) e funções para tratar mudança de seleção (`onChange`) e foco (`onFocus`). Utiliza `forwardRef` para permitir acesso direto ao elemento `<select>`.  É usado para coletar dados do usuário em formulários, exibindo opções pré-definidas.",
+        "referencia": ""
+    },
+    "SingleFileInput.tsx": {
+        "descricao": "Este componente `SingleFileInput` permite ao usuário selecionar um único arquivo via input do tipo `file`. Recebe `label` para exibição, `type` padrão (ex: '.pdf'), e flags para `required`, `disabled` e exibição de erros (`showError`, `errorMessage`).  As funções `onChange` e `onInput` são chamadas ao selecionar/alterar o arquivo.  O componente gerencia a atualização do input com um `file` pré-existente via `useEffect` e `useRef`, útil para preencher o campo com arquivos já carregados. Ele é usado para coletar uploads de arquivos em formulários.",
+        "referencia": ""
+    },
+    "TextAreaInput.tsx": {
+        "descricao": "TextAreaInput.tsx é um componente React para criar áreas de texto de entrada de formulário. Recebe `label`, `maxLength`, `required`, `errorMessage`, `showError`, `disabled` e `onChange` como props. Renderiza um `<textarea>` com estilização Tailwind CSS, exibindo rótulo, indicador de obrigatório (*) e mensagens de erro, se aplicável. Utiliza `forwardRef` para permitir acesso direto ao elemento textarea. É usado para coletar texto multi-linha do usuário em formulários.",
+        "referencia": ""
+    },
+    "TextInput.tsx": {
+        "descricao": "Este componente `TextInput` é um campo de entrada de texto reutilizável para formulários. Recebe propriedades como `label`, `type`, `maxLength`, `required` e `errorMessage` para customização e validação.  O `onChange` permite tratar a alteração do valor, e `showError` exibe mensagens de erro. Utiliza `forwardRef` para permitir acesso direto ao elemento input, facilitando manipulações externas (ex: foco). É usado para coletar dados textuais do usuário de forma padronizada na aplicação.",
+        "referencia": ""
+    },
+    "ToggleInput.tsx": {
+        "descricao": "O `ToggleInput.tsx` define um componente React para criar um switch (checkbox estilizado) com label. Recebe `label` (texto), `checked` (estado inicial), `disabled` (se está desabilitado) e `onChange` (função chamada ao mudar o estado). Utiliza `forwardRef` para permitir acesso direto ao elemento input. É usado para inputs booleanos na interface, como ativar/desativar alguma funcionalidade. O estilo visual é definido via classes Tailwind CSS.",
+        "referencia": ""
+    },
+    "MenuIcon.tsx": {
+        "descricao": "O arquivo `MenuIcon.tsx` define um componente React que renderiza um ícone de menu (três linhas horizontais). Ele utiliza SVG para desenhar o ícone, com cor branca (`#fff`) e espessura de linha 2. As classes CSS aplicadas garantem que o ícone seja exibido inline, com altura e largura de 8 pixels e contorno branco. Este componente é usado para representar visualmente a funcionalidade de menu na interface do usuário.",
+        "referencia": ""
+    },
+    "client.env.ts": {
+        "descricao": "Este arquivo (`client.env.ts`) define variáveis de configuração para o cliente (frontend) da aplicação. Ele lê variáveis de ambiente do processo (`process.env`) prefixadas com `NEXT_PUBLIC_`, permitindo configurar URLs importantes como o endereço do serviço de blobs (`BLOB_URL`), a extensão padrão dos blobs (`BLOB_EXTENSION`) e a URL da API (`API_URL`). Se uma variável de ambiente não estiver definida, valores padrão são utilizados (string vazia para `BLOB_URL`, `.png` para `BLOB_EXTENSION` e `http://localhost:3001/api` para `API_URL`). O objeto `env` é então exportado para ser usado em outros componentes do frontend.",
+        "referencia": ""
+    },
+    "server.env.ts": {
+        "descricao": "Este arquivo (server.env.ts) define variáveis de configuração para o servidor. Ele lê variáveis de ambiente (usando `process.env`) como URL da API do CMS, o ambiente de execução (NODE_ENV) e se deve usar dados simulados (MOCK). Se uma variável de ambiente não estiver definida, valores padrão são usados (string vazia para a URL, 'development' para NODE_ENV e 'true' para MOCK, interpretado como booleano). O objeto `serverEnv` exportado contém essas configurações, permitindo que outras partes do servidor acessem e usem esses valores. É usado apenas no lado do servidor ('server-only').",
+        "referencia": ""
+    },
+    "Bahnschrift.ttf": {
+        "descricao": "Este arquivo é uma fonte TrueType variável (TTF) chamada Bahnschrift. Ele contém as definições dos glifos, métricas e tabelas necessárias para renderizar o texto usando essa fonte. É usado pelo projeto para estilizar a interface do usuário ou exibir texto formatado, permitindo variações no peso e estilo da fonte. O arquivo define como cada caractere é desenhado e como eles se encaixam horizontalmente e verticalmente.",
+        "referencia": ""
+    },
+    "Montserrat.ttf": {
+        "descricao": "Este arquivo, Montserrat.ttf, é uma fonte TrueType variável. Ele define as características visuais do tipo de letra Montserrat, incluindo diferentes pesos (wght) e estilos (ital). A fonte contém dados sobre as curvas das letras (glyf), métricas (hmtx, maxp) e mapeamento de caracteres (cmap). É usada para exibir texto com diferentes estilos dentro do projeto, permitindo flexibilidade na apresentação visual. O `@GDEF`, `GPOS` e `GSUB` indicam tabelas de formatação avançada para OpenType.",
+        "referencia": ""
+    },
+    "cep.vm.ts": {
+        "descricao": "O arquivo `cep.vm.ts` define a classe `CEPVM`, um modelo de dados (View Model) para representar informações de um CEP. Ele armazena o CEP, estado, cidade, bairro e rua como propriedades somente leitura. O construtor recebe um objeto com esses dados e os atribui às propriedades da instância, facilitando a criação e manipulação de dados relacionados a endereços a partir de um CEP. É usado para estruturar os dados retornados pela API de CEP.",
+        "referencia": ""
+    },
+    "cnpj.vm.ts": {
+        "descricao": "Este arquivo define a classe `CNPJVM` que representa os dados de uma empresa obtidos a partir do CNPJ. Ele armazena informações como CNPJ, nome fantasia, razão social, endereço (logradouro, número, complemento, bairro, CEP, UF, município). A classe serve como um modelo de dados (Value Object) para organizar e transportar as informações da empresa dentro da aplicação, facilitando o uso e a manipulação desses dados em outras partes do projeto. O construtor inicializa os atributos com os valores fornecidos.",
+        "referencia": ""
+    },
+    "FailApiResponse.ts": {
+        "descricao": "FailApiResponse.ts define uma classe para representar respostas de falha de API. Implementa a interface IBaseApiResponse e possui propriedades para mensagem, código de status HTTP e um código de erro opcional. O construtor recebe um objeto com esses valores para inicializar a instância, facilitando a criação de respostas padronizadas de erro para a aplicação. É usado para uniformizar o formato de erros retornados pelas APIs.",
+        "referencia": ""
+    },
+    "SuccessApiReponse.ts": {
+        "descricao": "`SuccessApiResponse` é uma classe genérica que encapsula dados de sucesso de uma resposta da API. Recebe os dados (`T`) e uma referência de classe (`classRef`) para instanciar um novo objeto com esses dados. Garante que a resposta retorne uma instância da classe esperada, facilitando o tipo e uso dos dados recebidos. Útil para padronizar o formato de sucesso nas respostas da API do projeto.",
+        "referencia": ""
+    },
+    "base-api-reponse.interface.ts": {
+        "descricao": "Este arquivo define uma interface chamada `IBaseApiResponse`. Ela serve como um modelo para a estrutura de respostas da API no projeto. Toda resposta da API deve incluir os campos `message` (string com uma mensagem descritiva) e `statusCode` (número representando o código de status HTTP).  Usar essa interface garante consistência e facilita o tratamento de respostas em diferentes partes da aplicação.",
+        "referencia": ""
+    },
+    "useUser.ts": {
+        "descricao": "useUser.ts é um hook React que gerencia o estado do usuário autenticado. Ele tenta recuperar dados do usuário (armazenados como JWT) do localStorage ao carregar. Se encontrado e decodificado com sucesso, o usuário é definido no estado; caso contrário, o estado é definido como nulo. Retorna o objeto usuário decodificado ou nulo, permitindo que componentes acessem informações do usuário autenticado. Utiliza 'jose' para decodificar o JWT e 'LocalStorageUserViewModel' para tipagem.",
+        "referencia": ""
+    },
+    "imageUrl.ts": {
+        "descricao": "Este arquivo (`imageUrl.ts`) fornece uma função para construir URLs de imagens corretamente, considerando o ambiente (desenvolvimento ou produção). A função `imageUrl` recebe o caminho da imagem (sem extensão, começando com '/') e, opcionalmente, a extensão desejada. Ela combina este caminho com a URL base de armazenamento de blobs (definida em `env.BLOB_URL`) e a extensão padrão (definida em `env.BLOB_EXTENSION`) se nenhuma extensão for fornecida.  É usada para garantir que as imagens sejam acessíveis tanto em desenvolvimento quanto em produção, utilizando a configuração correta do ambiente.",
+        "referencia": ""
+    },
+    "object.ts": {
+        "descricao": "Este arquivo (object.ts) define a função `hasFalseValue`. Ela verifica recursivamente se um objeto (ou array) contém algum valor que seja `false`. A função percorre as propriedades do objeto e, se encontrar um valor `false` diretamente, retorna `true`. Se encontrar outro objeto ou array como valor, chama a si mesma para verificar dentro desse objeto/array. Retorna `false` se nenhum valor `false` for encontrado. É útil para validar se estruturas de dados complexas possuem algum indicador de falso.",
+        "referencia": ""
+    },
+    "address.ts": {
+        "descricao": "O arquivo `address.ts` define um validador para objetos do tipo `IAddress` (endereço). A função `addressValidator` recebe um endereço e retorna um objeto com `true` ou `false` para cada campo, indicando se a validação foi bem-sucedida.  Valida o CEP usando `cepValidator`, verifica se cidade, bairro, rua e número não estão vazios, e se a UF tem 2 caracteres. O campo \"complemento\" é considerado válido por padrão. Este validador é usado para garantir a integridade dos dados de endereço na aplicação.",
+        "referencia": ""
+    },
+    "cep.ts": {
+        "descricao": "Arquivo `cep.ts`: Valida se uma string representa um CEP (Código de Endereçamento Postal) brasileiro válido. Remove caracteres não numéricos da entrada usando `OnlyNumbersMask` e verifica se o resultado possui exatamente 8 dígitos, utilizando uma expressão regular. Retorna `true` se o CEP for válido, `false` caso contrário. É usado para validar dados de formulários ou APIs que requerem um CEP no formato correto.",
+        "referencia": ""
+    },
+    "cnpj.ts": {
+        "descricao": "Este arquivo (cnpj.ts) contém uma função para validar se uma string é um CNPJ (Cadastro Nacional da Pessoa Jurídica) válido. A função `cnpjValidator` remove caracteres não numéricos, verifica o tamanho (14 dígitos) e se todos os dígitos são iguais (CNPJ inválido conhecido). Em seguida, calcula os dois dígitos verificadores usando um algoritmo específico e compara com os dígitos fornecidos no CNPJ. Retorna `true` se o CNPJ for válido e `false` caso contrário. Utiliza a função `OnlyNumbersMask` para limpar a entrada.",
+        "referencia": ""
+    },
+    "cpf.ts": {
+        "descricao": "Este arquivo (cpf.ts) contém a função `cpfValidator` que valida um CPF (Cadastro de Pessoa Física) brasileiro. A função recebe uma string, remove caracteres não numéricos, verifica o tamanho (11 dígitos) e se todos os dígitos são iguais (CPF inválido). Em seguida, calcula os dígitos verificadores usando um algoritmo específico e compara com os dígitos fornecidos. Retorna `true` se o CPF for válido e `false` caso contrário. Utiliza a função `OnlyNumbersMask` para limpar a entrada. É usado para garantir a validade de CPFs inseridos na aplicação.",
+        "referencia": ""
+    },
+    "date.ts": {
+        "descricao": "Este arquivo (date.ts) define uma função para validar se uma string representa uma data no formato AAAA-MM-DD. A função `dateValidator` recebe uma string como entrada e retorna `true` se a string corresponder ao padrão de data (ano entre 1900 e 2099, mês entre 01 e 12, dia entre 01 e 31) e `false` caso contrário. É usado para garantir que os dados de data inseridos pelo usuário estejam em um formato válido, prevenindo erros no sistema.",
+        "referencia": ""
+    },
+    "documents.ts": {
+        "descricao": "O arquivo `documents.ts` define um validador para dados de documentos (tipo `IDocuments`) usados no processo de inscrição. A função `documentsValidator` recebe um objeto `IDocuments` e retorna um objeto com booleanos indicando se cada campo (videoLink, leanCanvas, CNPJCard) é válido. Valida se o link do vídeo não está vazio, se os arquivos leanCanvas e CNPJCard são PDFs e se o tamanho deles é menor que 10MB. O tipo `DocumentsValidator` representa o tipo de retorno da função.",
+        "referencia": ""
+    },
+    "legalEntity.ts": {
+        "descricao": "O arquivo `legalEntity.ts` define um validador para dados de entidades legais (empresas/organizações). A função `legalEntityValidator` recebe um objeto `ILegalEntity` e retorna um objeto com campos booleanos indicando se cada propriedade (CNPJ, nome fantasia, setor, razão social e endereço) é válida. A validação do CNPJ usa o validador `cnpjValidator` e a do endereço usa `addressValidator`, ambos importados. Campos de texto são validados verificando se possuem algum valor. O campo 'complement' do endereço é considerado válido por padrão.",
+        "referencia": ""
+    },
+    "members.ts": {
+        "descricao": "O arquivo `members.ts` define um validador para dados de membros de equipe (líder e participantes). Ele recebe objetos `ITeamMember` e retorna um objeto com status de validação (booleano) para cada campo, incluindo campos de endereço validados por `addressValidator`, CPF por `cpfValidator` e data de nascimento por `dateValidator`.  Serve para verificar a integridade dos dados antes de serem processados na inscrição.",
+        "referencia": ""
+    },
+    "team.ts": {
+        "descricao": "O arquivo `team.ts` define um validador para dados de equipes (`ITeam`). A função `teamValidator` recebe um objeto `ITeam` e retorna um objeto com booleanos indicando se cada campo obrigatório (nome, categoria, problema, descrição da solução) possui um valor válido (string com comprimento maior que zero).  É usado para verificar se os dados de inscrição de uma equipe estão completos antes de serem processados. O tipo `TeamValidator` representa o tipo de retorno da função.",
+        "referencia": ""
+    },
+    "local-storage-user.vm.ts": {
+        "descricao": "Este arquivo define uma classe `LocalStorageUserViewModel` que serve como um modelo de dados simples para representar um usuário armazenado no armazenamento local do navegador. A classe recebe o nome do usuário (`user`) no construtor e o torna publicamente acessível.  É utilizada para encapsular e fornecer o nome do usuário para outras partes da aplicação que interagem com o armazenamento local, facilitando o acesso e a manipulação dessa informação.",
+        "referencia": ""
+    },
+    "tailwind.config.ts": {
+        "descricao": "Este arquivo configura o Tailwind CSS para o projeto. Define os diretórios de código (`content`) onde o Tailwind procurará classes CSS a serem aplicadas. A seção `theme` estende as configurações padrão, definindo imagens de fundo personalizadas (`backgroundImage`) usando uma função `imageUrl` que constrói URLs a partir de variáveis de ambiente (`NEXT_PUBLIC_BLOB_URL` e `NEXT_PUBLIC_BLOB_EXTENSION`). Isso permite usar imagens armazenadas externamente com facilidade no CSS.",
+        "referencia": ""
+    },
+    ".prettierignore": {
+        "descricao": "Este arquivo `.prettierignore` define quais arquivos e pastas o Prettier deve ignorar durante a formatação automática do código. Ele impede que o Prettier modifique arquivos dentro de `node_modules`, pastas de configuração do VS Code (`.vs/`, `.vscode/`) e o arquivo `dados-exportados.csv`, garantindo que dependências, configurações de IDE e dados brutos não sejam formatados inadvertidamente. Essencial para manter a consistência e evitar conflitos no projeto.",
+        "referencia": ""
+    },
+    "app.js": {
+        "descricao": "Este arquivo (app.js) configura e inicia o servidor web usando Express.js. Ele define rotas através do arquivo 'router.js' e 'uploadAdminRouter.js', habilitando CORS para permitir requisições de diferentes origens.  Em modo de desenvolvimento, registra as requisições no console. Serve arquivos estáticos da pasta 'public' e escuta na porta 3000.  Exporta a instância do app para uso em outros módulos.",
+        "referencia": ""
+    },
+    "database.js": {
+        "descricao": "Este arquivo (database.js) configura a conexão com o banco de dados usando o Sequelize. Ele lê as configurações de conexão do arquivo config.json (ambiente 'development') e cria uma instância do Sequelize. Essa instância (sequelize) é então exportada para ser utilizada em outros arquivos do projeto, permitindo a interação com o banco de dados. A configuração inclui detalhes como nome do banco, usuário, senha, host e tipo de banco de dados (dialect). O logging é desativado por padrão.",
+        "referencia": ""
+    },
+    "jsonSecret.js": {
+        "descricao": "Este arquivo (jsonSecret.js) exporta um objeto JavaScript contendo uma única propriedade: `secret`. Essa propriedade armazena uma string que serve como chave secreta para o projeto. Essa chave é crucial para a segurança, sendo utilizada em processos como geração e verificação de tokens (ex: JWT) para autenticação e autorização de usuários na API. O valor da chave deve ser mantido em sigilo e não ser exposto no código do cliente.",
+        "referencia": ""
+    },
+    "teste_connection.js": {
+        "descricao": "Este arquivo (teste_connection.js) verifica a conexão com o banco de dados configurado no projeto. Ele usa o módulo 'sequelize' (definido em database.js) para tentar autenticar a conexão. Se a autenticação for bem-sucedida, exibe uma mensagem de sucesso no console. Caso contrário, imprime o erro ocorrido, auxiliando na identificação de problemas de conexão. A função 'test()' é executada automaticamente ao carregar o arquivo, realizando o teste de conexão.",
+        "referencia": ""
+    },
+    "InscricaoController.js": {
+        "descricao": "Este arquivo (InscricaoController.js) lida com as requisições relacionadas a inscrições. Ele usa o `InscricaoService` para acessar e manipular dados de inscrição no banco de dados. As funções incluem listar todas as inscrições (`todasAsInscricoes`) e provavelmente outras operações (não mostradas no trecho) como criar, atualizar ou deletar inscrições.  Ele também interage com outros serviços como `TimeService`, `PessoaService` e `AuthService` para validar e processar informações relacionadas. O código utiliza `moment` para manipulação de datas.",
+        "referencia": ""
+    },
+    "authController.js": {
+        "descricao": "O `authController.js` lida com a autenticação do usuário. Ele recebe requisições de login e recuperação de senha, repassando a lógica para o `authService`. A função `login` autentica com email/senha e retorna dados do usuário em caso de sucesso. `esqueciSenha` gera um código OTP (One-Time Password) e envia para o email do usuário. `redefinirSenha` usa o OTP e a nova senha para atualizar a senha do usuário.  Trata erros retornando status 500 e mensagem de erro.",
+        "referencia": ""
+    },
+    "challengeEdicaoController.js": {
+        "descricao": "Este arquivo implementa o controlador `ChallengeEdicaoController` para gerenciar edições de desafios. Ele expõe duas rotas: listar todas as edições (`listarTodasEdicoes`) e buscar uma edição por ID (`buscaPorIdEdicao`). A criação de novas edições (`criarChallengeEdicao`) também é suportada. O controlador utiliza o serviço `ChallengeEdicaoService` para acessar e manipular os dados, retornando respostas JSON com status HTTP apropriados (200, 404, 500) e mensagens de erro quando necessário. Ele recebe requisições HTTP (req) e envia respostas (res).",
+        "referencia": ""
+    },
+    "credenciamentoController.js": {
+        "descricao": "Este arquivo (credenciamentoController.js) gerencia a lógica para credenciamentos. Ele recebe requisições HTTP (criar, atualizar, listar) e interage com o `CredenciamentoService` para realizar as operações no banco de dados. As funções `criarCredenciamento` e `atualizarCredenciamento` retornam o credenciamento criado/atualizado ou um erro. `listarTodosCredenciamentos` (incompleto no trecho) provavelmente retornará uma lista de credenciamentos. Ele atua como intermediário entre as rotas da API e a camada de serviço.",
+        "referencia": ""
+    },
+    "downloadController.js": {
+        "descricao": "Este arquivo implementa o controlador `DownloadController` responsável por lidar com requisições de download de arquivos. Ele utiliza o `DownloadService` para obter o caminho do arquivo solicitado (a partir do nome no parâmetro da requisição) e então usa o método `res.download` do Express para enviar o arquivo ao cliente, permitindo o download. O nome original do arquivo é obtido via query parameter para ser usado no download. Em caso de erro durante o download, retorna um status 500 com uma mensagem de erro.",
+        "referencia": ""
+    },
+    "pessoasController.js": {
+        "descricao": "Este arquivo (pessoasController.js) lida com as requisições relacionadas a pessoas. Ele expõe métodos para listar todas as pessoas cadastradas e buscar uma pessoa específica por ID. A busca por ID inclui uma verificação de permissão baseada no papel do usuário (User Leader) e no ID da pessoa requisitada, garantindo que apenas o líder possa ver detalhes de outros usuários. Utiliza os serviços `PessoaService` para acessar os dados e `AuthService` para validar o token e obter informações do usuário autenticado.",
+        "referencia": ""
+    },
+    "pessoasJuridicasController.js": {
+        "descricao": "Este arquivo (pessoasJuridicasController.js) é responsável por receber requisições HTTP relacionadas a pessoas jurídicas. Ele utiliza o serviço `PessoaJuridicaService` para criar novas pessoas jurídicas no sistema. A função `criarPessoa` recebe os dados da pessoa jurídica no corpo da requisição (req.body), chama o serviço para persistir os dados e retorna a pessoa jurídica criada em formato JSON, ou uma mensagem de erro em caso de falha. Há um código comentado para consulta de CNPJ via API externa (MinhaReceita), atualmente desabilitado.",
+        "referencia": ""
+    },
+    "problemasController.js": {
+        "descricao": "Este arquivo (problemasController.js) lida com a criação e listagem de problemas no sistema. Ele usa a classe `ProblemaService` para interagir com a lógica de negócios e o banco de dados. A função `criarProblema` recebe dados de um problema via requisição POST, valida se o 'challenge' associado existe e, se tudo estiver correto, cria o problema e retorna os dados criados. `listarTodosProblemas` retorna todos os problemas existentes no sistema. Em caso de erro, retorna mensagens apropriadas com status HTTP correspondente.",
+        "referencia": ""
+    },
+    "relatorioInscricoesController.js": {
+        "descricao": "Este arquivo (relatorioInscricoesController.js) lida com a geração e envio de relatórios de inscrições em formato CSV. A função `exportCSV` aciona um serviço (`relatorioInscricaoService`) para criar o arquivo CSV e, em seguida, o envia como download para o usuário, nomeando-o \"dados-exportados.csv\".  Em caso de erro na criação ou envio, retorna uma mensagem de erro em JSON. Ele é o ponto de entrada para requisições que precisam do relatório de inscrições.",
+        "referencia": ""
+    },
+    "relatorioPessoaJuridica.js": {
+        "descricao": "Este arquivo (relatorioPessoaJuridica.js) é um controlador responsável por gerar e disponibilizar um relatório em formato CSV de dados de pessoas jurídicas. A função `exportCSV` aciona um serviço (`inscricaoService`) para criar o arquivo CSV. Em caso de sucesso, o arquivo é enviado para download com o nome \"dados-exportados.csv\". Erros durante a geração ou envio resultam em respostas de erro JSON com status 500. Ele serve como ponto de entrada para requisições que precisam do relatório em CSV.",
+        "referencia": ""
+    },
+    "relatorioPessoasController.js": {
+        "descricao": "Este arquivo (relatorioPessoasController.js) é responsável por lidar com a exportação de dados de pessoas em formato CSV. A função `exportCSV` recebe uma requisição, chama o serviço `relatorioPessoasService` para gerar o arquivo CSV, e então o envia como download para o usuário, nomeando-o \"dados-exportados.csv\". Em caso de erro na geração ou envio, retorna uma resposta de erro com status 500. Ele atua como intermediário entre as rotas da API e a lógica de negócio de geração do relatório.",
+        "referencia": ""
+    },
+    "relatorioTimesController.js": {
+        "descricao": "Este arquivo (relatorioTimesController.js) é responsável por lidar com a geração e download de relatórios em formato CSV. A função `exportCSV` chama o serviço `relatorioTimesService` para criar o arquivo CSV. Em caso de sucesso, o arquivo é enviado para o usuário com o nome \"dados-exportados.csv\". Erros durante a criação ou download retornam uma resposta de erro HTTP 500 com a mensagem correspondente. Ele atua como intermediário entre as requisições HTTP e a lógica de geração do relatório.",
+        "referencia": ""
+    },
+    "timesController.js": {
+        "descricao": "Este arquivo (timesController.js) lida com as requisições relacionadas a times. Ele expõe duas funções: `listarTodosTimes` (retorna todos os times) e `buscaPorIdLider` (retorna os times liderados por um usuário, extraindo o ID do usuário do token de autenticação no header da requisição). Utiliza a classe `TimeService` para acessar os dados e retorna respostas JSON com status HTTP apropriados (200 para sucesso, 500 para erro).",
+        "referencia": ""
+    },
+    "uploadController.js": {
+        "descricao": "Este arquivo (uploadController.js) lida com o upload e listagem de arquivos no backend. Ele usa o serviço `uploadAdminService` para realizar as operações de upload e busca no banco de dados. As rotas expostas são: `uploadArquivo` (recebe um arquivo via requisição e salva) e `listarUpload` (retorna a lista de todos os uploads). Também possui uma rota incompleta `buscarPorIDUpload`. O controller retorna respostas JSON indicando sucesso ou erro nas operações.",
+        "referencia": ""
+    },
+    "uploadInscricaoController.js": {
+        "descricao": "Este arquivo (uploadInscricaoController.js) é responsável por lidar com o envio e listagem de arquivos de inscrição. Ele recebe requisições HTTP, utiliza o serviço `uploadInscService` para realizar as operações de upload e busca no banco de dados, e retorna respostas JSON com o resultado. As rotas implementadas são: envio de arquivo (`uploadArquivo`), listagem de todos os uploads (`listarUpload`) e busca de um upload específico por ID (`buscarPorIDUpload`). Ele interage com o modelo de dados via `db` e utiliza módulos `path` e `fs` para manipulação de arquivos.",
+        "referencia": ""
+    },
+    "criaUsuario.js": {
+        "descricao": "Este arquivo (criaUsuario.js) cria um novo usuário no banco de dados. Ele usa o Sequelize para interagir com as tabelas 'Pessoas', 'Login' e 'Roles'. A função `criarUsuarioCompleto` insere dados de um usuário (nome, email, etc.) e suas credenciais de login (email, senha) e associa uma role pré-existente ('Admin Master') ao usuário. A senha é criptografada usando bcrypt antes de ser salva. O script é útil para popular o banco com dados iniciais ou para testes.",
+        "referencia": ""
+    },
+    "downloadArquivo.js": {
+        "descricao": "Este arquivo define a classe `DownloadMiddlewares` que auxilia na construção do caminho completo para arquivos armazenados no servidor. A função `getFilePath` recebe o nome do arquivo e retorna o caminho absoluto para o diretório de uploads ('public/uploads/admin'), útil para baixar ou manipular esses arquivos no backend. É usado como um middleware para garantir acesso seguro e correto aos arquivos.",
+        "referencia": ""
+    },
+    "roles.js": {
+        "descricao": "Arquivo `roles.js`: Middleware para autenticação baseada em roles. Extrai a role do usuário do token JWT (presente no header `Authorization`) e verifica se ela está incluída na lista de roles permitidas (`rolesNecessarias`) para acessar a rota. Retorna erro 401 se token ausente ou 403 se role não autorizada. Utiliza a biblioteca `jsonwebtoken` e o segredo definido em `jsonSecret.js` para validar o token.",
+        "referencia": ""
+    },
+    "uploadArquivo.js": {
+        "descricao": "Este arquivo configura o middleware `multer` para lidar com o upload de arquivos. Ele recebe arquivos PDF, salvando-os em pastas específicas dentro de `public/uploads/times/{time_Id}`. Se a pasta do time não existir, ela é criada. O nome do arquivo é gerado com base no timestamp atual e sua extensão original. O `fileFilter` garante que apenas arquivos PDF sejam aceitos. É usado para receber documentos de times específicos no backend.",
+        "referencia": ""
+    },
+    "uploadArquivoAdmin.js": {
+        "descricao": "Este arquivo configura o middleware `multer` para lidar com o upload de arquivos no painel administrativo. Ele define onde os arquivos serão salvos (`./public/uploads/admin`) e como serão nomeados (usando timestamp e extensão original). Apenas arquivos PDF são aceitos, garantindo que apenas o tipo de arquivo esperado seja processado. O middleware retorna um objeto `multer` pronto para ser usado nas rotas de upload.",
+        "referencia": ""
+    },
+    "20230822180409-create-integrantes.js": {
+        "descricao": "Este arquivo cria a tabela 'Integrantes' no banco de dados. Define campos como id, função, nome, cpf, data de nascimento, celular, restrição alimentar, email e opção de receber publicidade. Utiliza Sequelize para definir tipos de dados e restrições (como 'not null' e 'primaryKey'). A migration é usada para versionar a estrutura do banco de dados durante o desenvolvimento do projeto.",
+        "referencia": ""
+    },
+    "20230822180409-create-integrantes.js.bak": {
+        "descricao": "Este arquivo é uma migração do Sequelize para criar a tabela 'Integrantes' no banco de dados. Define os campos para armazenar informações de membros, como função, nome, CPF, data de nascimento, contato e restrições alimentares. A migração usa `Sequelize.INTEGER`, `Sequelize.STRING`, `Sequelize.DATE` e `Sequelize.CHAR` para definir os tipos de dados das colunas. Inclui um valor padrão para a data de nascimento ('1990-01-15'). É usado para configurar a estrutura inicial do banco de dados.",
+        "referencia": ""
+    },
+    "20230823131038-create-time.js": {
+        "descricao": "Este arquivo cria a tabela 'Times' no banco de dados usando Sequelize. Define colunas para id (chave primária), nome, linha de atuação, problema, ideia, e datas de criação/atualização. A data padrão para 'createdAt' e 'updatedAt' é definida como '1990-01-15', utilizando uma função SQL para garantir o tipo DATEONLY. Essencial para armazenar informações sobre os times no projeto.",
+        "referencia": ""
+    },
+    "20230823190859-create-challenge-edicoes.js": {
+        "descricao": "Este arquivo cria a tabela 'challenge_edicoes' no banco de dados. Ela armazena informações sobre as edições de um desafio, como nome e ano. A coluna 'createdAt' e 'updatedAt' recebem uma data padrão (15/01/1990) ao criar ou atualizar um registro. A função 'up' cria a tabela e 'down' a remove, permitindo desfazer a migração. Utiliza o Sequelize para definir a estrutura da tabela e interagir com o banco de dados.",
+        "referencia": ""
+    },
+    "20230823190944-create-inscricoes.js": {
+        "descricao": "Este arquivo cria a tabela 'Inscricoes' no banco de dados. Ela armazena informações sobre inscrições de participantes ('Integrantes') em times ('Times') para uma edição específica de um desafio ('challenge_edicoes'). As colunas incluem IDs de relacionamento, data de criação (com valor padrão fixo) e timestamps de criação/atualização. É usado durante a migração inicial do banco de dados para definir a estrutura da tabela de inscrições.",
+        "referencia": ""
+    },
+    "20230830175136-create-roles.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize, responsável por criar a tabela 'Roles' no banco de dados. A tabela armazena informações sobre os diferentes papéis (ou permissões) no sistema, com campos para ID, nome e descrição. A função 'up' cria a tabela, enquanto 'down' a remove, permitindo desfazer a migração. É usado para configurar a estrutura inicial do banco de dados.",
+        "referencia": ""
+    },
+    "20230830190829-create-login.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para criar a tabela 'Logins' no banco de dados. A tabela armazena informações de login dos usuários, relacionando-os à tabela 'integrantes' (pessoas) e 'roles' (perfis de acesso). Contém campos para ID, ID da pessoa, ID do role, senha, e timestamps de criação/atualização. A função 'up' cria a tabela e 'down' a remove, permitindo desfazer a migração.",
+        "referencia": ""
+    },
+    "20230919170734-alter-name-table-integrante.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize, responsável por renomear uma tabela no banco de dados. A função `up` renomeia a tabela 'Integrantes' para 'Pessoas'. A função `down` reverte essa alteração, renomeando 'Pessoas' de volta para 'Integrantes'. Migrações são usadas para controlar mudanças no esquema do banco de dados de forma versionada e segura.",
+        "referencia": ""
+    },
+    "20230919180654-alter-name-column-integrante-login.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize, usada para alterar o esquema do banco de dados. Especificamente, ele renomeia a coluna 'pessoa_Id' da tabela 'Logins' para 'integrante_id'. A função 'up' executa a alteração, enquanto 'down' a reverte, permitindo desfazer a migração se necessário. É parte do processo de evolução do banco de dados do projeto.",
+        "referencia": ""
+    },
+    "20230920123629-create-arquivo-admin.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para criar a tabela 'ArquivoAdmins' no banco de dados. Ela armazena informações sobre arquivos enviados por pessoas em desafios/edições. A tabela possui chaves estrangeiras para 'challenge_edicoes' e 'Pessoas', além de campos para nome, nome original, filename e datas de criação/atualização. A função 'up' cria a tabela, enquanto 'down' (não completa no trecho) a removeria.",
+        "referencia": ""
+    },
+    "20230920194646-adicionar-nova-coluna-tabela-login.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para o banco de dados. Ele adiciona uma nova coluna chamada 'OTP' (tipo texto, podendo ser nula) à tabela 'Logins'. A função 'up' executa a alteração no banco, enquanto 'down' remove a coluna, permitindo desfazer a migração caso necessário. Essencial para implementar autenticação de dois fatores (2FA) ou envio de códigos de verificação.",
+        "referencia": ""
+    },
+    "20230920194952-adicionar-nova-coluna-tabela-login.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, usando o Sequelize. Sua função é adicionar uma nova coluna chamada 'data_criacao_OTP' à tabela 'Logins'. A coluna é do tipo DATE, aceita valores nulos e, por padrão, é inicializada com NULL. A função 'up' executa a adição da coluna, enquanto 'down' remove a coluna, permitindo desfazer a alteração. É usado para rastrear quando um OTP (One-Time Password) foi criado para um login.",
+        "referencia": ""
+    },
+    "20230922192613-add-newcolumm-arquivoadmin.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para o banco de dados. Ele foi criado para adicionar uma nova coluna na tabela 'arquivoadmin', mas a implementação está vazia, indicando que a coluna 'filename' já existia. As funções 'up' e 'down' são executadas ao aplicar e reverter a migração, respectivamente, mas não realizam nenhuma operação neste caso. Essencialmente, este arquivo serve como um marcador de que a coluna já estava presente no banco de dados.",
+        "referencia": ""
+    },
+    "20230922192635-add-newcolumm-arquivoadmin-filename.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, responsável por adicionar ou remover a coluna 'filename' na tabela 'ArquivoAdmins'. A função 'up' adiciona a coluna do tipo STRING, permitindo valores nulos, após a coluna 'originalname', se ela ainda não existir. A função 'down' remove a coluna 'filename' caso ela exista, permitindo reverter a migração. Ele garante que a coluna só seja adicionada/removida uma vez, evitando erros.",
+        "referencia": ""
+    },
+    "20230925135934-adicionar-nova-coluna-tabela-login.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para o banco de dados. Ele adiciona uma nova coluna chamada 'ativo' (booleana) à tabela 'Logins'. A coluna 'ativo' não pode ser nula e, por padrão, recebe o valor 'true' (1). A função 'down' remove a coluna 'ativo' caso a migração precise ser desfeita, permitindo reverter a alteração no esquema do banco de dados. Essencial para controlar o status de usuários no sistema.",
+        "referencia": ""
+    },
+    "20230926200644-alter-references-uploadAdmin.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize, usada para alterar o banco de dados. A função `up` adiciona uma chave estrangeira (`challenge_edicao_Id`) à tabela `ArquivoAdmins`, relacionando-a à tabela `challenge_edicoes`. A função `down` remove essa chave estrangeira, revertendo a alteração. O timestamp no nome da constraint garante unicidade em múltiplas execuções de migração. Essencial para manter a integridade referencial entre as tabelas.",
+        "referencia": ""
+    },
+    "20231002172531-create-upload-inscricoes.js": {
+        "descricao": "Este arquivo cria a tabela 'UploadInscricoes' no banco de dados. Ela armazena informações sobre arquivos de inscrição enviados pelos usuários, associando-os a uma pessoa ('pessoa_Id') e a um time ('time_Id'). Contém também metadados do arquivo (nome, filename, originalname) e timestamps de criação/atualização. É usado durante a migração inicial do banco de dados para estruturar os dados de inscrição.",
+        "referencia": ""
+    },
+    "20231016121931-create-problemas.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para criar a tabela 'Problemas' no banco de dados. A tabela armazena informações sobre os problemas de um desafio, incluindo sua descrição e qual edição do desafio ele pertence (via chave estrangeira 'challenge_edicao_Id'). A função 'up' cria a tabela, enquanto 'down' a remove, permitindo desfazer a migração. É usado para versionar e aplicar mudanças no esquema do banco de dados.",
+        "referencia": ""
+    },
+    "20231016122548-remove-tabela-integrantes.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize, usada para controlar mudanças no banco de dados. Sua função é remover a tabela 'Integrantes' do banco. A função 'up' executa a remoção quando a migração é aplicada (ex: durante o deploy). A função 'down' está vazia, indicando que não há um processo de reversão definido para esta migração específica – a tabela é removida permanentemente. É parte do processo de evolução do esquema do banco de dados.",
+        "referencia": ""
+    },
+    "20231016173945-renomear-coluna-ideia-para-solucao.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize, usada para alterar o esquema do banco de dados. Especificamente, ele renomeia a coluna 'ideia' para 'solucao' na tabela 'Times'. A função 'up' executa a alteração ao aplicar a migração, enquanto 'down' reverte a alteração, renomeando 'solucao' de volta para 'ideia', permitindo desfazer a migração se necessário. É parte do processo de evolução do banco de dados do projeto.",
+        "referencia": ""
+    },
+    "20231016180134-adicionar-coluna-lgpd-em-Pessoas.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para o banco de dados. Ele adiciona uma coluna booleana chamada 'lgpd' à tabela 'Pessoas'. A coluna indica se a pessoa concorda com a Lei Geral de Proteção de Dados (LGPD), com valor padrão 'false'. A migração 'up' adiciona a coluna e 'down' a remove, permitindo desfazer a alteração. É usado para evoluir o esquema do banco de dados de forma controlada.",
+        "referencia": ""
+    },
+    "20231016182800-create-pessoas-juridicas.js": {
+        "descricao": "Este arquivo cria a tabela 'PessoasJuridicas' no banco de dados. Ela armazena informações de pessoas jurídicas, como razão social, CNPJ e endereço. A tabela possui uma relação com a tabela 'Pessoas' através do campo 'pessoa_Id', indicando a qual pessoa física está associada a pessoa jurídica. É uma migration do Sequelize, usada para versionar e aplicar mudanças no esquema do banco de dados.",
+        "referencia": ""
+    },
+    "20231018131900-adicionar-coluna-lider-inscricoes.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, usando o Sequelize. Ele adiciona uma coluna booleana chamada 'lider' à tabela 'Inscricoes'. Essa coluna indica se uma inscrição representa um líder, com valor padrão 'false'. A função 'down' remove a coluna 'lider' caso a migração precise ser desfeita, permitindo reverter a alteração no esquema do banco de dados. Essencial para controlar a evolução do modelo de dados.",
+        "referencia": ""
+    },
+    "20231018134200-adicionar-coluna_aprovada_inscrições.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, usando o Sequelize. Ele adiciona uma coluna booleana chamada 'aprovada' à tabela 'Inscricoes'. A coluna indica se uma inscrição foi aprovada (true) ou não (false), com valor padrão sendo 'false'. A função 'up' executa a adição da coluna, enquanto 'down' remove a coluna, permitindo desfazer a alteração. É usado para controlar o status de aprovação das inscrições no sistema.",
+        "referencia": ""
+    },
+    "20231024173615-add-ativo-to-inscricoes.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, usando o Sequelize. Ele adiciona uma coluna booleana chamada 'ativo' à tabela 'Inscricoes'. Por padrão, o valor de 'ativo' será 'true' para novas inscrições. A função 'down' remove a coluna 'ativo' caso a migração precise ser desfeita, permitindo reverter a alteração no esquema do banco de dados. Essencial para controlar o status de inscrições no sistema.",
+        "referencia": ""
+    },
+    "20231030131838-create-Credenciamento.js": {
+        "descricao": "Este arquivo cria a tabela 'Credenciamento' no banco de dados. Ela registra informações sobre a entrada e saída de pessoas em um evento, associando cada credenciamento a um registro na tabela 'Pessoas' através do campo 'pessoa_Id'. Armazena data/hora de entrada e saída, além de timestamps de criação e atualização. É uma migration do Sequelize, usada para versionar e aplicar mudanças no esquema do banco de dados.",
+        "referencia": ""
+    },
+    "20231031151451-alterar-limite-caracteres-colunas-problema-solucao-tabela-time.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, responsável por alterar o tamanho das colunas 'problema' e 'solucao' na tabela 'Times'. A função 'up' aumenta o limite de caracteres de 'problema' para 500 e de 'solucao' para 1000. A função 'down' reverte essas alterações, retornando os tamanhos originais (255 para 'problema'). Migrações são usadas para controlar mudanças no esquema do banco de dados de forma versionada.",
+        "referencia": ""
+    },
+    "20231031191130-adicionar-colunas-endereco-tabela-pessoas.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados. A função `up` adiciona colunas de endereço (rua, bairro, complemento, número, cidade, uf) à tabela 'Pessoas'. A função `down` remove essas colunas, permitindo desfazer a alteração. É usado para evoluir o esquema do banco de dados de forma controlada.",
+        "referencia": ""
+    },
+    "20231101131802-adicionar-coluna-cep-tabela-pessoas.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, usando Sequelize. A função `up` adiciona uma coluna chamada 'cep' (tipo texto, obrigatória) à tabela 'Pessoas'. A função `down` remove essa coluna, permitindo desfazer a alteração. É usado para evoluir o esquema do banco de dados de forma controlada.",
+        "referencia": ""
+    },
+    "20231101135055-adicionar-coluna-cep-tabela-pessoasjuridicas.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, responsável por adicionar e remover a coluna 'cep' na tabela 'PessoasJuridicas'. A função 'up' adiciona a coluna 'cep' como texto (STRING) que não pode ser nula. A função 'down' remove a coluna 'cep', permitindo reverter a alteração caso necessário. É usado para evoluir o esquema do banco de dados de forma controlada.",
+        "referencia": ""
+    },
+    "20231101184046-adicionar-coluna-observacoes-pessoa.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, responsável por adicionar e remover a coluna 'observacoes' na tabela 'Pessoas'. A função 'up' adiciona a coluna do tipo texto (STRING) que não pode ficar vazia. A função 'down' remove a coluna, permitindo reverter a alteração caso necessário. É usado para controlar mudanças no esquema do banco de dados de forma versionada.",
+        "referencia": ""
+    },
+    "20231107151816-Remover-coluna-restricao-alimentar.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize, usada para alterar o banco de dados. Especificamente, a função `up` remove a coluna `restricao_alimentar` da tabela `Pessoas`. A função `down` está vazia, indicando que a alteração não pode ser revertida automaticamente (provavelmente porque os dados da coluna não são necessários para restaurar um estado anterior). É parte do processo de evolução do esquema do banco de dados.",
+        "referencia": ""
+    },
+    "20231107175425-adicionar-coluna-aprovado-time.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, responsável por adicionar e remover a coluna 'aprovado' na tabela 'Times'. A função 'up' adiciona uma coluna booleana chamada 'aprovado' (que pode ser nula) à tabela 'Times'. A função 'down' remove essa mesma coluna. Migrações são usadas para controlar mudanças no esquema do banco de dados de forma versionada e segura.",
+        "referencia": ""
+    },
+    "20231108185121-Adicionar-coluna-link-para-solucao-Time.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados, usando o Sequelize. Ele adiciona uma nova coluna chamada 'links_solucao' à tabela 'Times'. A coluna é do tipo texto (STRING), não pode ser vazia (allowNull: false) e, por padrão, começa vazia (defaultValue: ''). A função 'down' remove essa coluna caso a migração precise ser desfeita. Essencialmente, permite armazenar links relacionados à solução de um time.",
+        "referencia": ""
+    },
+    "20250506130527-add-integrante-id-to-logins.js": {
+        "descricao": "Este arquivo é uma migração do Sequelize para o banco de dados. Ele está preparado para adicionar uma coluna `integranteId` à tabela `Logins`, mas atualmente não contém nenhuma instrução de alteração (em `up`) ou reversão (em `down`).  Serve como um ponto de partida para adicionar a relação entre logins e integrantes no banco de dados, permitindo rastrear qual integrante realizou cada login. O programador deve preencher as funções `up` e `down` com o código SQL para realizar a adição e remoção da coluna, respectivamente.",
+        "referencia": ""
+    },
+    "20250506132020-add-missing-columns-to-pessoas.js": {
+        "descricao": "Este arquivo é uma migração do banco de dados. Adiciona novas colunas à tabela 'Pessoas': 'lgpd' (booleano), 'rua', 'bairro', 'cidade', 'uf', 'cep' (strings) e 'numero' (inteiro), além de 'observacoes' (string). Todas as colunas permitem valores nulos. A função 'up' executa essas adições quando a migração é aplicada.",
+        "referencia": ""
+    },
+    "arquivoadmin.js": {
+        "descricao": "O arquivo `arquivoadmin.js` define o modelo Sequelize para a tabela `ArquivoAdmin`. Representa arquivos administrativos associados a edições de desafios e pessoas. Define relacionamentos: um arquivo pertence a uma edição de desafio (`challenge_edicoes`) e a uma pessoa (`Pessoas`).  Utiliza `belongsTo` para criar as associações, permitindo acesso aos dados relacionados através de aliases (`arquivo_admin`, `arquivo_admin_pessoa`). O modelo inclui campos como nome do arquivo, nome original e filename.",
+        "referencia": ""
+    },
+    "challenge_edicoes.js": {
+        "descricao": "Este arquivo define o modelo de dados `challenge_edicoes` usando Sequelize, representando uma edição de um desafio. Possui campos para o nome da edição (`nome_edicao`) e o ano (`ano`).  Estabelece relacionamentos: uma edição pode ter várias inscrições (através de `Inscricoes`) e vários arquivos de administração (através de `ArquivoAdmin`). O `static associate` configura esses relacionamentos, permitindo acessar as inscrições e arquivos relacionados a uma edição específica. É usado para persistir e gerenciar informações sobre as diferentes edições do desafio no banco de dados.",
+        "referencia": ""
+    },
+    "credenciamento.js": {
+        "descricao": "Este arquivo define o modelo de dados 'Credenciamentos' usando Sequelize. Representa o registro de entrada e saída de pessoas em um evento. Possui campos como ID da pessoa, status de entrada/saída (booleano), e datas/horas de entrada e saída. A associação 'belongsTo' conecta cada credenciamento a uma pessoa (modelo 'Pessoas') através do 'pessoa_Id', permitindo acessar informações da pessoa associada ao credenciamento. É usado para controlar o acesso e monitorar a presença em eventos.",
+        "referencia": ""
+    },
+    "index.js": {
+        "descricao": "Este arquivo (index.js) configura a conexão com o banco de dados usando o Sequelize. Ele lê as configurações do arquivo config.json, instancia o Sequelize e carrega todos os modelos definidos na pasta 'models'.  Além disso, chama a função 'associate' de cada modelo para definir as relações entre eles, permitindo a interação entre as tabelas do banco de dados. Essencialmente, ele centraliza e inicializa a lógica de acesso a dados do projeto.",
+        "referencia": ""
+    },
+    "inscricoes.js": {
+        "descricao": "O arquivo `inscricoes.js` define o modelo de dados 'Inscricoes' usando Sequelize. Representa a inscrição de um participante (pessoa ou time) em uma edição de um desafio.  Estabelece relacionamentos: uma inscrição pertence a uma edição do desafio (`challenge_edicoes`), a uma pessoa (`Pessoas`) e a um time (`Time`). As chaves estrangeiras (`pessoa_Id`, `time_Id`, `challenge_edicao_Id`) ligam as tabelas. O modelo é usado para interagir com a tabela de inscrições no banco de dados.",
+        "referencia": ""
+    },
+    "login.js": {
+        "descricao": "Este arquivo define o modelo 'Login' para o banco de dados usando Sequelize. Representa informações de login de usuários, incluindo referência à tabela 'Pessoas' (usuário) e 'Roles' (perfil de acesso). Armazena senha, código OTP (autenticação de dois fatores), data de criação do OTP e status de ativação. Define relacionamentos 'belongsTo' para 'Pessoas' e 'Roles', permitindo acessar dados relacionados. É usado para autenticação e autorização no sistema.",
+        "referencia": ""
+    },
+    "pessoas.js": {
+        "descricao": "O arquivo `pessoas.js` define o modelo de dados \"Pessoas\" usando o Sequelize ORM. Representa a tabela de pessoas no banco de dados, com campos como nome, email, etc. Estabelece relacionamentos: uma pessoa pode ter várias inscrições (`Inscricoes`), um login (`Login`), uma pessoa jurídica (`PessoasJuridicas`) e vários arquivos de administração (`ArquivoAdmin`).  É central para gerenciar informações de usuários no sistema.",
+        "referencia": ""
+    },
+    "pessoasJuridicas.js": {
+        "descricao": "Este arquivo define o modelo de dados `PessoasJuridicas` usando Sequelize, representando entidades jurídicas (empresas). Define atributos como razão social, CNPJ, endereço, etc. Estabelece um relacionamento \"belongsTo\" com o modelo `Pessoas`, indicando que cada pessoa jurídica está associada a uma pessoa física (tabela `pessoas`). É usado para interagir com a tabela de pessoas jurídicas no banco de dados.",
+        "referencia": ""
+    },
+    "problemas.js": {
+        "descricao": "Este arquivo define o modelo de dados 'Problemas' usando Sequelize, um ORM para Node.js. Representa um problema associado a uma edição de desafio. Possui campos para 'challenge_edicao_Id' (chave estrangeira para a edição do desafio) e 'descricao' (texto do problema). O método 'associate' permite definir relacionamentos com outros modelos, mas está vazio neste caso. Essencialmente, mapeia a tabela 'Problemas' no banco de dados.",
+        "referencia": ""
+    },
+    "time.js": {
+        "descricao": "Este arquivo define o modelo 'Time' para o banco de dados, usando Sequelize. Representa um time participante, com campos como nome, área de atuação, problema abordado, solução proposta, status de aprovação e links relacionados.  Estabelece relações: um time pode ter várias inscrições (modelo 'Inscricoes') e vários uploads de inscrição (modelo 'UploadInscricoes'). A associação permite acessar as inscrições de um time através de 'time.Inscricoes' e os uploads via 'time.arquivo_inscricao_time_id'.",
+        "referencia": ""
+    },
+    "uploadinscricoes.js": {
+        "descricao": "Este arquivo define o modelo `UploadInscricoes` para a tabela de uploads de inscrições no banco de dados. Ele usa o Sequelize ORM para mapear a tabela e seus campos. O modelo possui relações de \"pertence a\" com os modelos `Pessoas` (pessoa que fez o upload) e `Time` (time associado à inscrição).  `pessoa_Id` e `time_Id` são chaves estrangeiras que ligam os registros. Serve para armazenar informações sobre arquivos de inscrição enviados pelos usuários.",
+        "referencia": ""
+    },
+    "npm": {
+        "descricao": "Este script (npm) coleta o caminho absoluto da pasta onde o arquivo zip do nvm-windows foi extraído. Ele usa a entrada do usuário para determinar a localização, essencial para configurar o ambiente Node.js no projeto backend. A informação coletada é provavelmente usada em scripts subsequentes para definir variáveis de ambiente ou executar comandos relacionados ao nvm-windows.",
+        "referencia": ""
+    },
+    "authRouter.js": {
+        "descricao": "Este arquivo define as rotas de autenticação da aplicação. Utiliza o `express` para criar um roteador (`router`) e o `AuthController` para lidar com a lógica de login, recuperação de senha e redefinição.  As rotas `/ativardesativar/:id` e `/deletar/:id` exigem permissão de \"Admin Master\" via middleware `roles`.  Exporta o roteador para ser usado na aplicação principal.",
+        "referencia": ""
+    },
+    "challenge_edicaoRouter.js": {
+        "descricao": "Este arquivo define as rotas para a gestão de desafios (challenges) no backend. Utiliza o framework Express para criar endpoints que interagem com o `ChallengeController` para listar, buscar, criar, atualizar e deletar desafios. As rotas de criação, atualização e deleção exigem autenticação com o role 'Admin Master' através do middleware `roles`. Essencialmente, expõe uma API REST para operações CRUD (Create, Read, Update, Delete) sobre os desafios do sistema.",
+        "referencia": ""
+    },
+    "credenciamentoRouter.js": {
+        "descricao": "Este arquivo define as rotas da API para gerenciar credenciamentos. Utiliza o framework Express para definir endpoints como listar, criar e atualizar credenciamentos. A autenticação e autorização são controladas pelo middleware `roles`, restringindo o acesso apenas a usuários com a role 'Admin Master'. As funções de lógica (controladores) estão no arquivo `credenciamentoController.js`. Essencialmente, este router expõe as operações CRUD (Create, Read, Update) para a entidade Credenciamento.",
+        "referencia": ""
+    },
+    "downloadRouter.js": {
+        "descricao": "Este arquivo define rotas para download de arquivos. Utiliza o framework Express para criar um roteador (`/download/:filename`) que recebe o nome do arquivo como parâmetro. A requisição é encaminhada para o método `downloadFile` do `DownloadController`, que por sua vez usa um serviço (`DownloadService`) e um middleware (`DownloadModel`) para gerenciar o download. O middleware provavelmente valida ou prepara o arquivo, o serviço lida com a lógica de acesso e o controller responde à requisição HTTP. Essencialmente, expõe um endpoint para baixar arquivos do servidor.",
+        "referencia": ""
+    },
+    "inscricaoRouter.js": {
+        "descricao": "Este arquivo define as rotas para a gestão de inscrições no sistema. Utiliza o `express` para criar um roteador e o `InscricaoController` para lidar com a lógica de cada rota. As rotas permitem listar inscrições ativas/desativadas (Admin Master), buscar inscrições por ID (Admin Master), aprovar times (Admin Master), criar novas inscrições (aberto) e buscar inscrições de uma sessão (User Leader). A autenticação e autorização são controladas pelo middleware `roles`.",
+        "referencia": ""
+    },
+    "pessoasJuridicasRouter.js": {
+        "descricao": "Este arquivo define as rotas para a gestão de pessoas jurídicas na API. Utiliza o `express` para criar um roteador e o `PessoaJuridicaController` para lidar com a lógica de negócios. As rotas incluem cadastro, busca por ID, listagem (com restrição de acesso para 'Admin Master'), busca por líder (requer 'User Leader') e atualização/exclusão (com diferentes níveis de permissão definidos no middleware `roles`). Essencialmente, expõe endpoints para criar, ler, atualizar e deletar registros de pessoas jurídicas, controlando o acesso com base em roles.",
+        "referencia": ""
+    },
+    "pessoasRouter.js": {
+        "descricao": "Este arquivo define as rotas da API relacionadas a pessoas. Utiliza o `express` para criar um roteador e o `PessoaController` para lidar com a lógica de cada operação (listar, buscar, criar, atualizar, deletar).  Acesso às rotas é controlado pelo middleware `roles`, garantindo que apenas usuários com as permissões corretas possam executar certas ações.  `/pessoas` lida com operações em massa ou individuais (via ID), e `/pessoas/cadastrarPessoas` é usado para criar novas pessoas.",
+        "referencia": ""
+    },
+    "problemasRouter.js": {
+        "descricao": "Este arquivo define as rotas da API para gerenciar problemas. Utiliza o framework Express para mapear requisições HTTP (GET, PUT, DELETE) para funções específicas no `ProblemaController`. \n\nAs rotas permitem listar todos os problemas, buscar um problema por ID, atualizar um problema existente e deletar um problema. O código exporta o roteador para ser usado na aplicação principal, centralizando a lógica de acesso aos problemas.",
+        "referencia": ""
+    },
+    "relatorioInscricaoRouter.js": {
+        "descricao": "Este arquivo define as rotas para gerar relatórios de inscrição. Utiliza o framework Express para criar um roteador (`router`) e o `RelatorioController` para a lógica de exportação dos dados em formato CSV. A rota `/gerarRelatorio-csv` é protegida pelo middleware `roles`, exigindo permissão de \"Admin Master\" para ser acessada. As outras rotas comentadas parecem ser exemplos de outras funcionalidades (times) que não estão implementadas neste arquivo. Essencialmente, ele expõe um endpoint para download de relatórios.",
+        "referencia": ""
+    },
+    "relatorioPessoaJuridicaRouter.js": {
+        "descricao": "Este arquivo define as rotas para gerar relatórios de pessoas jurídicas. Utiliza o framework Express para criar um roteador (`router`) que mapeia requisições GET para `/gerarRelatorioPessoasJuridicas-csv` para a função `exportCSV` do `RelatorioController`.  A rota exige autenticação com o role 'Admin Master' através do middleware `roles`. As outras rotas comentadas parecem ser exemplos de outras funcionalidades não implementadas. Essencialmente, expõe um endpoint para exportar dados de pessoas jurídicas em formato CSV.",
+        "referencia": ""
+    },
+    "relatorioPessoasRouter.js": {
+        "descricao": "Este arquivo define as rotas para gerar relatórios de pessoas no formato CSV. Utiliza o framework Express para criar um roteador (`router`) e o middleware `roles` para garantir que apenas usuários com permissão 'Admin Master' possam acessar a rota `/gerarRelatorioPessoas-csv`.  Essa rota chama a função `exportCSV` do `RelatorioController` para efetuar a geração e envio do relatório. As outras rotas comentadas parecem ser exemplos de outras funcionalidades não implementadas.",
+        "referencia": ""
+    },
+    "relatorioTimesRouter.js": {
+        "descricao": "Este arquivo define as rotas para gerar relatórios de times. Utiliza o framework Express para criar um roteador (`router`) e associa a rota GET `/gerarRelatorioTimes-csv` à função `exportCSV` do `RelatorioController`. Essa função é responsável por gerar e exportar o relatório no formato CSV. O arquivo também importa e utiliza um middleware de roles, embora não esteja sendo usado nas rotas ativas. As outras rotas relacionadas a times (busca, criação, atualização, deleção) estão comentadas.",
+        "referencia": ""
+    },
+    "testeToken.js": {
+        "descricao": "Este arquivo (testeToken.js) gera um token JWT simulado para testes. A função `gerarTokenSimulado` cria um objeto de usuário com ID, nome e role (Admin Master). Esses dados são usados para construir o payload do token, que é assinado com a chave secreta definida em `jsonSecret`. O token resultante, válido por 1 hora, é então impresso no console. Ele serve para simular a autenticação de um usuário com permissões de administrador em testes de API.",
+        "referencia": ""
+    },
+    "timesRouter.js": {
+        "descricao": "Este arquivo define as rotas para a gestão de times usando o framework Express.js. Ele expõe endpoints para listar, criar, buscar, atualizar e deletar times, controlados pelo `TimeController`. A segurança é aplicada via middleware `roles`, restringindo o acesso a certas rotas com base no papel do usuário (Admin Master ou User Leader). As rotas incluem: listar todos os times (Admin Master), buscar times por ID do líder (User Leader), cadastrar um novo time, buscar time por ID, atualizar time (Admin Master/User Leader) e deletar time (Admin Master).",
+        "referencia": ""
+    },
+    "uploadAdminRouter.js": {
+        "descricao": "Este arquivo define as rotas para a gestão de uploads de arquivos no painel administrativo. Utiliza o framework Express para criar um roteador (`/uploadsAdmin`) que interage com o `uploadControllerAdmin` para listar, buscar, criar, atualizar e deletar arquivos. \n\nA rota de upload e atualização exige autenticação com o middleware `roles` (apenas 'Admin Master') e utiliza `uploadArquiAdmin` para processar o envio do arquivo. Essencialmente, centraliza a lógica de acesso e manipulação de arquivos enviados pelos administradores.",
+        "referencia": ""
+    },
+    "uploadInscricaoRouter.js": {
+        "descricao": "Este arquivo define rotas para gerenciar uploads de arquivos de inscrição. Utiliza `express` para criar o roteador e `multer` para lidar com o upload dos arquivos. As rotas permitem: enviar um arquivo (`/uploadsInscricao` - POST), listar todos os uploads (`/uploadsInscricao/Listar` - GET), buscar um upload específico por ID (`/uploadsInscricao/:id` - GET) e atualizar um upload existente (`/uploadsInscricao/:id/atualizarUpload` - PUT). O middleware `uploadInscricao` é usado para processar o arquivo antes de chegar ao controller `uploadInscricaoController`, que contém a lógica principal para salvar e buscar os arquivos.",
+        "referencia": ""
+    },
+    "update-challenge-backend.sh": {
+        "descricao": "Este script (update-challenge-backend.sh) automatiza a atualização do backend do desafio. Ele primeiro aguarda 12 segundos e, em seguida, utiliza o Docker Compose para construir e iniciar o container 'challenge-backend' em modo detached (-d). O script também remove imagens Docker não utilizadas para liberar espaço em disco, garantindo que apenas as imagens necessárias estejam presentes. Ele é usado para facilitar o deploy e atualização do backend durante o desenvolvimento ou em produção.",
+        "referencia": ""
+    },
+    "update-challenge-frontend.sh": {
+        "descricao": "Este script (update-challenge-frontend.sh) automatiza a atualização do frontend do desafio. Ele utiliza o Docker Compose para construir e iniciar o container 'challenge-frontend' no modo detached (-d), garantindo que a aplicação rode em background.  O script primeiro aguarda 10 segundos e, em seguida, executa o build e o 'up' do container. Por fim, remove imagens Docker não utilizadas para liberar espaço em disco. Ele é usado para garantir que a versão mais recente do frontend esteja sempre em execução.",
+        "referencia": ""
+    },
+    "20230814151130-demo-inscricao.js": {
+        "descricao": "Este arquivo é uma \"seeder\" do Sequelize, usado para popular o banco de dados com dados iniciais. Especificamente, ele insere uma única entrada na tabela 'inscricaotimes', representando uma inscrição de um time chamado 'Startup' na área de 'Marketing'. A função 'up' realiza a inserção, enquanto 'down' remove a entrada, permitindo desfazer a operação. É útil para testes e demonstrações.",
+        "referencia": ""
+    },
+    "20230815124846-demo-integrantes.js": {
+        "descricao": "Este arquivo é uma \"seeder\" do Sequelize, usado para popular o banco de dados com dados iniciais. Especificamente, ele insere um único registro na tabela 'integrantes', representando um membro da equipe com informações como nome, função, contato e preferências alimentares. A função 'up' realiza a inserção, enquanto 'down' remove todos os registros da tabela 'integrantes', permitindo reverter a operação. É usado para configurar um ambiente de testes ou demonstrativo com dados pré-definidos.",
+        "referencia": ""
+    },
+    "authService.js": {
+        "descricao": "Arquivo `authService.js`: Responsável pela autenticação e login de usuários. Utiliza o modelo `Pessoas` e `Login` do banco de dados para verificar credenciais (email e senha). Em caso de sucesso, gera um token JWT para autenticação posterior. Inclui validação de senha com `bcryptjs` e envio de emails via `EmailService`. Lida com erros de email/senha inválidos.",
+        "referencia": ""
+    },
+    "challengeEdicaoService.js": {
+        "descricao": "Este arquivo define a classe `ChallengeEdicaoService` responsável por operações no banco de dados relacionadas às edições de desafios. Ele oferece métodos para listar todas as edições, buscar uma edição por ID, criar uma nova edição e (incompleto) atualizar uma edição existente. Utiliza o modelo `challenge_edicoes` definido em `../models` para interagir com o banco de dados, realizando consultas e manipulações de dados. As funções retornam os dados solicitados ou lançam erros em caso de falha.",
+        "referencia": ""
+    },
+    "credenciamentoService.js": {
+        "descricao": "Este arquivo (credenciamentoService.js) lida com a criação de registros de credenciamento no banco de dados. A função `criarCredenciamento` recebe dados de uma pessoa (ID), horários de entrada/saída e flags indicando se houve entrada/saída física. Ela valida se apenas um dos horários (entrada ou saída) foi fornecido, cria um novo registro no banco usando o modelo `Credenciamentos` e retorna o credenciamento criado. Em caso de erro, lança uma exceção com a mensagem de erro detalhada.",
+        "referencia": ""
+    },
+    "downloadService.js": {
+        "descricao": "Este arquivo (downloadService.js) define uma classe `DownloadService` responsável por fornecer o caminho completo para arquivos a serem baixados. Ele utiliza a classe `DownloadMiddlewares` para obter esse caminho, encapsulando a lógica de construção do path. A função `getFilePath` recebe o nome do arquivo e retorna o caminho completo para o sistema de arquivos, permitindo que outros componentes do backend localizem e sirvam o arquivo para download. Essencialmente, atua como uma camada de serviço para acesso seguro aos arquivos.",
+        "referencia": ""
+    },
+    "emailService.js": {
+        "descricao": "O arquivo `emailService.js` implementa o envio de emails usando a biblioteca `nodemailer`. Ele configura um transportador para o serviço Outlook (pode ser alterado) com credenciais específicas. A classe `EmailService` possui o método `enviarEmailOTP` que formata e envia um email contendo um código OTP (One-Time Password) para o usuário, usado para redefinição de senha. Este serviço é central para a funcionalidade de recuperação de senha da aplicação.",
+        "referencia": ""
+    },
+    "inscricaoService.js": {
+        "descricao": "Este arquivo (inscricaoService.js) define a classe `InscricaoService` responsável por operações relacionadas a inscrições no sistema. Ele usa o modelo `Inscricoes` do banco de dados (via `database.Inscricoes`) para buscar inscrições ativas, inativas, por ID de inscrição ou por ID de pessoa. As funções retornam os dados encontrados ou lançam um erro em caso de falha na consulta. O `dto` (Data Transfer Object) é usado para passar dados para as funções de busca.",
+        "referencia": ""
+    },
+    "pessoasJuridicasService.js": {
+        "descricao": "Este arquivo (pessoasJuridicasService.js) contém a lógica para validar e consultar dados de pessoas jurídicas. A classe `PessoasJuridicasService` oferece métodos para verificar a existência de um CNPJ no banco de dados (`verificarCNPJ`) e para verificar CNPJ em edição (`verificarCNPJedicao`). Utiliza o modelo `PessoasJuridicas` (definido em `../models`) para interagir com a base de dados e bibliotecas externas para validação de CNPJ e outros dados. O serviço atua como intermediário entre as rotas da API e o acesso aos dados, encapsulando a lógica de negócios relacionada a pessoas jurídicas.",
+        "referencia": ""
+    },
+    "pessoasService.js": {
+        "descricao": "Este arquivo (pessoasService.js) define a classe `PessoaService` responsável pela lógica de negócios relacionada a pessoas. Ele interage com o modelo `Pessoas` do Sequelize para realizar operações como verificar a existência de um email já cadastrado. Utiliza funções de validação (CPF, Email, etc.) para garantir a integridade dos dados e o `authService` para autenticação. A função `verificarEmail` busca no banco de dados se um email já está em uso, retornando `true` se encontrado, `false` caso contrário.",
+        "referencia": ""
+    },
+    "problemasServices.js": {
+        "descricao": "Este arquivo define a classe `ProblemaService` responsável pela lógica de negócios relacionada a problemas. Ele interage com o modelo `Problemas` (definido em `../models`) para criar, listar, buscar por ID e atualizar problemas. As funções `criarProblema`, `listarTodosProblemas`, `buscaPorIdProblema` e `atualizarProblema` encapsulam essas operações, retornando os dados ou lançando erros em caso de falha. O `dto` (Data Transfer Object) é usado para passar os dados necessários para as operações.",
+        "referencia": ""
+    },
+    "relatorioInscricaoService.js": {
+        "descricao": "Este arquivo (relatorioInscricaoService.js) exporta dados de inscrições para um arquivo CSV chamado 'dados-exportados.csv'. Utiliza o Sequelize para consultar o banco de dados (model 'Inscricoes') e a biblioteca 'csv-writer' para formatar os dados. A função `exportToCSV` consulta as inscrições, define os cabeçalhos do CSV (ID, Time, Pessoa, Challenge Edicao, Datas de Criação/Atualização, Lider) e escreve os dados no arquivo. Um callback é usado para indicar a conclusão da operação. Ele depende de `sqlService.js` para a conexão com o banco e do arquivo de configuração `config.json`.",
+        "referencia": ""
+    },
+    "relatorioPessoaJuridicaService.js": {
+        "descricao": "Este arquivo (relatorioPessoaJuridicaService.js) exporta dados de pessoas jurídicas para um arquivo CSV chamado 'dados-exportados.csv'. Utiliza o Sequelize para consultar o banco de dados (model PessoasJuridicas) e a biblioteca 'csv-writer' para formatar e gravar os dados. A função `exportToCSV` consulta o banco, define os cabeçalhos do CSV e escreve os dados, retornando um callback quando finalizado. Ele depende das configurações do banco de dados em `config.json` e dos modelos definidos em `../models`.",
+        "referencia": ""
+    },
+    "relatorioPessoasService.js": {
+        "descricao": "Este arquivo (relatorioPessoasService.js) exporta dados da tabela 'Pessoas' do banco de dados para um arquivo CSV chamado 'dados-exportados.csv'. Utiliza o Sequelize para consultar os dados e a biblioteca 'csv-writer' para formatá-los. A função `exportToCSV` consulta todas as pessoas no banco e as escreve no arquivo CSV com cabeçalhos definidos para ID, Função, Nome, CPF, Data de Nascimento, Contato, E-mail e preferência por publicidade. O callback é usado para indicar conclusão ou erro.",
+        "referencia": ""
+    },
+    "relatorioTimesService.js": {
+        "descricao": "Este arquivo (relatorioTimesService.js) exporta dados da tabela 'Time' do banco de dados para um arquivo CSV chamado 'dados-exportados.csv'. Utiliza o Sequelize para consultar os dados e a biblioteca 'csv-writer' para formatá-los. A função `exportToCSV` consulta todos os times, define os cabeçalhos do CSV (ID, Nome, Linha de Atuação, Problema, Solução, Criação, Edição) e escreve os dados no arquivo. Um callback é usado para indicar a conclusão da operação. Ele depende do modelo 'Time' definido em '../models' e das configurações de banco de dados em '../config/config.json'.",
+        "referencia": ""
+    },
+    "timesService.js": {
+        "descricao": "timesService.js gerencia a lógica para times. A função `listarTodosTimes` busca todos os times no banco de dados, e para cada time, busca informações do líder, PJ e membros usando outras funções da classe.  Combina esses dados em um único objeto para cada time, retornando uma lista completa com informações relacionadas. Usa `Promise.all` para otimizar as buscas.",
+        "referencia": ""
+    },
+    "uploadAdminService.js": {
+        "descricao": "Este arquivo (uploadAdminService.js) lida com o upload e gerenciamento de arquivos (PDFs) no backend. Ele oferece funções para: salvar um arquivo no banco de dados (uploadArquivo), listar todos os arquivos salvos (listarUploads) e buscar um arquivo específico pelo seu ID (buscarPorIDUpload). Utiliza o modelo 'ArquivoAdmin' para interagir com o banco de dados e armazena informações como nome original, nome do arquivo no servidor e IDs relacionados (challenge_edicao_Id, pessoa_Id). Recebe dados via DTO (Data Transfer Object).",
+        "referencia": ""
+    },
+    "uploadInscricao.js": {
+        "descricao": "Este arquivo (uploadInscricao.js) define um serviço para gerenciar uploads de arquivos de inscrição. Ele permite: 1) Salvar informações sobre o arquivo (nome, original, ID do usuário/time) no banco de dados; 2) Listar todos os uploads cadastrados; 3) Buscar um upload específico pelo seu ID. Utiliza o modelo `UploadInscricoes` para interagir com o banco de dados e recebe dados via DTO (Data Transfer Object). Valida se um arquivo foi selecionado antes de salvar.",
+        "referencia": ""
+    },
+    "validacao_CEP.js": {
+        "descricao": "Este arquivo (validacao_CEP.js) contém uma função para validar o formato de um CEP (Código de Endereçamento Postal) brasileiro. A função `isValidCEP` recebe uma string como entrada e retorna `true` se a string corresponder ao padrão de 8 dígitos numéricos (ex: 12345678), e `false` caso contrário.  É utilizada para garantir que os CEPs inseridos no sistema tenham o formato correto, evitando erros em outras partes da aplicação. A função é exportada para ser utilizada em outros módulos do projeto.",
+        "referencia": ""
+    },
+    "validacao_CNPJ.js": {
+        "descricao": "Este arquivo contém a função `CnpjValido` que verifica se um CNPJ é válido. Remove caracteres não numéricos, confere o tamanho (14 dígitos) e calcula os dígitos verificadores usando um algoritmo específico. Retorna `true` se o CNPJ for válido e `false` caso contrário. É usado para validar dados de empresas no backend. Utiliza a biblioteca `cpf-cnpj-validator` para formatação inicial.",
+        "referencia": ""
+    },
+    "validacao_CPF.js": {
+        "descricao": "Este arquivo (validacao_CPF.js) contém a função `validarCPF` que verifica se um CPF fornecido é válido. Remove caracteres não numéricos, checa o tamanho (11 dígitos) e aplica o algoritmo de validação do CPF (cálculo dos dígitos verificadores). Retorna `true` se o CPF for válido e `false` caso contrário. É usado para garantir a integridade dos dados de CPF no backend.",
+        "referencia": ""
+    },
+    "validacao_Email.js": {
+        "descricao": "Este arquivo (validacao_Email.js) contém a função `validarEmail`, responsável por verificar se um endereço de e-mail fornecido é válido. A validação é feita em etapas: primeiro, verifica se o e-mail não está vazio e se o tamanho não excede 254 caracteres. Em seguida, usa uma expressão regular para validar o formato geral. Por fim, checa o tamanho do nome de usuário (antes do @) e das partes do domínio, garantindo que não excedam 64 e 63 caracteres, respectivamente. A função retorna `true` se o e-mail for válido e `false` caso contrário. É utilizada para garantir a integridade dos dados de e-mail no backend.",
+        "referencia": ""
+    },
+    "validacao_Inscricao.js": {
+        "descricao": "Este arquivo define um esquema de validação para dados de inscrição usando a biblioteca Joi. Ele valida campos como função (deve ser \"Líder\"), nome (usando função customizada `validarNome`), data de nascimento (formato AAAA-MM-DD), CPF (formato numérico de 11 dígitos e validação customizada `validarCPF`), entre outros.  Importa e utiliza outras funções de validação específicas (CPF, Nome, Telefone, Email, UF, CEP, CNPJ) para garantir a integridade dos dados antes de serem processados no backend. O esquema é usado para verificar se os dados de inscrição estão completos e no formato correto.",
+        "referencia": ""
+    },
+    "validacao_Nome.js": {
+        "descricao": "Este arquivo (validacao_Nome.js) contém a função `isValidName`. Ela verifica se uma string (nome) é válida, permitindo apenas letras (incluindo acentos) e espaços. Utiliza uma expressão regular para essa validação. A função retorna `true` se o nome for válido e `false` caso contrário. É usada para validar dados de entrada no backend, garantindo que o nome do usuário siga um formato esperado. A função é exportada para ser utilizada em outros módulos do projeto.",
+        "referencia": ""
+    },
+    "validacao_Telefone.js": {
+        "descricao": "Este arquivo valida números de celular. A função `Telefone_validation` recebe um número, remove caracteres não numéricos e verifica se possui 10 ou 11 dígitos. Se tiver 11, o primeiro dígito após o DDD deve ser 9. Também impede sequências repetidas de dígitos e valida o DDD contra uma lista de códigos válidos. Retorna `true` se o número for válido, `false` caso contrário. É usado para garantir a qualidade dos dados de telefone no backend.",
+        "referencia": ""
+    },
+    "validacao_UF.js": {
+        "descricao": "Este arquivo (validacao_UF.js) contém a função `isValidState` que valida se uma sigla de estado brasileiro é válida. Ela recebe uma sigla como entrada e retorna `true` se a sigla estiver presente na lista interna de estados válidos, e `false` caso contrário. É usado para garantir a correção dos dados de endereço no backend. A função é exportada para ser utilizada em outros módulos do projeto.",
+        "referencia": ""
     }
 }

@@ -6,8 +6,6 @@ import os
 import google.generativeai as genai
 import html
 
-
-
 def gerar_descricao_com_gemini(caminho_arquivo, projeto_path):
 
     print(f"\n📄 Gerando descrição para: {caminho_arquivo.name}")
@@ -27,7 +25,8 @@ Sua tarefa é gerar uma descrição técnica e funcional para o arquivo de códi
 
 ## DIRETRIZES PARA A DESCRIÇÃO
 1.  **Público-Alvo:** Programador júnior ou alguém vendo o projeto pela primeira vez
-2.  **Limite:** Máximo 1000 caracteres
+2.  **Limite:** Máximo 1000 caracteres  
+
 3.  **Foco:** Função principal do arquivo e como ele se conecta ao projeto
 4.  **Tom:** Direto e didático, evitando jargões complexos
 5.  **Formato:** Apenas texto puro, sem cabeçalhos ou formatações
@@ -80,22 +79,22 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
             nome_arquivo = valor.name
             caminho_relativo = str(valor.relative_to(projeto_path))
             
-            # Verifica se precisa gerar nova descrição
+            #---------------------------------- Verifica se precisa gerar nova descrição
             if nome_arquivo not in descricoes:
                 descricao_gerada = gerar_descricao_com_gemini(valor, projeto_path)
                 descricoes[nome_arquivo] = {
                     'descricao': descricao_gerada,
-                    'referencia': ""  # Inicializa referência vazia
+                    'referencia': ""  #----------------------------------Inicializa referência vazia
                 }
-                # Salva imediatamente no arquivo
+                #----------------------------------Salva imediatamente no arquivo
                 with open("descricoes.json", "w", encoding="utf-8") as f:
                     json.dump(descricoes, f, indent=4, ensure_ascii=False)
             
-            # Obtém a descrição (agora garantido que existe)
+            #----------------------------------Obtém a descrição (agora garantido que existe)
             descricao = descricoes[nome_arquivo].get('descricao', "Sem descrição definida.")
-            descricao_html = html.escape(descricao)  # ESCAPA AQUI
+            descricao_html = html.escape(descricao)  #----------------------------------ESCAPA AQUI
             
-            # Busca por referências
+            #----------------------------------Busca por referências
             referencias = []
             for arq_ref in arquivos:
                 if arq_ref == valor:
@@ -107,7 +106,7 @@ def gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, info_projeto
                 except:
                     continue
             
-            # Construindo a seção de detalhes
+            #----------------------------------Construindo a 22seção de detalhes
             detalhes = f"""
             <p><strong>Caminho:</strong> {caminho_relativo}</p>
             <p><strong>Descrição:</strong> {descricao_html}</p>
@@ -141,9 +140,9 @@ def main():
         print(f"❌ '{projeto_path}' não é um diretório válido.")
         sys.exit(1)
 
-    # Informações básicas do projeto (agora definidas automaticamente)
+    #----------------------------------Informações básicas do projeto (agora definidas automaticamente)
 
-    # Configurações iniciais
+    #----------------------------------Configurações iniciais
     Path("output").mkdir(exist_ok=True)
     if not Path("style.css").exists():
         Path("style.css").write_text("""
@@ -152,7 +151,7 @@ def main():
         .detalhes { padding: 10px; }
         """)
 
-    # Processamento dos arquivos
+    #----------------------------------Processamento dos arquivos
     ignorar_ext = ['.png', '.jpg', '.pdf', '.jpeg', '.gif', '.svg', '.ico', '.webp', '.mp4', '.mp3','.dll', '.exe', '.pdb', '.so', '.a', '.o', '.class', '.jar', '.pyc', '.wasm','.lock', '.log', '.cache', '.tmp', '.swp','.json', '.md', '.txt', '.csv', '.db', '.sqlite', '.env', '.ini', '.yml', '.yaml','.html', '.xml','.targets', '.props', '.csproj', '.sln']
     ignorar_pastas = ['node_modules', 'bower_components', 'vendor','.git', '.github', '.vscode', '.idea', '.vs', 'dist', 'build', 'out', '.next', '.turbo', '.parcel-cache','__pycache__', 'venv', '.mypy_cache', 'bin', 'obj', '__tests__', 'tests', 'test', 'examples','coverage', '.coverage', 'reports']
 
@@ -174,7 +173,7 @@ def main():
     with tqdm(total=len(arquivos), desc="Gerando documentação") as barra:
         conteudo_html = gerar_html_pasta(estrutura, projeto_path, descricoes, arquivos, projeto_path, barra)
 
-    # Gerar HTML final
+    #----------------------------------Gerar HTML final
     template = Path("template.html").read_text(encoding="utf-8")
     with open("output/documentacao.html", "w", encoding="utf-8") as f:
         f.write(template.replace("{{CONTEUDO}}", conteudo_html))
