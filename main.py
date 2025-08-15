@@ -181,4 +181,4 @@ def main():
     print("\n✅ Documentação gerada em: output/documentacao.html")
 
 if __name__ == "__main__":
-    main()
+    main() 
